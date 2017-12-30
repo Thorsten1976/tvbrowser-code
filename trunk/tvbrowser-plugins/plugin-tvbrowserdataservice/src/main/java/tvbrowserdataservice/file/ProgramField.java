@@ -84,7 +84,7 @@ public class ProgramField implements Cloneable {
 
 
     public ProgramField() {
-        mDataFormat = ProgramFieldType.UNKNOWN_FORMAT;
+        mDataFormat = ProgramFieldType.FORMAT_UNKNOWN;
         mType = null;
     }
 
@@ -96,7 +96,7 @@ public class ProgramField implements Cloneable {
      * @since 2.2.2
      */
     protected ProgramField(Object o) {
-      mDataFormat = ProgramFieldType.UNKNOWN_FORMAT;
+      mDataFormat = ProgramFieldType.FORMAT_UNKNOWN;
       mTypeId = 255;
     }
 
@@ -220,7 +220,7 @@ public class ProgramField implements Cloneable {
     public static ProgramField create(ProgramFieldType type, int value) {
         ProgramField p = new ProgramField();
         p.setType(type);
-        if (type.getFormat() == ProgramFieldType.TIME_FORMAT) {
+        if (type.getFormat() == ProgramFieldType.FORMAT_TIME) {
             p.setTimeData(value);
         } else {
             p.setIntData(value);
@@ -267,7 +267,7 @@ public class ProgramField implements Cloneable {
      * Is used for a field in an update file that should be deleted.
      */
     public void removeData() {
-        mDataFormat = ProgramFieldType.UNKNOWN_FORMAT;
+        mDataFormat = ProgramFieldType.FORMAT_UNKNOWN;
         mData = null;
     }
 
@@ -281,7 +281,7 @@ public class ProgramField implements Cloneable {
      * @param data
      */
     public void setBinaryData(byte[] data) {
-        mDataFormat = ProgramFieldType.BINARY_FORMAT;
+        mDataFormat = ProgramFieldType.FORMAT_BINARY;
 
         mData = data;
     }
@@ -305,7 +305,7 @@ public class ProgramField implements Cloneable {
 
 
     public void setTextData(String text) {
-        mDataFormat = ProgramFieldType.TEXT_FORMAT;
+        mDataFormat = ProgramFieldType.FORMAT_TEXT;
 
         try {
             mData = StringUtils.trim(text).getBytes(TEXT_CHARSET);
@@ -323,7 +323,7 @@ public class ProgramField implements Cloneable {
 
 
     public void setIntData(int value) {
-        mDataFormat = ProgramFieldType.INT_FORMAT;
+        mDataFormat = ProgramFieldType.FORMAT_INT;
 
         mData = intToData(value);
     }
@@ -335,7 +335,7 @@ public class ProgramField implements Cloneable {
 
 
     public void setTimeData(int minutesAfter1970) {
-        mDataFormat = ProgramFieldType.TIME_FORMAT;
+        mDataFormat = ProgramFieldType.FORMAT_TIME;
 
         mData = intToData(minutesAfter1970);
     }
@@ -347,18 +347,18 @@ public class ProgramField implements Cloneable {
      * @return the data value as String.
      */
     public String getDataAsString() {
-        if (mDataFormat == ProgramFieldType.TEXT_FORMAT) {
+        if (mDataFormat == ProgramFieldType.FORMAT_TEXT) {
             return new StringBuilder("'").append(getTextData()).append("'")
           .toString();
-        } else if (mDataFormat == ProgramFieldType.INT_FORMAT) {
+        } else if (mDataFormat == ProgramFieldType.FORMAT_INT) {
             return Integer.toString(getIntData());
-        } else if (mDataFormat == ProgramFieldType.TIME_FORMAT) {
+        } else if (mDataFormat == ProgramFieldType.FORMAT_TIME) {
             int time = getTimeData();
             int hours = time / 60;
             int minutes = time % 60;
             return new StringBuilder().append(hours).append(':').append(
           (minutes < 10) ? "0" : "").append(minutes).toString();
-        } else if (mDataFormat == ProgramFieldType.BINARY_FORMAT) {
+        } else if (mDataFormat == ProgramFieldType.FORMAT_BINARY) {
             return "(binary)";
         } else {
             return "(unknown)";
@@ -405,7 +405,7 @@ public class ProgramField implements Cloneable {
         mTypeId = stream.read();
         mType = null;
 
-        mDataFormat = ProgramFieldType.UNKNOWN_FORMAT;
+        mDataFormat = ProgramFieldType.FORMAT_UNKNOWN;
 
         int dataLength = ((stream.read() & 0xFF) << 16)
                 | ((stream.read() & 0xFF) << 8)

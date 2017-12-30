@@ -133,7 +133,7 @@ public class ChannelGroupDialog extends JDialog {
             }
         });
         
-        JList list = new JList(ch);
+        JList<Channel> list = new JList<>(ch);
         list.setCellRenderer(new ChannelListCellRenderer(true, true));
         
         channelPanel.add(new JScrollPane(list), BorderLayout.CENTER);

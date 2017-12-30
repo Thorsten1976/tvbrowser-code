@@ -36,22 +36,21 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.TimeZone;
-import java.util.logging.Logger;
 import java.util.zip.GZIPOutputStream;
 
 import javax.swing.Icon;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import tvbrowserdataservice.TvBrowserDataService;
-import util.io.FileFormatException;
-import util.io.IOUtilities;
-import util.tvdataservice.IconLoader;
 import au.com.bytecode.opencsv.CSVReader;
 import devplugin.AbstractTvDataService;
 import devplugin.Channel;
 import devplugin.ChannelGroup;
 import devplugin.ChannelGroupImpl;
+import tvbrowserdataservice.TvBrowserDataService;
+import util.io.FileFormatException;
+import util.io.IOUtilities;
+import util.tvdataservice.IconLoader;
 
 /**
  *
@@ -62,7 +61,7 @@ public class ChannelList {
 
   public static final String FILE_NAME = "channellist.gz";
 
-  private static final Logger mLog = Logger.getLogger(ChannelList.class.getName());
+//  private static final Logger mLog = Logger.getLogger(ChannelList.class.getName());
 
   private ArrayList<ChannelItem> mChannelList;
 
