@@ -225,6 +225,7 @@
       <fileset dir="${unpacked.dir}" includes="tvdataservice/**"/>
       <fileset dir="${unpacked.dir}" includes="devplugin/**"/>
       <fileset dir="${unpacked.dir}" includes="util/**"/>
+      <fileset dir="${unpacked.dir}" includes="tvbrowser/core/filters/ParserException.class"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/core/Settings*"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/core/settings/**"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/ui/mainframe/MainFrame*"/>
