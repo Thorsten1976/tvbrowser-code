@@ -87,9 +87,9 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
 
   private JButton mAddBtn, mRemoveBtn, mInfoBtn;
 
-  private JList mGroupList;
+  private JList<TvBrowserDataServiceChannelGroup> mGroupList;
 
-  private DefaultListModel mGroupListModel;
+  private DefaultListModel<TvBrowserDataServiceChannelGroup> mGroupListModel;
 
   private TvBrowserDataServiceChannelGroup mGroup;
 
@@ -157,9 +157,9 @@ public class TvBrowserDataServiceSettingsPanel extends SettingsPanel implements 
 
     JPanel panel2 = new JPanel(new BorderLayout(10, 0));
 
-    mGroupListModel = new DefaultListModel();
+    mGroupListModel = new DefaultListModel<>();
 
-    mGroupList = new JList(mGroupListModel);
+    mGroupList = new JList<>(mGroupListModel);
     mGroupList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     panel2.add(new JScrollPane(mGroupList), BorderLayout.CENTER);
 

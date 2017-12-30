@@ -30,8 +30,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import util.io.FileFormatException;
 import devplugin.ProgramFieldType;
+import util.io.FileFormatException;
 
 /**
  * 
@@ -60,6 +60,7 @@ public class ProgramFrame implements Cloneable {
 
   
   
+  @SuppressWarnings("unchecked")
   public Object clone() {
     try {
       ProgramFrame clone = (ProgramFrame) super.clone();

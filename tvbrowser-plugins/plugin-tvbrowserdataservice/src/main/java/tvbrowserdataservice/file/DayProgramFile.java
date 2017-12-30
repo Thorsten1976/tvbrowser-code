@@ -36,12 +36,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.zip.GZIPOutputStream;
 
+import devplugin.Date;
 import util.exc.TvBrowserException;
 import util.io.DownloadJob;
 import util.io.FileFormatException;
 import util.io.IOUtilities;
-import devplugin.Date;
-import devplugin.ProgramFieldType;
 
 /**
  * @author Til Schneider, www.murfman.de
@@ -526,7 +525,7 @@ public class DayProgramFile extends AbstractFile {
 
 
   public static String getProgramFileName(Date date, devplugin.Channel channel) {
-    return getProgramFileName(date,channel.getCountry(),channel.getId());
+    return getProgramFileName(date,channel.getBaseCountry(),channel.getId());
   }
 
 

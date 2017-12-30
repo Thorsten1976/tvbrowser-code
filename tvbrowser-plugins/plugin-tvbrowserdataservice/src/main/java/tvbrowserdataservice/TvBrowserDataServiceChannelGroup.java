@@ -425,10 +425,7 @@ public class TvBrowserDataServiceChannelGroup extends ChannelGroupImpl {
               maxMetaDataAge = 2000;
             }
           }
-        } catch (Exception e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-        }
+        } catch (Exception e) {}
       }
       
       final long minLastModified = System.currentTimeMillis() - (maxMetaDataAge * 24L * 60L * 60L * 1000L);

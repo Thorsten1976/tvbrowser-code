@@ -135,7 +135,7 @@ public class TvDataBaseUpdater {
     for (int i = 0; i < DayProgramFile.getLevels().length; i++) {
       String level = DayProgramFile.getLevels()[i].getId();
       String fileName = DayProgramFile.getProgramFileName(date,
-        channel.getCountry(), channel.getId(), level);
+        channel.getBaseCountry(), channel.getId(), level);
       File file = new File(mDataService.getDataDir(), fileName);
       
       if (file.exists()) {
@@ -203,16 +203,16 @@ public class TvDataBaseUpdater {
     for (int i = 0; i < fieldCount; i++) {
       field = frame.getProgramFieldAt(i);
       ProgramFieldType type = field.getType();
-      if (type.getFormat() == ProgramFieldType.BINARY_FORMAT) {
+      if (type.getFormat() == ProgramFieldType.FORMAT_BINARY) {
         program.setBinaryField(type, field.getBinaryData());
       }
-      else if (type.getFormat() == ProgramFieldType.TEXT_FORMAT) {
+      else if (type.getFormat() == ProgramFieldType.FORMAT_TEXT) {
         program.setTextField(type, field.getTextData());
       }
-      else if (type.getFormat() == ProgramFieldType.INT_FORMAT) {
+      else if (type.getFormat() == ProgramFieldType.FORMAT_INT) {
         program.setIntField(type, field.getIntData());
       }
-      else if (type.getFormat() == ProgramFieldType.TIME_FORMAT) {
+      else if (type.getFormat() == ProgramFieldType.FORMAT_TIME) {
         program.setTimeField(type, field.getTimeData());
       }
     }
@@ -269,7 +269,7 @@ public class TvDataBaseUpdater {
       // NOTE: Needed to create the hash code and to compare
       if (asString == null) {
         asString = mDate.toString() + "_" + mChannel.getId() + "_"
-          + mChannel.getCountry();
+          + mChannel.getBaseCountry();
       }
       return asString;
     }
