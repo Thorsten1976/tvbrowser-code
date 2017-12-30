@@ -1,5 +1,7 @@
 package primarydatamanager.primarydataservice.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -40,8 +42,25 @@ public class InfoCategoryParser {
 
   private void loadProperties(int infoCategory, String fileNamePart) {
     Properties properties = new Properties();
-    final InputStream stream = InfoCategoryParser.class
-        .getResourceAsStream("category_" + fileNamePart + ".properties");
+    
+    File test = new File("category_" + fileNamePart + ".properties");
+    
+    System.out.println(test.getAbsolutePath() + ": " + test.isFile());
+    
+    InputStream stream = null;
+    
+    try {
+      if(test.isFile()) {
+        stream = new FileInputStream(test);
+      }
+      else {
+        stream = InfoCategoryParser.class.getResourceAsStream("category_" + fileNamePart + ".properties");
+      }
+    } catch (IOException e1) {
+      stream = InfoCategoryParser.class.getResourceAsStream("category_" + fileNamePart + ".properties");
+      e1.printStackTrace();
+    }
+    
     ArrayList<String> genres = new ArrayList<String>();
     if (stream != null) {
       try {
@@ -59,8 +78,13 @@ public class InfoCategoryParser {
         mGenres.add(genres);
         mCategoryInfos.add(infoCategory);
       } catch (IOException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
+      } finally {
+        if(stream != null) {
+          try {
+            stream.close();
+          }catch(IOException ioe) {}
+        }
       }
     }
   }
