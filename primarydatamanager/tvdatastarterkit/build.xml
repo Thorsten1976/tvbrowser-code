@@ -227,7 +227,7 @@
       <fileset dir="${unpacked.dir}" includes="util/**"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/core/filters/ParserException.class"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/extras/reminderplugin/ReminderListPanel.class"/>
-      <fileset dir="${unpacked.dir}" includes="tvbrowser/extras/reminderplugin/ReminderDialog"/>
+      <fileset dir="${unpacked.dir}" includes="tvbrowser/extras/reminderplugin/ReminderDialog.class"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/core/Settings*"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/core/settings/**"/>
       <fileset dir="${unpacked.dir}" includes="tvbrowser/ui/mainframe/MainFrame*"/>
