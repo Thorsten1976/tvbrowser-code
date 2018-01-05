@@ -12,6 +12,7 @@ LangString STD_SECTION_NAME ${LANG_ENGLISH} "${PROG_NAME} (necessary)"
 LangString DESKTOP_SECTION_NAME ${LANG_ENGLISH} "Shortcut on the desktop"
 LangString QUICKLAUNCH_SECTION_NAME ${LANG_ENGLISH} "Quick launch shortcut"
 LangString START_WITH_WINDOWS ${LANG_ENGLISH} "Start TV-Browser at Windows startup"
+LangString STARTMENU_LINK_ADDITIONAL_NAME ${LANG_ENGLISH} "Extended start menu entries"
 
 LangString MISC_DIR ${LANG_ENGLISH} "Misc"
 LangString LICENSE_TXT ${LANG_ENGLISH} "License"
@@ -22,6 +23,7 @@ LangString UNINSTALL_TXT ${LANG_ENGLISH} "Uninstall ${PROG_NAME}"
 LangString DESC_SEC_STANDARD ${LANG_ENGLISH} "TV-Browser application and files"
 LangString DESC_SEC_DESKTOP ${LANG_ENGLISH} "Create a shortcut on your desktop to run TV-Browser."
 LangString DESC_SEC_QUICKLAUNCH ${LANG_ENGLISH} "Create a shortcut in the quicklaunch area to run TV-Browser."
+LangString DESC_SEC_STARTMENU_LINK_ADDITIONAL ${LANG_ENGLISH} "Create extended start menu entries."
 
 # uninstaller
 LangString un.QUESTION_DELETE_CONFIG ${LANG_ENGLISH} "Do you want to delete the settings and TV data files?"

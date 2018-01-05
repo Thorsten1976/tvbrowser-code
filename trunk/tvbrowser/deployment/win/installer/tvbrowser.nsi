@@ -478,39 +478,16 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
       "$INSTDIR\tvbrowser.exe" "" "$INSTDIR\imgs\desktop.ico"
 
     CreateShortCut \
-      "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\$(LICENSE_TXT).lnk" \
-      "$INSTDIR\LICENSE.txt"
-
-    CreateShortCut \
       "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\$(WITHOUT_DIRECTX).lnk" \
       "$INSTDIR\tvbrowser_noDD.exe" "" "$INSTDIR\imgs\desktop.ico"
 
-    CreateShortCut \
-      "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\$(WITHOUT_DIRECTX) - Info.lnk" \
-      "$INSTDIR\tvbrowser_noDD.txt"
 
-    !insertmacro CreateInternetShortcut \
-        "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\Website" \
-        "http://tvbrowser.sourceforge.net/"
-
-    !insertmacro CreateInternetShortcut \
-        "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\Forum" \
-        "http://hilfe.tvbrowser.org/index.php"
-
-    !insertmacro CreateInternetShortcut \
-        "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\Deutsches Handbuch" \
-        "http://wiki.tvbrowser.org/"
-
-    !insertmacro CreateInternetShortcut \
-        "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\English Manual" \
-        "http://enwiki.tvbrowser.org"
-
-    CreateShortCut \
-      "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\$(UNINSTALL_TXT).lnk" \
-      "$INSTDIR\Uninstall.exe" \
-      "" \
-      "$INSTDIR\Uninstall.exe" \
-      0
+#    CreateShortCut \
+#      "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\$(UNINSTALL_TXT).lnk" \
+#      "$INSTDIR\Uninstall.exe" \
+#      "" \
+#      "$INSTDIR\Uninstall.exe" \
+#      0
 
   !insertmacro MUI_STARTMENU_WRITE_END
 
@@ -541,6 +518,44 @@ Section "$(DESKTOP_SECTION_NAME)" SEC_DESKTOP
     "$DESKTOP\${PROG_NAME}.lnk" \
     "$INSTDIR\tvbrowser.exe" "" "$INSTDIR\imgs\desktop.ico"
 SectionEnd # link section
+
+Section "$(STARTMENU_LINK_ADDITIONAL_NAME)" SEC_ADDITIONAL_STARTMENU
+  SectionIn 1 2
+  StrCmp $8 "HKCU" user admin
+  user:
+    SetShellVarContext current
+    goto goon
+  admin:
+    SetShellVarContext all
+  goon:
+  
+  # Set the directory where the shortcuts should be executed in
+  SetOutPath "$INSTDIR"
+
+	CreateShortCut \
+	  "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\$(LICENSE_TXT).lnk" \
+	  "$INSTDIR\LICENSE.txt"
+	
+	CreateShortCut \
+	  "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\$(WITHOUT_DIRECTX) - Info.lnk" \
+	  "$INSTDIR\tvbrowser_noDD.txt"
+	
+	!insertmacro CreateInternetShortcut \
+	    "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\Website" \
+	    "http://tvbrowser.sourceforge.net/"
+	
+	!insertmacro CreateInternetShortcut \
+	    "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\Forum" \
+	    "http://hilfe.tvbrowser.org/index.php"
+	
+	!insertmacro CreateInternetShortcut \
+	    "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\Deutsches Handbuch" \
+	    "http://wiki.tvbrowser.org/"
+	
+	!insertmacro CreateInternetShortcut \
+	    "$SMPROGRAMS\$STARTMENU_FOLDER\$(MISC_DIR)\English Manual" \
+	    "http://enwiki.tvbrowser.org"
+SectionEnd # addtional startmenu
 
 Section "$(QUICKLAUNCH_SECTION_NAME)" SEC_QUICKLAUNCH
   SectionIn 1 2
@@ -684,7 +699,7 @@ Section "Uninstall"
     Delete "$SMPROGRAMS\$8\$(MISC_DIR)\Forum.url"
     Delete "$SMPROGRAMS\$8\$(MISC_DIR)\Deutsches Handbuch.url"
 	Delete "$SMPROGRAMS\$8\$(MISC_DIR)\English Manual.url"
-	Delete "$SMPROGRAMS\$8\$(MISC_DIR)\$(UNINSTALL_TXT).lnk"
+#	Delete "$SMPROGRAMS\$8\$(MISC_DIR)\$(UNINSTALL_TXT).lnk"
     Delete "$SMPROGRAMS\$8\${PROG_NAME}.lnk"
     
     # delete start menu directories if empty
@@ -701,6 +716,7 @@ SectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_STANDARD} $(DESC_SEC_STANDARD)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ADDITIONAL_STARTMENU} $(DESC_SEC_STARTMENU_LINK_ADDITIONAL)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_DESKTOP} $(DESC_SEC_DESKTOP)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_QUICKLAUNCH} $(DESC_SEC_QUICKLAUNCH)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END

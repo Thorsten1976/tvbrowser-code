@@ -12,6 +12,7 @@ LangString STD_SECTION_NAME ${LANG_GERMAN} "${PROG_NAME} (erforderlich)"
 LangString DESKTOP_SECTION_NAME ${LANG_GERMAN} "Verknüpfung auf dem Desktop"
 LangString QUICKLAUNCH_SECTION_NAME ${LANG_GERMAN} "Verknüpfung auf Schnellstartleiste"
 LangString START_WITH_WINDOWS ${LANG_GERMAN} "TV-Browser mit Windows starten"
+LangString STARTMENU_LINK_ADDITIONAL_NAME ${LANG_ENGLISH} "Erweiterte Startmenüeinträge"
 
 LangString MISC_DIR ${LANG_GERMAN} "Sonstiges"
 LangString LICENSE_TXT ${LANG_GERMAN} "Lizenz"
@@ -22,6 +23,7 @@ LangString UNINSTALL_TXT ${LANG_GERMAN} "${PROG_NAME} deinstallieren"
 LangString DESC_SEC_STANDARD ${LANG_GERMAN} "TV-Browser-Hauptprogramm und zusätzliche Dateien"
 LangString DESC_SEC_DESKTOP ${LANG_GERMAN} "Eine Verknüpfung zum TV-Browser auf dem Desktop anlegen."
 LangString DESC_SEC_QUICKLAUNCH ${LANG_GERMAN} "Eine Verknüpfung zum TV-Browser auf der Schnellstartleiste anlegen."
+LangString DESC_SEC_STARTMENU_LINK_ADDITIONAL ${LANG_GERMAN} "Erweiterte Startmenü-Verknüpfungen von TV-Browser anlegen."
 
 # uninstaller
 LangString un.QUESTION_DELETE_CONFIG ${LANG_GERMAN} "Sollen die Konfigurationsdateien und TV-Daten gelöscht werden?"
