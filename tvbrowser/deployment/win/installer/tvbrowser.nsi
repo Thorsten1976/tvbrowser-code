@@ -204,8 +204,8 @@ FunctionEnd
 #  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "UninstallSettings.ini"
 #FunctionEnd
 
-!define MIN_JAVA_VERSION_STRING "1.6"
-!define MIN_JAVA_VERSION 16
+!define MIN_JAVA_VERSION_STRING "1.8"
+!define MIN_JAVA_VERSION 18
 
 Var JAVA_HOME
 Var JAVA_VER
