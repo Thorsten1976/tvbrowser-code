@@ -12,7 +12,7 @@ LangString STD_SECTION_NAME ${LANG_GERMAN} "${PROG_NAME} (erforderlich)"
 LangString DESKTOP_SECTION_NAME ${LANG_GERMAN} "Verknüpfung auf dem Desktop"
 LangString QUICKLAUNCH_SECTION_NAME ${LANG_GERMAN} "Verknüpfung auf Schnellstartleiste"
 LangString START_WITH_WINDOWS ${LANG_GERMAN} "TV-Browser mit Windows starten"
-LangString STARTMENU_LINK_ADDITIONAL_NAME ${LANG_ENGLISH} "Erweiterte Startmenüeinträge"
+LangString STARTMENU_LINK_ADDITIONAL_NAME ${LANG_GERMAN} "Erweiterte Startmenüeinträge"
 
 LangString MISC_DIR ${LANG_GERMAN} "Sonstiges"
 LangString LICENSE_TXT ${LANG_GERMAN} "Lizenz"
