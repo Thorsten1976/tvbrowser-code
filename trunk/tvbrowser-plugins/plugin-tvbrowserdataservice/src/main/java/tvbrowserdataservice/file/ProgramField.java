@@ -71,16 +71,18 @@ public class ProgramField implements Cloneable {
 
     private int mDataFormat;
 
+    private static final float QUALITY_JPEG = 0.7f;
+    
     /**
      * Maximum Size of Images. Images get resized to this
      * size if they exceed the limit
      */
-    private static final int MAX_IMAGE_SIZE_X = 150;
+    private static final int MAX_IMAGE_SIZE_X = 300;
     /**
      * Maximum Size of Images. Images get resized to this
      * size if they exceed the limit
      */
-    private static final int MAX_IMAGE_SIZE_Y = 150;
+    private static final int MAX_IMAGE_SIZE_Y = 300;
 
 
     public ProgramField() {
@@ -194,7 +196,7 @@ public class ProgramField implements Cloneable {
                 JPEGImageWriteParam param = new JPEGImageWriteParam(null);
 
                 param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                param.setCompressionQuality(0.85f);
+                param.setCompressionQuality(QUALITY_JPEG);
 
                 // Write the image
                 writer.write(null, new IIOImage(newImage, null, null), param);
