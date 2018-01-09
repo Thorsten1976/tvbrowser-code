@@ -38,14 +38,13 @@ public class InfoCategoryParser {
     loadProperties(Program.INFO_CATEGORIE_SPORTS, "sports");
     loadProperties(Program.INFO_CATEGORIE_CHILDRENS, "childrens");
     loadProperties(Program.INFO_CATEGORIE_OTHERS, "others");
+    loadProperties(0, "none");
   }
 
   private void loadProperties(int infoCategory, String fileNamePart) {
     Properties properties = new Properties();
     
     File test = new File("category_" + fileNamePart + ".properties");
-    
-    System.out.println(test.getAbsolutePath() + ": " + test.isFile());
     
     InputStream stream = null;
     
