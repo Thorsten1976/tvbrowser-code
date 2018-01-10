@@ -153,7 +153,7 @@ public class ProgramField implements Cloneable {
         BufferedImage image = null;
         try {
             // Read Image
-            image = ImageIO.read(new ByteArrayInputStream(data));
+            image = PictureUtils.loadImageCompatible(new ByteArrayInputStream(data));
 
             int curx = image.getWidth(null);
             int cury = image.getHeight(null);
