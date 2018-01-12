@@ -47,13 +47,14 @@ public class JavaVersion {
   public static final int VERSION_1_6 = 7;
 
   public static final int VERSION_1_7 = 8;
+  
+  public static final int VERSION_1_8 = 9;
 
   /**
    * Returns the Version of Java.
    * @return VERSION_ - Value acording to the Java-Version
    */
   public static int getVersion() {
-
     String[] ver = System.getProperty("java.version").split("\\.");
 
     if (ver.length < 2) {
@@ -84,13 +85,18 @@ public class JavaVersion {
           return VERSION_1_6;
         case 7:
           return VERSION_1_7;
+        case 8:
+          return VERSION_1_8;
         default:
           break;
         }
 
-        if (minor > 7) {
-          return VERSION_1_7;
+        if (minor > 8) {
+          return VERSION_1_8;
         }
+      }
+      else if(major > 1) {
+    	  return major + 1;
       }
 
     } catch (Exception e) {
