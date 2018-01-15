@@ -127,7 +127,7 @@ public class PictureUtils {
           if(target.isFile()) {
             final File targetOut = new File(target.getParentFile(),"_rgb_"+target.getName());
             
-            final ExecutionHandler exec = new ExecutionHandler(new String[]{iMagick.getAbsolutePath(),"-colorspace","rgb","-quality","100",target.getAbsolutePath(),targetOut.getAbsolutePath()}, "/tmp");
+            final ExecutionHandler exec = new ExecutionHandler(new String[]{iMagick.getAbsolutePath(),"-colorspace","srgb","-quality","100",target.getAbsolutePath(),targetOut.getAbsolutePath()}, "/tmp");
             
             try {
               exec.execute();
