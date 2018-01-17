@@ -46,7 +46,7 @@ import devplugin.ProgramFieldType;
  * @since 2.2.2
  */
 public class PictureAreaIcon implements Icon {
-
+  private static final int MAX_PICTURE_HEIGHT = 180;
   private static final int MAX_COLOR_DIFF = 20;
   /**
    * the description text icon will be null, if the string to be shown is empty
@@ -110,6 +110,10 @@ public class PictureAreaIcon implements Icon {
 
       if(width == -1) {
         width = imic.getIconWidth()+6;
+      }
+      
+      if(imic.getIconHeight() > width && !zoom) {
+        imic = (ImageIcon)UiUtilities.scaleIcon(MAX_PICTURE_HEIGHT, imic);
       }
 
       if(imic.getIconWidth() > width-6 || (zoom && imic.getIconWidth() != width)) {

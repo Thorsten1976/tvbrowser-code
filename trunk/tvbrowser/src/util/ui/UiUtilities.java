@@ -817,6 +817,22 @@ public class UiUtilities {
   }
 
   /**
+   * Scale Icons to a specific width. The aspect ratio is kept.
+   *
+   * @param icon
+   *          The icon to scale.
+   * @param newHeight
+   *          The new height of the icon.
+   * @return The scaled Icon.
+   */
+  public static Icon scaleIcon(int newHeight, Icon icon) {
+    if (icon == null) {
+      return null;
+    }
+    return scaleIcon(icon, (int) ((newHeight / (float) icon
+        .getIconHeight()) * icon.getIconWidth()), newHeight);
+  }
+  /**
    * Scales Icons to a specific size
    *
    * @param icon
