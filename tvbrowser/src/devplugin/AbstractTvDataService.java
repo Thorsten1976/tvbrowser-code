@@ -48,7 +48,7 @@ public abstract class AbstractTvDataService {
   /** Contains the mirror urls usable for receiving the groups.txt from. */
   private static final String[] DEFAULT_CHANNEL_GROUPS_MIRRORS = {
     "http://tvbrowser.dyndns.tv",
-    "http://www.gamers-fusion.de/projects/tvbrowser.org/",
+    "http://tvbrowser.qwws.net.ws4me.net",
     "http://tvbrowser1.sam-schwedler.de",
     "http://tvbrowser.nicht-langweilig.de/data"
   };
