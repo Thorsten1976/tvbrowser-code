@@ -1938,7 +1938,7 @@ public class Settings {
   /**
    * maximum width of the program table columns
    */
-  public static final int MAX_COLUMN_WIDTH = 600;
+  public static final int MAX_COLUMN_WIDTH = 2000;
 
   /**
    * minimum width of the program table columns
