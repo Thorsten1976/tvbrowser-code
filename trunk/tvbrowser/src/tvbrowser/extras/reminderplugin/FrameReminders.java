@@ -34,6 +34,7 @@ import devplugin.Program;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
+import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.reminderplugin.PanelReminder.InterfaceClose;
 import util.ui.Localizer;
 import util.ui.ScrollableJPanel;
@@ -556,5 +557,27 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
       requestFocus();
       setAlwaysOnTop(false);
   	});
+  }
+  
+  public synchronized void updatePrograms() {
+    for(int i = mListReminders.getComponentCount()-1; i >= 0; i--) {
+      PanelReminder panel = (PanelReminder)mListReminders.getComponent(i);
+      
+      Program p = panel.getProgram();
+      
+      if(p.getProgramState() == Program.STATE_WAS_UPDATED) {
+        p = PluginManagerImpl.getInstance().getProgram(p.getUniqueID());
+      }
+      else if(p.getProgramState() == Program.STATE_WAS_DELETED) {
+        p = null;
+      }
+      
+      if(p == null) {
+        close(panel, false, false);
+      }
+      else {
+        panel.setProgram(p);
+      }
+    }
   }
 }

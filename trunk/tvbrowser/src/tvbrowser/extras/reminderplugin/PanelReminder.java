@@ -457,4 +457,14 @@ public class PanelReminder extends ScrollableJPanel {
   public boolean containsItem(ReminderListItem item) {
     return mItem.equals(item);
   }
+  
+  public Program getProgram() {
+    return mProgramPanel.getProgram();
+  }
+  
+  public void setProgram(final Program program) {
+    if(program != mProgramPanel.getProgram()) {
+      mProgramPanel.setProgram(program);
+    }
+  }
 }
