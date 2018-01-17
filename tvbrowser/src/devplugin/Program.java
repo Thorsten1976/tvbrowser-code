@@ -35,7 +35,10 @@ import javax.swing.event.ChangeListener;
  * @author Martin Oberhauser
  */
 public interface Program {
-
+  /**
+   * program has no info
+   */
+  public static final int INFO_NONE = 0;
   /**
    * black and white, no color
    */
