@@ -109,5 +109,7 @@ public class ReminderListDialog extends JDialog implements WindowClosingIf {
     if(dlg != null) {
       dlg.mReminderListPanel.updateTableEntries();
     }
+    
+    FrameReminders.getInstance().updatePrograms();
   }
 }
