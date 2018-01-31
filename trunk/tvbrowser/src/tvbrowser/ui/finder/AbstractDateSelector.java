@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import devplugin.Date;
+import tvbrowser.core.ChannelList;
 import tvbrowser.core.TvDataBase;
 import tvbrowser.ui.mainframe.MainFrame;
 
@@ -148,7 +149,7 @@ public abstract class AbstractDateSelector extends JPanel implements
   
   final protected void askForDataUpdate(final Date date) {
     int numberOfDays = date.getNumberOfDaysSince(Date.getCurrentDate());
-    if (numberOfDays >= 0) {
+    if (numberOfDays >= 0 && ChannelList.getSubscribedChannels().length > 0) {
       MainFrame.getInstance().askForDataUpdate(
           mLocalizer.msg("noDataFor", "No TV data available for {0}.", date
               .toString()), numberOfDays);
