@@ -799,21 +799,28 @@ public class TVBrowser {
 		if (System.getProperty(SUN_JAVA_COMMAND) == null) return null;
 		String[] mainCommand = System.getProperty(SUN_JAVA_COMMAND).split(" ");
 		// program main is a jar
-		if (mainCommand[0].endsWith(".jar")) {
+		StringBuilder sb = new StringBuilder(mainCommand[0]);
+		int mainCommandSize;
+		for (mainCommandSize=1; mainCommandSize < mainCommand.length && !mainCommand[mainCommandSize-1].endsWith(".jar"); mainCommandSize++) {
+		  sb.append(' ').append(mainCommand[mainCommandSize]);
+		}
+		String jarFile = sb.toString();
+		if (jarFile.endsWith(".jar")) {
 			// if it's a jar, add -jar mainJar
 			cmd.add("-jar");
-			cmd.add(new File(mainCommand[0]).getPath());
+			cmd.add(new File(jarFile).getPath());
 		} else {
 			// else it's a .class, add the classpath and mainClass
 			if (System.getProperty("java.class.path")==null) return null;
 			cmd.add("-cp");
 			cmd.add(System.getProperty("java.class.path"));
 			cmd.add(mainCommand[0]);
+	    mainCommandSize = 1;
 		}
-		// finally add program arguments
-		for (int i = 1; i < mainCommand.length; i++) {
-			cmd.add(mainCommand[i]);
-		}		
+    for (int i= mainCommandSize; i < mainCommand.length; i++) {
+      cmd.add(mainCommand[i]);
+    }
+		// finally add program arguments		
 		String[] cmdarr = new String[cmd.size()];
 		for(int i=0;i<cmd.size();++i){
 			cmdarr[i] = cmd.get(i);
