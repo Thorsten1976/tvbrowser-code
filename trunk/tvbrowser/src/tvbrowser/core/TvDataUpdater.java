@@ -328,7 +328,8 @@ public class TvDataUpdater {
     if(channelAutoUpdatePeriod > StartupSettingsTab.VALUE_AUTO_CHANNEL_UPDATE_DISABLED) {
       final Date compare = new Date().addDays(-channelAutoUpdatePeriod+1);
       
-      if(Settings.propLastChannelUpdate.getDate() == null || Settings.propLastChannelUpdate.getDate().compareTo(compare) < 0) {
+      if((Settings.propLastChannelUpdate.getDate() == null || Settings.propLastChannelUpdate.getDate().compareTo(compare) < 0)
+          && NetworkUtilities.checkConnection()) {
         final Channel[] currentChannels = ChannelList.getAvailableChannels();
         
         final int currentNetworkTimeout = Settings.propDefaultNetworkConnectionTimeout.getInt();
