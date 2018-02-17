@@ -191,6 +191,7 @@ import util.browserlauncher.Launch;
 import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
 import util.io.IOUtilities;
+import util.io.NetworkUtilities;
 import util.misc.OperatingSystem;
 import util.programkeyevent.ProgramKeyEventHandler;
 import util.settings.ContextMenuMouseActionSetting;
@@ -2456,7 +2457,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
             onDownloadDone();
             newTvDataAvailable(scroll);
 
-            if((Settings.propLastPluginsUpdate.getDate() == null || Settings.propLastPluginsUpdate.getDate().addDays(7).compareTo(Date.getCurrentDate()) <= 0)) {
+            if((Settings.propLastPluginsUpdate.getDate() == null || Settings.propLastPluginsUpdate.getDate().addDays(7).compareTo(Date.getCurrentDate()) <= 0)
+                && NetworkUtilities.checkConnection()) {
               PluginAutoUpdater.searchForPluginUpdates(mStatusBar.getLabel());
             }
           });

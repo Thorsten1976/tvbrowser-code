@@ -1727,12 +1727,14 @@ public class TVBrowser {
       SoftwareUpdateItem[] updateItems = PluginAutoUpdater.getDataServicesForFirstStartup();
       
       if(updateItems.length > 0) {
+        final boolean oldValue = Settings.propPluginBetaWarning.getBoolean();
+        
         Settings.propPluginBetaWarning.setBoolean(false);
         SoftwareUpdateDlg updateDlg = new SoftwareUpdateDlg(UiUtilities.getLastModalChildOf(mainFrame),SoftwareUpdater.ONLY_DATA_SERVICE_TYPE,updateItems,false,null);
         updateDlg.setLocationRelativeTo(null);
         updateDlg.setVisible(true);
         
-        Settings.propPluginBetaWarning.setBoolean(true);
+        Settings.propPluginBetaWarning.setBoolean(oldValue);
         PluginLoader.getInstance().installPendingPlugins();
         PluginLoader.getInstance().loadAllPlugins();
         
