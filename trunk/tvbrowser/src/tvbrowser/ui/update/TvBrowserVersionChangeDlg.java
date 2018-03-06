@@ -35,6 +35,7 @@ import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 
@@ -84,7 +85,7 @@ public class TvBrowserVersionChangeDlg extends JDialog implements WindowClosingI
     CellConstraints cc = new CellConstraints();
     PanelBuilder pb = new PanelBuilder(
         new FormLayout("default:grow,default,default:grow",
-            "default,fill:default:grow,default"),
+            "default,180dlu,default"),
         (JPanel)getContentPane());
     JLabel l = pb.addLabel(mLocalizer.msg("header","TV-Browser was updated from {0} to {1}!",oldTvBrowserVersion,TVBrowser.VERSION), cc.xy(2,1));
     l.setForeground(new Color(200,0,0));
@@ -103,7 +104,12 @@ public class TvBrowserVersionChangeDlg extends JDialog implements WindowClosingI
     pane.setBackground(UIManager.getColor("EditorPane.background"));
     pane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(0,0,1,0,Color.darkGray),Borders.createEmptyBorder("0dlu,10dlu,0dlu,10dlu")));
     
-    pb.add(pane, cc.xyw(1,2,3));
+    JScrollPane scroll = new JScrollPane(pane);
+    scroll.setBackground(pane.getBackground());
+    scroll.getViewport().setBackground(scroll.getBackground());
+    scroll.setBorder(BorderFactory.createEmptyBorder());
+    
+    pb.add(scroll, cc.xyw(1,2,3));
     
     JButton[] buttons = {new JButton(mLocalizer.msg("updatePlugins","Update Plugins now")),
         new JButton(mLocalizer.msg("closeTvBrowser","Close TV-Browser now")),
