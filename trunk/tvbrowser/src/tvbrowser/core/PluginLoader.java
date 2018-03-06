@@ -585,7 +585,7 @@ public class PluginLoader {
         version1 = (Version)getVersion.invoke(pluginClass);
 
         if(pluginClass.getSuperclass().equals(devplugin.AbstractTvDataService.class)) {
-          isBlockedDataService = Settings.propBlockedPluginArray.isBlocked(pluginName.toLowerCase() + "." + pluginName, version1);
+          isBlockedDataService = Settings.propBlockedPluginArray.isBlocked("java." + pluginName.toLowerCase() + "." + pluginName, version1);
         }
       }
 
