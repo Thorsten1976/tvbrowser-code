@@ -1054,7 +1054,7 @@ public class TVBrowser {
             System.exit(-1);
           } catch (AWTException e) {e.printStackTrace();}
           
-        } else if(result == 0) {
+        } else if(result == 0 || (isToggleActive && result == 1)) {
           System.exit(-1);
         }
       });
