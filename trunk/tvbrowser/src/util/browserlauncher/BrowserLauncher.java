@@ -210,7 +210,7 @@ class BrowserLauncher {
         String osName = System.getProperty("os.name");
         if (osName.startsWith("Mac OS")) {
             String javaVersion = System.getProperty("java.version");
-            String majorJavaVersion = javaVersion.substring(0, 3);
+            String majorJavaVersion = javaVersion.substring(0, Math.min(3, javaVersion.length()));
             try {
                 double version = Double.parseDouble(majorJavaVersion);
                 if (version >= 1.4) {
