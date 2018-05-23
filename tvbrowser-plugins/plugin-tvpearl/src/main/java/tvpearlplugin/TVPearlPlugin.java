@@ -64,6 +64,7 @@ import devplugin.ProgramRatingIf;
 import devplugin.ProgramReceiveIf;
 import devplugin.ProgramReceiveTarget;
 import devplugin.SettingsTab;
+import devplugin.TvBrowserSettings;
 import devplugin.Version;
 import util.misc.StringPool;
 import util.paramhandler.ParamParser;
@@ -76,7 +77,7 @@ public final class TVPearlPlugin extends devplugin.Plugin implements Runnable
 {
 
 	private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 27, 1, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 27, 2, PLUGIN_IS_STABLE);
 
   private static final String TARGET_PEARL_COPY = "pearlCopy";
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer
@@ -391,6 +392,12 @@ public final class TVPearlPlugin extends devplugin.Plugin implements Runnable
     // settings are handled in another class, so do not store a reference to the
     // properties parameter!
     mSettings = new TVPearlSettings(prop);
+    
+    if(!mSettings.getUrl().startsWith("http://")) {
+      mSettings.setUrl(mSettings.getUrl().replace("http:", "https:"));
+      saveMe();
+    }
+    
     mTVPearls.setUrl(mSettings.getUrl());
   }
 

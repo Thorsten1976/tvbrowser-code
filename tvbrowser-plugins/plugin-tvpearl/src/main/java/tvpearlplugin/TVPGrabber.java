@@ -51,7 +51,7 @@ public class TVPGrabber
    * regular expression to grab the content of a TV pearl
    */
   private static final Pattern PATTERN_CONTENT = Pattern
-      .compile("<p class=\"author\"><a href=\"([^\"]*)p(([0-9])*?)\">.*?<a href=\"./memberlist.php?[^\"]*\"[^>]*>(.*?)</a></strong> &raquo; </span>(.*?)</p>[\\r\\n\\t ]*?<div class=\"content\">([\\w\\W]*?)</div>");
+      .compile("<p class=\"author\">.*?<a.*?href=\"([^&]*).*?#p(([0-9])*?).*?\">.*?<a href=\"./memberlist.php?[^\"]*\"[^>]*>(.*?)</a></strong> &raquo; </span>(.*?)</p>[\\r\\n\\t ]*?<div class=\"content\">([\\w\\W]*?)</div>", Pattern.DOTALL);
   
   /**
    * getter for content pattern
@@ -65,7 +65,7 @@ public class TVPGrabber
    * regular expression to grab the URL of the next forum page
    */
   private static final Pattern PATTERN_NEXT_URL = Pattern
-      .compile("<a href=\"([^\"]*?)\"[^>]*>N\u00e4chste</a>");
+      .compile("<a.*?href=\"(.*?)\".*?>N\u00e4chste.*?</a>");
 
   /**
    * regular expression to grab post count
@@ -128,6 +128,7 @@ public class TVPGrabber
 				final String webContent = downloadUrl(workingUrl);
 
 				workingUrl = extentUrl(getNextUrl(webContent), url);
+				
 				parseContent(webContent, programList, url);
 			}
 			while (workingUrl.length() > 0 && mRecursiveGrab);
@@ -187,7 +188,7 @@ public class TVPGrabber
     final Matcher matcher = PATTERN_NEXT_URL.matcher(content);
 
 		String resultUrl = "";
-
+		
 		if (matcher.find())
 		{
 			resultUrl = matcher.group(1).trim();
@@ -237,19 +238,20 @@ public class TVPGrabber
 	{
 		//Pattern pattern = Pattern.compile("<td.*?class=\"ro[\\w\\W]*?<b>(.*?)</b>.*?</td>[\\w\\W]*?<a href=\"([^\"]*?)\"><img src=\"templates/subSilver/images/icon_minipost.gif\".*?<span class=\"postdetails\">[^:]*:(.*?)<[\\w\\W]*?<span class=\"postbody\">([\\w\\W]*?)</td>[\\n\\t\\r ]+</tr>[\\n\\t\\r ]+</table>");
     final Matcher matcher = PATTERN_CONTENT.matcher(content);
-
 		while (matcher.find())
 		{
 		  /*for(int i=1;i<=matcher.groupCount();i++){
 		    System.out.println("Group " + i + " = " + matcher.group(i));
 		  }*/
 		  final String author = matcher.group(4).trim();
-		  final String contentUrl = extentUrl(matcher.group(1).trim(), originalUrl);
+		  final String link = matcher.group(1).trim();
+		  
+		  final String contentUrl = extentUrl(link+"#p"+link.substring(link.indexOf("=")+1), originalUrl);
 			final Date createDate = parseDate(matcher.group(5).trim());
 			String itemContent = matcher.group(6);
 			//final String postID = matcher.group(2).trim();
 			//itemContent = itemContent.replaceAll("_+__<br[\\w\\W]+$", "");
-			itemContent = itemContent.replace("\n", "").replace("<br />", "\n").replaceAll("<.*?>", "");
+			itemContent = itemContent.replace("\n", "").replaceAll("<br>", "\n").replaceAll("<.*?>", "");
 
 			if (createDate != null && createDate.after(MIN_CREATION_DATE))
 			{

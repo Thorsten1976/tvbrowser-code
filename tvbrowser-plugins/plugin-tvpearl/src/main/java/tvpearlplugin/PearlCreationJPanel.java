@@ -326,7 +326,7 @@ public class PearlCreationJPanel extends JPanel {
     Charset utf8 = Charset.forName("UTF-8");
     
     try {
-      HttpGet loginForm = new HttpGet("http://hilfe.tvbrowser.org/ucp.php?mode=login");
+      HttpGet loginForm = new HttpGet("https://hilfe.tvbrowser.org/ucp.php?mode=login");
       
       CloseableHttpClient client = HttpClients.createDefault();
      
@@ -380,7 +380,7 @@ public class PearlCreationJPanel extends JPanel {
 
       UrlEncodedFormEntity entity = new UrlEncodedFormEntity(postValues, Consts.UTF_8);
       
-      HttpPost post = new HttpPost("http://hilfe.tvbrowser.org/ucp.php?mode=login&sid=" + SID);
+      HttpPost post = new HttpPost("https://hilfe.tvbrowser.org/ucp.php?mode=login&sid=" + SID);
       post.setEntity(entity);
       
       response = client.execute(post);
@@ -417,7 +417,7 @@ public class PearlCreationJPanel extends JPanel {
         
         response.close();
         
-        HttpGet testPost = new HttpGet("http://hilfe.tvbrowser.org/posting.php?mode=reply&f=27&t=1470");
+        HttpGet testPost = new HttpGet("https://hilfe.tvbrowser.org/posting.php?mode=reply&f=27&t=1470");
         response = client.execute(testPost);
         result = response.getEntity();
         
@@ -490,7 +490,7 @@ public class PearlCreationJPanel extends JPanel {
         
         HttpEntity form = test.build();
         
-        String postURL = "http://hilfe.tvbrowser.org/" + postAction;
+        String postURL = "https://hilfe.tvbrowser.org/" + postAction;
         
         post = new HttpPost(postURL);
         post.setHeader("Referer", postURL);
@@ -555,7 +555,7 @@ public class PearlCreationJPanel extends JPanel {
         response.close();
       }
       
-      HttpGet logout = new HttpGet("http://hilfe.tvbrowser.org/"+logoutLink);
+      HttpGet logout = new HttpGet("https://hilfe.tvbrowser.org/"+logoutLink);
       response = client.execute(logout);
       
       result = response.getEntity();
