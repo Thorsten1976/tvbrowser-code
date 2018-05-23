@@ -43,7 +43,7 @@ public class TVPearlSettings {
   private static final String KEY_FORUM_USER_PASSWORD = "ForumUserPassword";
   private static final String KEY_COMMENT_VALUES = "KEY_COMMENT_VALUES";
   private static final String KEY_COMMENT_SIZE = "KEY_COMMENT_SIZE";
-  private static final String DEFAULT_URL = "http://hilfe.tvbrowser.org/viewtopic.php?t=1470";
+  public static final String DEFAULT_URL = "https://hilfe.tvbrowser.org/viewtopic.php?t=1470";
   
   private final static int SHOW_ALL_PEARLS = 1;
   private final static int SHOW_SUBSCRIBED_CHANNELS = 2;

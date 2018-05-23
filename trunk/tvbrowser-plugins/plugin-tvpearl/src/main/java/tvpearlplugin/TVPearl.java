@@ -61,7 +61,7 @@ public class TVPearl {
   private List<TVPProgram> mProgramList;
   private Calendar mLastUpdate;
   private boolean mReindexAll = true;
-  private static final TVPProgram EXAMPLE_PEARL = new TVPProgram("Me", "http://hilfe.tvbrowser.org", Calendar
+  private static final TVPProgram EXAMPLE_PEARL = new TVPProgram("Me", "https://hilfe.tvbrowser.org", Calendar
       .getInstance(), "Example", "Channel", Calendar.getInstance(), "Info", "ID");
   private HashMap<String, TVPProgram> mRepetitions;
   
