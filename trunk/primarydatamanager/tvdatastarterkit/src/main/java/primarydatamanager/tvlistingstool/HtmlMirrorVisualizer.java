@@ -33,13 +33,13 @@ import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 
+import devplugin.Channel;
+import devplugin.Date;
 import primarydatamanager.mirrorupdater.UpdateException;
 import primarydatamanager.mirrorupdater.data.DataSource;
 import primarydatamanager.mirrorupdater.data.DataTarget;
 import tvbrowserdataservice.file.ChannelList;
 import tvbrowserdataservice.file.SummaryFile;
-import devplugin.Channel;
-import devplugin.Date;
 
 
 
@@ -224,6 +224,7 @@ public class HtmlMirrorVisualizer implements MirrorVisualizer {
   
   protected void footer() {
     mOut.println("</table>");
+    mOut.println("<a style=\"text-align:center;\" href=\"https://www.tvbrowser.org/index.php?id=datenschutzerklaerung\">Datenschutzerkl&auml;rung</a>");
     mOut.println("</body>");
     mOut.println("</html>");
   }
