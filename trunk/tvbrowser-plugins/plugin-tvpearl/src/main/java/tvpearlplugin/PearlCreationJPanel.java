@@ -243,6 +243,8 @@ public class PearlCreationJPanel extends JPanel {
         dialog.dispose();
       }
     });
+
+    dialog.getRootPane().setDefaultButton(send);
     
     CaretListener listener = new CaretListener() {
       @Override
@@ -336,7 +338,7 @@ public class PearlCreationJPanel extends JPanel {
 
       String content = new String(EntityUtils.toString(result).getBytes(utf8),utf8);
       
-      int loginIndex = content.indexOf("id=\"login\"");
+      int loginIndex = content.indexOf("<form action=\"./ucp.php?mode=login");
       
       content = content.substring(loginIndex,content.indexOf("</form>",loginIndex));
       
@@ -400,7 +402,7 @@ public class PearlCreationJPanel extends JPanel {
         
         content = new String(EntityUtils.toString(result).getBytes(utf8),utf8);
         
-        Pattern logout = Pattern.compile("class=\"small-icon icon-logout\"><a href=\"(.*?)\"");
+        Pattern logout = Pattern.compile("<a href=\"(./ucp.php\\?mode=logout.*?)\"");
         m = logout.matcher(content);
         
         m.find();
@@ -527,7 +529,6 @@ public class PearlCreationJPanel extends JPanel {
         result = response.getEntity();
         
         content = new String(EntityUtils.toString(result).getBytes(utf8),utf8);
-        System.out.println(content);
         
         Pattern checkError = Pattern.compile("<p class=\"error\">(.*?)</p>");
         m = checkError.matcher(content);
@@ -536,7 +537,6 @@ public class PearlCreationJPanel extends JPanel {
           answer = new ForenAnswer(false, mLocalizer.msg("noSuccess","TV pearls could not be posted:\n\n'{0}'{1}",HTMLTextHelper.convertHtmlToText(m.group(1)),""));
         }
         else {
-                    
           final Matcher matcher = TVPGrabber.getPatternContent().matcher(content);
 
           while (matcher.find())
