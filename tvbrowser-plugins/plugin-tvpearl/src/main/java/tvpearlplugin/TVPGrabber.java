@@ -51,7 +51,7 @@ public class TVPGrabber
    * regular expression to grab the content of a TV pearl
    */
   private static final Pattern PATTERN_CONTENT = Pattern
-      .compile("<p class=\"author\">.*?<a.*?href=\"([^&]*).*?#p(([0-9])*?).*?\">.*?<a href=\"./memberlist.php?[^\"]*\"[^>]*>(.*?)</a></strong> &raquo; </span>(.*?)</p>[\\r\\n\\t ]*?<div class=\"content\">([\\w\\W]*?)</div>", Pattern.DOTALL);
+      .compile("<p class=\"author\">.*?<a.*?href=\"([^&|#]*).*?#p(([0-9])*?)\".*?>.*?<a href=\"./memberlist.php?[^\"]*\"[^>]*>(.*?)</a></strong> &raquo; </span>(.*?)</p>[\\r\\n\\t ]*?<div class=\"content\">([\\w\\W]*?)</div>", Pattern.DOTALL);
   
   /**
    * getter for content pattern
