@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -91,18 +92,24 @@ public class PictureUtils {
       try {
         result = ImageIO.read(temp);
       }catch(IOException ioe) {
-        toThrow = ioe;
+        toThrow = new IOException("Could not load: " + fileName, ioe);
       }
       
       if(toThrow != null) {
         temp.reset();
         
         if(iMagick.isFile()) {
+          String suffix = ".jpg";
+          
           if(fileName.indexOf("/") != -1) {
             fileName = fileName.substring(fileName.lastIndexOf("/")+1);
           }
           
-          final File target = new File(System.getProperty("java.io.tmpdir","/tmp"),"_"+fileName);
+          if(fileName.indexOf(".") > 0) {
+            suffix = fileName.substring(fileName.lastIndexOf("."));
+          }
+          
+          final File target = new File(System.getProperty("java.io.tmpdir","/tmp"),"_"+UUID.randomUUID()+suffix);
           
           FileOutputStream out = null;
           
