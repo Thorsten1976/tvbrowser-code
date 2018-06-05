@@ -96,6 +96,7 @@ public class TVPearl {
           mLastUpdate = Calendar.getInstance();
 
           final TVPGrabber grabber = new TVPGrabber();
+          
           final List<TVPProgram> programList = grabber.parse(mUrl);
           mUrl = grabber.getLastUrl();
 
