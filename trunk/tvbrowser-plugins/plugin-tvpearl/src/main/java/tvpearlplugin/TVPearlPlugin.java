@@ -77,7 +77,7 @@ public final class TVPearlPlugin extends devplugin.Plugin implements Runnable
 {
 
 	private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 27, 3, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 27, 4, PLUGIN_IS_STABLE);
 
   private static final String TARGET_PEARL_COPY = "pearlCopy";
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer
@@ -393,7 +393,7 @@ public final class TVPearlPlugin extends devplugin.Plugin implements Runnable
     // properties parameter!
     mSettings = new TVPearlSettings(prop);
     
-    if(!mSettings.getUrl().startsWith("http://")) {
+    if(mSettings.getUrl().startsWith("http://")) {
       mSettings.setUrl(mSettings.getUrl().replace("http:", "https:"));
       saveMe();
     }

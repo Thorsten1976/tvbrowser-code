@@ -236,23 +236,17 @@ public class TVPGrabber
 	private void parseContent(final String content,
       final List<TVPProgram> programList, final String originalUrl)
 	{
-		//Pattern pattern = Pattern.compile("<td.*?class=\"ro[\\w\\W]*?<b>(.*?)</b>.*?</td>[\\w\\W]*?<a href=\"([^\"]*?)\"><img src=\"templates/subSilver/images/icon_minipost.gif\".*?<span class=\"postdetails\">[^:]*:(.*?)<[\\w\\W]*?<span class=\"postbody\">([\\w\\W]*?)</td>[\\n\\t\\r ]+</tr>[\\n\\t\\r ]+</table>");
     final Matcher matcher = PATTERN_CONTENT.matcher(content);
 		while (matcher.find())
 		{
-		  /*for(int i=1;i<=matcher.groupCount();i++){
-		    System.out.println("Group " + i + " = " + matcher.group(i));
-		  }*/
 		  final String author = matcher.group(4).trim();
 		  final String link = matcher.group(1).trim();
 		  
 		  final String contentUrl = extentUrl(link+"#p"+link.substring(link.indexOf("=")+1), originalUrl);
 			final Date createDate = parseDate(matcher.group(5).trim());
 			String itemContent = matcher.group(6);
-			//final String postID = matcher.group(2).trim();
-			//itemContent = itemContent.replaceAll("_+__<br[\\w\\W]+$", "");
 			itemContent = itemContent.replace("\n", "").replaceAll("<br>", "\n").replaceAll("<.*?>", "");
-
+	        
 			if (createDate != null && createDate.after(MIN_CREATION_DATE))
 			{
 				parseInfo(itemContent, author, contentUrl, createDate, programList);
@@ -297,9 +291,11 @@ public class TVPGrabber
 
 		for (String line : value.split("\n"))
 		{
+		  
 			boolean isHeader = false;
 
 			final String[] items = line.split("[,|·]");
+			
 			if (items.length == 4)
 			{
 
