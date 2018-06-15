@@ -56,14 +56,14 @@ import util.io.IOUtilities;
  * @author Til Schneider, www.murfman.de
  */
 public class NewsPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,14);
+  private static final Version mVersion = new Version(3,16);
 
   /** The localizer used by this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer
       .getLocalizerFor(NewsPlugin.class);
 
   /** The URL of the news skript. */
-  private static final String NEWS_URL = "http://www.tvbrowser.org/newsplugin/newsplugin-get.php";
+  private static final String NEWS_URL = "http://download.tvbrowser.org/newsplugin/static-news.xml";
 
   /** The maximum age of news. Older news will be removed. */
   private static int MAX_NEWS_AGE = 90;
