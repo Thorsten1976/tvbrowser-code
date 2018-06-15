@@ -67,7 +67,7 @@ public final class SoftwareUpdater {
 	private String mBlockRequestingPluginId;
 	private boolean mIsRequestingBlockArrayClear;
 	
-	public static final String FALLBACK_PLUGINS_GZ_URL = "http://www.tvbrowser.org/scripts/plugins.gz";
+	public static final String FALLBACK_PLUGINS_GZ_URL = "http://download.tvbrowser.org/plugins/plugins.gz";
 
 	 /**
    * Creates an instance of this class.

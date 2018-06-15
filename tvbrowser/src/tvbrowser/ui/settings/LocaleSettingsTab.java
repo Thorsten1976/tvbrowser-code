@@ -354,7 +354,7 @@ public class LocaleSettingsTab implements devplugin.SettingsTab {
      ArrayList<LocaleLink> availableLocales = new ArrayList<LocaleLink>();
       
       try {
-        String siteText = new String(IOUtilities.loadFileFromHttpServer(new URL("http://www.tvbrowser.org/downloads/lang/index.php")));
+        String siteText = new String(IOUtilities.loadFileFromHttpServer(new URL("https://www.tvbrowser.org/downloads/lang/index.php")));
         
         Pattern p = Pattern.compile("<li><a href=\"([^\"]*)\">([^<]*)</a></li>");
         

@@ -43,7 +43,7 @@ public class InfoThemeLoader {
   /** The icon dir of the current user. */
   public static final File USER_ICON_DIR = new File(Settings.getUserDirectoryName(), "infothemes");
   /** The url of the download specs. */
-  public static final String DOWNLOAD_SPEC_URL = "http://www.tvbrowser.org/downloads/infothemes/infothemes.txt";
+  public static final String DOWNLOAD_SPEC_URL = "https://www.tvbrowser.org/downloads/infothemes/infothemes.txt";
   
   private static final FileFilter THEME_FILE_FILTER = new FileFilter() {
     @Override

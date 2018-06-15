@@ -250,6 +250,12 @@ public class FavoritesPlugin {
         }
 
         Runnable update = () -> {
+          Favorite[] favArray = null;
+          
+          if(removedDayProgram != null || addedDayProgram != null) {
+            favArray = FavoriteTreeModel.getInstance().getFavoriteArr();
+          }
+          
           if(removedDayProgram != null) {
             Iterator<Program> it1 = removedDayProgram.getPrograms();
 
@@ -257,7 +263,7 @@ public class FavoritesPlugin {
               try {
                 Program p1 = it1.next();
 
-                for (Favorite fav1 : FavoriteTreeModel.getInstance().getFavoriteArr()) {
+                for (Favorite fav1 : favArray) {
                   fav1.removeProgram(p1);
                 }
               }catch(Throwable t) {
@@ -271,11 +277,11 @@ public class FavoritesPlugin {
             while (it2.hasNext()) {
               final Program p2 = it2.next();
 
-              for (Favorite fav2 : FavoriteTreeModel.getInstance().getFavoriteArr()) {
+              for (Favorite fav2 : favArray) {
                 try {
                   fav2.tryToMatch(p2);
-                } catch (TvBrowserException e) {
-                  ErrorHandler.handle(e);
+                } catch (Throwable t) {
+                  ErrorHandler.handle("Error in searching programs for Favorites",t);
                 }
               }
             }

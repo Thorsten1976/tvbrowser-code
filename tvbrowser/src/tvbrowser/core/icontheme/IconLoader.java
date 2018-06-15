@@ -76,7 +76,7 @@ public class IconLoader {
   /** The icon dir of the current user. */
   public static final File USER_ICON_DIR = new File(Settings.getUserDirectoryName(), "icons");
   /** The url of the download specs. */
-  public static final String DOWNLOAD_SPEC_URL = "http://www.tvbrowser.org/downloads/themes/themes.txt";
+  public static final String DOWNLOAD_SPEC_URL = "https://www.tvbrowser.org/downloads/themes/themes.txt";
   
   /**
    * Private Constructor

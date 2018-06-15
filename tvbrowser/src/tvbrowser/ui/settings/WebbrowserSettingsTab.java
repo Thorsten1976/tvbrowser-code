@@ -81,12 +81,12 @@ public class WebbrowserSettingsTab implements devplugin.SettingsTab {
 
     mSettingsPn.add(DefaultComponentFactory.getInstance().createSeparator(mLocalizer.msg("browser", "Web browser")), cc.xyw(1,1,9));
 
-    JButton testButton = new LinkButton(mLocalizer.msg("testBrowser", "Test Webbrowser"), "http://www.tvbrowser.org", SwingConstants.LEFT, false);
+    JButton testButton = new LinkButton(mLocalizer.msg("testBrowser", "Test Webbrowser"), "https://www.tvbrowser.org", SwingConstants.LEFT, false);
     testButton.addActionListener(e -> {
       String buffer = IOUtilities.translateRelativePath(Settings.propUserDefinedWebbrowser.getString());
       String bufferParams = Settings.propUserDefinedWebbrowserParams.getString();
       saveSettings();
-      Launch.openURL("http://www.tvbrowser.org");
+      Launch.openURL("https://www.tvbrowser.org");
       Settings.propUserDefinedWebbrowser.setString(IOUtilities.checkForRelativePath(buffer));
       Settings.propUserDefinedWebbrowserParams.setString(bufferParams);
     });

@@ -1141,7 +1141,7 @@ public abstract class MenuBar extends JMenuBar implements ActionListener {
 		  
 		  JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("debugCopied", "Debug information copied to clipboard."), Localizer.getLocalization(Localizer.I18N_INFO), JOptionPane.INFORMATION_MESSAGE);
 		} else if(source == mDonateMI) {
-		  Launch.openURL("http://www.tvbrowser.org/index.php?id=donations");
+		  Launch.openURL("https://www.tvbrowser.org/index.php?id=donations");
 		}
 	}
 

@@ -86,7 +86,7 @@ public class PluginInformationDialog extends JDialog implements WindowClosingIf 
     l.setFont(l.getFont().deriveFont(Font.BOLD,20));
     l.setBorder(Borders.createEmptyBorder("10dlu,0dlu,5dlu,0dlu"));
 
-    JEditorPane pane = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("text","<div style=\"font-size:medium;text-align:justify\"><p>TV-Browser can be extended with additional functions (plugins), for instance to control hardware, to load other data sources, to load ratings from IMDb and much more.</p><p>You also can find more plugins <a href=\"http://www.tvbrowser.org/downloads-mainmenu-5/plugins-mainmenu-24.html\">on our website</a>, that are currently not available for download from within TV-Browser, but are mostly already usable.</p><p>Do you want to see the list with the Plugins available through download from TV-Browser?<br>(You also can always open that list over the Plugins menu.)</p></div>"),
+    JEditorPane pane = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("text","<div style=\"font-size:medium;text-align:justify\"><p>TV-Browser can be extended with additional functions (plugins), for instance to control hardware, to load other data sources, to load ratings from IMDb and much more.</p><p>You also can find more plugins <a href=\"https://www.tvbrowser.org/downloads-mainmenu-5/plugins-mainmenu-24.html\">on our website</a>, that are currently not available for download from within TV-Browser, but are mostly already usable.</p><p>Do you want to see the list with the Plugins available through download from TV-Browser?<br>(You also can always open that list over the Plugins menu.)</p></div>"),
         e -> {
           if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
             Launch.openURL(e.getURL().toString());
