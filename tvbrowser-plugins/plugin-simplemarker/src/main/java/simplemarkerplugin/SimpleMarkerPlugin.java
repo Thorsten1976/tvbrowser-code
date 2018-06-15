@@ -94,7 +94,7 @@ import util.ui.WindowClosingIf;
  * @author René Mach
  */
 public class SimpleMarkerPlugin extends Plugin {
-  private static final Version mVersion = new Version(3,26,9,true);
+  private static final Version mVersion = new Version(3,26,10,true);
 
   /** The localizer for this class. */
   private static final util.ui.Localizer mLocalizer = util.ui.Localizer.getLocalizerFor(SimpleMarkerPlugin.class);
@@ -135,6 +135,7 @@ public class SimpleMarkerPlugin extends Plugin {
   public SimpleMarkerPlugin() {
     mInstance = this;
     mActionIdCount = 1;
+    mMarkListVector = new MarkListsVector();
   }
 
   /**
@@ -148,7 +149,6 @@ public class SimpleMarkerPlugin extends Plugin {
 
   public void onActivation() {
     mInfoCounter = 1;
-    mMarkListVector = new MarkListsVector();
     updateTree(true);
     
     /*SwingUtilities.invokeLater(new Runnable() {
@@ -263,7 +263,12 @@ public class SimpleMarkerPlugin extends Plugin {
 
     ActionMenu result = null;
     
-    if (mMarkListVector.size() == 1) {
+    if(mMarkListVector.isEmpty()) {
+      if(isExampleProgram) {
+        result = new ActionMenu(new ContextMenuAction(mLocalizer.msg("mark", "Mark"),createImageIcon("status", "mail-attachment", 16)));
+      }
+    }
+    else if (mMarkListVector.size() == 1) {
       // Create context menu entry
       result = new ActionMenu(mMarkListVector.getListAt(0).getContextMenuAction(program, true));
       
