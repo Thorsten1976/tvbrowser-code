@@ -226,7 +226,7 @@ public final class LookAndFeelSettingsTab implements SettingsTab {
     mPersonaSelection = new JComboBox<>(installedPersonas);
     
     final LinkButton personaDetails = new LinkButton(mLocalizer.msg("personaDetails","Persona details"),
-    "http://www.tvbrowser.org/");
+    "https://www.tvbrowser.org/");
     
     for(PersonaInfo info : installedPersonas) {
       if(Settings.propRandomPersona.getBoolean()) {

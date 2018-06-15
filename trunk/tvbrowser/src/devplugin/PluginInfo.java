@@ -240,7 +240,7 @@ public final class PluginInfo {
         url = plugin.getInfo().getHelpUrl();
       }
       if (url == null) {
-        url = "http://www.tvbrowser.org/showHelpFor.php?id="
+        url = "https://www.tvbrowser.org/showHelpFor.php?id="
           + id + "&lang="
           + Settings.propLanguage.getString();
       }

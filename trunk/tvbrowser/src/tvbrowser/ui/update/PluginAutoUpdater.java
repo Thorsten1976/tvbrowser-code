@@ -47,7 +47,7 @@ public class PluginAutoUpdater {
   /** The name of the updates file. */
   public static final String PLUGIN_UPDATES_FILENAME = "plugins.gz";
   /** The default plugins download url */
-  public static final String DEFAULT_PLUGINS_DOWNLOAD_URL = "http://www.tvbrowser.org/plugins";
+  public static final String DEFAULT_PLUGINS_DOWNLOAD_URL = "http://download.tvbrowser.org/plugins";
   
   /** Contains the mirror urls useable for receiving the groups.txt from. */
   private static final String[] DEFAULT_PLUGINS_UPDATE_MIRRORS = {

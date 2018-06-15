@@ -182,7 +182,7 @@ public final class Persona {
         mTextColor = null;
         mShadowColor = null;
         mAccentColor = null;
-        mDetailURL = "http://www.tvbrowser.org";
+        mDetailURL = "https://www.tvbrowser.org";
       }
       
       synchronized (mPersonaListenerList) {

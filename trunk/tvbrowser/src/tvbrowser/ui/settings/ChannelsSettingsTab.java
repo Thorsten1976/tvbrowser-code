@@ -531,7 +531,7 @@ public class ChannelsSettingsTab implements SettingsTab, ListDropAction<Object> 
           boolean error = false;
           
           try {
-            IOUtilities.download(new URL("http://www.tvbrowser.org/scripts/download-plugin.php?plugin=1381591864575_786"), target);
+            IOUtilities.download(new URL("https://www.tvbrowser.org/scripts/download-plugin.php?plugin=1381591864575_786"), target);
             
             PluginLoader.getInstance().loadPlugin(target, true);
             
