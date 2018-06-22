@@ -69,16 +69,6 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.codec.binary.Base64;
 
-import tvbrowser.extras.reminderplugin.ReminderPlugin;
-import tvdataservice.MarkedProgramsList;
-import util.io.IOUtilities;
-import util.ui.ChannelListCellRenderer;
-import util.ui.DefaultMarkingPrioritySelectionPanel;
-import util.ui.EnhancedPanelBuilder;
-import util.ui.Localizer;
-import util.ui.UiUtilities;
-import util.ui.customizableitems.SelectableItemList;
-
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
@@ -100,6 +90,15 @@ import devplugin.ProgramFilter;
 import devplugin.SettingsTab;
 import devplugin.ThemeIcon;
 import devplugin.Version;
+import tvbrowser.extras.reminderplugin.ReminderPlugin;
+import tvdataservice.MarkedProgramsMap;
+import util.io.IOUtilities;
+import util.ui.ChannelListCellRenderer;
+import util.ui.DefaultMarkingPrioritySelectionPanel;
+import util.ui.EnhancedPanelBuilder;
+import util.ui.Localizer;
+import util.ui.UiUtilities;
+import util.ui.customizableitems.SelectableItemList;
 
 /**
  * Exports and imports channels, markings and reminders to and from Android version of TV-Browser.
@@ -131,7 +130,7 @@ public class AndroidSync extends Plugin {
   private static final String PLUGIN_TYPE = "PLUGIN_TYPE";
   private static final String FILTER_TYPE = "FILTER_TYPE";
   
-  private static final Version mVersion = new Version(0, 25, 0, true);
+  private static final Version mVersion = new Version(0, 25, 1, true);
   private final String CrLf = "\r\n";
   private Properties mProperties;
   
@@ -684,7 +683,7 @@ public class AndroidSync extends Plugin {
     if(address.equals(FAVORITE_SYNC_ADDRESS)) {
       StringBuilder dat = new StringBuilder();
       
-      Program[] programs = MarkedProgramsList.getInstance().getMarkedPrograms();
+      Program[] programs = MarkedProgramsMap.getInstance().getMarkedPrograms();
       
       Date compare = Date.getCurrentDate().addDays(21);
       
@@ -815,7 +814,7 @@ public class AndroidSync extends Plugin {
       return getCompressedData(channels.toString().getBytes());
     }
     else if(address.equals(REMINDER_UP_SYNC_ADDRESS)) {
-      Program[] programs = MarkedProgramsList.getInstance().getMarkedPrograms();
+      Program[] programs = MarkedProgramsMap.getInstance().getMarkedPrograms();
       
       Date compare = Date.getCurrentDate().addDays(21);
       
@@ -1451,7 +1450,7 @@ public class AndroidSync extends Plugin {
       pb.add(mBicycle, CC.xy(4, pb.getRowCount()));
       
       if(showCreationLink) {
-        JEditorPane linkToWeb = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("createUserData", "<html>Create new user account: <a href=\"http://android.tvbrowser.org/index.php?id=createaccount\">http://android.tvbrowser.org/index.php?id=createaccount</a></html>"));
+        JEditorPane linkToWeb = UiUtilities.createHtmlHelpTextArea(mLocalizer.msg("createUserData", "<html>Create new user account: <a href=\"https://www.tvbrowser-app.de/index.php?id=createaccount\">https://www.tvbrowser-app.de/index.php?id=createaccount</a></html>"));
         
         pb.addRow("3dlu",false);
         pb.addRow(false);
