@@ -1059,7 +1059,7 @@ public class ProgramTextCreator {
           }
         }
       }
-
+/*
       if (fieldType == ProgramFieldType.ORIGIN_TYPE && prog.getTextField(fieldType) != null) {
         String temp = prog
             .getIntFieldAsString(ProgramFieldType.PRODUCTION_YEAR_TYPE);
@@ -1084,7 +1084,7 @@ public class ProgramTextCreator {
             text += " - " + temp;
           }
         }
-      }
+      }*/
 
       if (text == null || text.trim().length() < 1) {
         if (ProgramFieldType.CUSTOM_TYPE == fieldType) {
@@ -1196,13 +1196,18 @@ public class ProgramTextCreator {
     
     if (section.length() > 21 && section.indexOf("<br") == -1) {
       //try to split long names
-      int space = section.lastIndexOf(' ');
+      int space = section.lastIndexOf(" ");
+      int slash = section.lastIndexOf("/")+1;
+      
       if (space > 1 && space < section.length()-2) {
-        //if (space != section.indexOf(' ')) {
-          //TODO      
-        //}
         buffer.append(section.substring(0, space)).append("<br>").append(section.substring(space+1));
-      }      
+      }
+      else if (slash > 1 && slash < section.length()-2) {
+        buffer.append(section.substring(0, slash)).append("<br>").append(section.substring(slash));
+      } 
+      else {
+        buffer.append(section);
+      }
     } else {
       buffer.append(section);
     }
@@ -1240,6 +1245,7 @@ public class ProgramTextCreator {
         ProgramFieldType.DESCRIPTION_TYPE,
         ProgramFieldType.ADDITIONAL_INFORMATION_TYPE,
         ProgramFieldType.RATING_TYPE,
+        CompoundedProgramFieldType.COMPOSITION_ORIGIN_YEAR,
         ProgramFieldType.ORIGIN_TYPE,
         ProgramFieldType.DIRECTOR_TYPE,
         ProgramFieldType.SCRIPT_TYPE,

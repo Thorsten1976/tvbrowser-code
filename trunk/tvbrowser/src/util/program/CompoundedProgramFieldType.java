@@ -36,11 +36,89 @@ public class CompoundedProgramFieldType {
   /** The compounded field type for the episode formating */
   public static final CompoundedProgramFieldType EPISODE_COMPOSITION =
     new CompoundedProgramFieldType(-1, new ProgramFieldType[] {ProgramFieldType.EPISODE_NUMBER_TYPE,ProgramFieldType.EPISODE_TOTAL_NUMBER_TYPE,ProgramFieldType.SEASON_NUMBER_TYPE,ProgramFieldType.EPISODE_TYPE}, ProgramFieldType.EPISODE_TYPE.getLocalizedName(), new String[] {"/"," - ",", "});
+  public static final CompoundedProgramFieldType COMPOSITION_ORIGIN_YEAR =
+      new CompoundedProgramFieldType(-2, null, ProgramFieldType.ORIGIN_TYPE.getLocalizedName() + "/" + ProgramFieldType.PRODUCTION_YEAR_TYPE.getLocalizedName(), new Formatter() {
+        @Override
+        public String getFormattedValueForProgram(ProgramFieldType[] fieldTypes, Program prog) {
+          String origin = prog.getTextField(ProgramFieldType.ORIGIN_TYPE);
+          int year = prog.getIntField(ProgramFieldType.PRODUCTION_YEAR_TYPE);
+          int yearFirst = prog.getIntField(ProgramFieldType.FIRST_PRODUCTION_YEAR);
+          int yearLast = prog.getIntField(ProgramFieldType.LAST_PRODUCTION_YEAR_TYPE);
+          
+          if(year != -1 && yearLast != -1 && yearFirst == -1) {
+            yearFirst = year;
+          }
+          
+          final StringBuilder result = new StringBuilder();
+          
+          int originIndex = 0;
+          
+          if(origin != null) {
+            result.append(origin);
+            originIndex = result.length();
+          }
+          
+          if(year != -1) {
+            if(result.length() >= 0) {
+              result.append(" ");
+            }
+            
+            result.append(year);
+          }
+          
+          if(yearLast != -1) {
+            if(yearFirst != -1) {
+              if(result.length() >= 0) {
+                if(yearFirst == year) {
+                  result.append(" - ");
+                }
+                else {
+                  result.append(" (");
+                }
+              }
+              
+              if(yearFirst == year) {
+                result.append(yearLast);
+              }
+              else {
+                result.append(yearFirst).append(" - ").append(yearLast).append(")");
+              }
+            }
+            else {
+              result.append(yearLast);
+            }
+          }
+          else if(yearFirst != -1 && yearFirst != year) {
+            if(yearFirst < year) {
+              result.insert(originIndex, " - ");
+              result.insert(originIndex, yearFirst);
+              
+              if(originIndex != 0) {
+                result.insert(originIndex, " ");
+              }
+            }
+            else if(year == -1) {
+              if(originIndex > 0) {
+                result.append(" ");
+              }
+              
+              result.append(yearFirst);
+            }
+          }
+          
+          if(!result.toString().trim().isEmpty()) {
+            return result.toString();
+          }
+          
+          return null;
+        }
+      });
   
   private int mId;
   private ProgramFieldType[] mFieldTypes;
   private String mName;
   private String mFormatString;
+  private Formatter mFormatter;
   
   private String[] mPartSeparators;
   
@@ -78,6 +156,25 @@ public class CompoundedProgramFieldType {
     mName = name;
     mFormatString = null;
     mPartSeparators = partSeparators;
+  }
+  
+
+  /**
+   * Creates an instance of this extra type.
+   * 
+   * @param id The id of the compounded field type. (has to be a negative value!)
+   * @param fieldTypes The field type that this type contains.
+   * @param name The name for this field type, or <code>null</code> if
+   * the name of the first entry in the field type array should be used.
+   * @param formatter The formatter for the program fields.
+   */
+  private CompoundedProgramFieldType(int id, ProgramFieldType[] fieldTypes, String name, Formatter formatter) {
+    mId = id;
+    mFieldTypes = fieldTypes;
+    mName = name;
+    mFormatString = null;
+    mPartSeparators = null;
+    mFormatter = formatter;
   }
   
   /**
@@ -164,6 +261,9 @@ public class CompoundedProgramFieldType {
         return value.toString();
       }
     }
+    else if(mFormatter != null) {
+      return mFormatter.getFormattedValueForProgram(mFieldTypes, prog);
+    }
     
     return null;
   }
@@ -206,7 +306,14 @@ public class CompoundedProgramFieldType {
     if(id == EPISODE_COMPOSITION.getId()) {
       return EPISODE_COMPOSITION;
     }
+    else if(id == COMPOSITION_ORIGIN_YEAR.getId()) {
+      return COMPOSITION_ORIGIN_YEAR;
+    }
     
     return null;
+  }
+  
+  private static interface Formatter {
+    public String getFormattedValueForProgram(final ProgramFieldType[] fieldTypes, final Program prog);
   }
 }
