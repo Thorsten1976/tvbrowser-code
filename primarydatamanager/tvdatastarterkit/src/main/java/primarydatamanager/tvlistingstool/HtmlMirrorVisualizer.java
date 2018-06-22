@@ -224,7 +224,7 @@ public class HtmlMirrorVisualizer implements MirrorVisualizer {
   
   protected void footer() {
     mOut.println("</table>");
-    mOut.println("<a style=\"text-align:center;\" href=\"https://www.tvbrowser.org/index.php?id=datenschutzerklaerung\">Datenschutzerkl&auml;rung</a>");
+    mOut.println("<a style=\"text-align:center;\" href=\"https://www.tvbrowser.org/index.php?id=datenschutzerklaerung\">Datenschutzerkl&auml;rung</a> <a style=\"text-align:center;\" href=\"https://www.tvbrowser.org/index.php?id=impressum\">Impressum</a>");
     mOut.println("</body>");
     mOut.println("</html>");
   }
