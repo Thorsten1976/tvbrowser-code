@@ -130,7 +130,7 @@ public class AndroidSync extends Plugin {
   private static final String PLUGIN_TYPE = "PLUGIN_TYPE";
   private static final String FILTER_TYPE = "FILTER_TYPE";
   
-  private static final Version mVersion = new Version(0, 25, 1, true);
+  private static final Version mVersion = new Version(0, 25, 2, true);
   private final String CrLf = "\r\n";
   private Properties mProperties;
   
@@ -187,8 +187,16 @@ public class AndroidSync extends Plugin {
   
   @Override
   public void handleTvBrowserStartFinished() {
+    openCredentialsDialog(false);
+  }
+  
+  private boolean hasCredentials() {
+    return (mProperties.getProperty(KEY_CAR,"").trim().length() > 0 && mProperties.getProperty(KEY_BICYCLE,"").trim().length() > 0);
+  }
+  
+  private void openCredentialsDialog(final boolean ignoreShown) {
     if(!hasCredentials()) {
-      if(mProperties.getProperty(KEY_SHOWN_DIALOG_CREDENTIALS, "false").equals("false")) {
+      if(ignoreShown || mProperties.getProperty(KEY_SHOWN_DIALOG_CREDENTIALS, "false").equals("false")) {
         String[] options = {
             mLocalizer.msg("enterNow", "Save user data"),
             Localizer.getLocalization(Localizer.I18N_CANCEL)
@@ -214,10 +222,6 @@ public class AndroidSync extends Plugin {
     else {
       updateChannels();
     }
-  }
-  
-  private boolean hasCredentials() {
-    return (mProperties.getProperty(KEY_CAR,"").trim().length() > 0 && mProperties.getProperty(KEY_BICYCLE,"").trim().length() > 0);
   }
   
   private void updateChannels() {
@@ -1406,7 +1410,17 @@ public class AndroidSync extends Plugin {
       SSLTool.resetCertificateValidation();
     }
     else {
-      JOptionPane.showMessageDialog(getParentFrame(), mLocalizer.msg("setupFirst", "You have to enter user name and password first."), mLocalizer.msg("noUser", "No user name and/or password"), JOptionPane.ERROR_MESSAGE);
+      final UserPanel userPanel = new UserPanel(car, bicycle, false);
+      
+      Object[] message = new Object[] {mLocalizer.msg("userDataInfo", "To use the synchronization, you must enter your user data first.\n"),userPanel};
+      
+      if(JOptionPane.showConfirmDialog(UiUtilities.getLastModalChildOf(getParentFrame()), message, mLocalizer.msg("noUserData", "AndroidSync: User data missing"), JOptionPane.OK_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.OK_OPTION) {
+        car = userPanel.getCar();
+        bicycle = userPanel.getBicycle();
+        
+        mProperties.setProperty(KEY_CAR, car);
+        mProperties.setProperty(KEY_BICYCLE, bicycle);
+      }
     }
   }
   
