@@ -45,7 +45,11 @@ public class CompoundedProgramFieldType {
           int yearFirst = prog.getIntField(ProgramFieldType.FIRST_PRODUCTION_YEAR);
           int yearLast = prog.getIntField(ProgramFieldType.LAST_PRODUCTION_YEAR_TYPE);
           
-          if(year != -1 && yearLast != -1 && yearFirst == -1) {
+          if(yearLast < year) {
+            yearLast = -1;
+          }
+          
+          if(year != -1 && ((yearLast != -1 && yearFirst == -1) || (yearLast == -1 && yearFirst < year && yearFirst != -1))) {
             yearFirst = year;
           }
           
@@ -66,11 +70,11 @@ public class CompoundedProgramFieldType {
             result.append(year);
           }
           
-          if(yearLast != -1) {
+          if(yearLast != -1 && yearLast != year) {
             if(yearFirst != -1) {
               if(result.length() >= 0) {
                 if(yearFirst == year) {
-                  result.append(" - ");
+                  result.append(" \u2013 ");
                 }
                 else {
                   result.append(" (");
@@ -81,7 +85,7 @@ public class CompoundedProgramFieldType {
                 result.append(yearLast);
               }
               else {
-                result.append(yearFirst).append(" - ").append(yearLast).append(")");
+                result.append(yearFirst).append(" \u2013 ").append(yearLast).append(")");
               }
             }
             else {
@@ -90,7 +94,7 @@ public class CompoundedProgramFieldType {
           }
           else if(yearFirst != -1 && yearFirst != year) {
             if(yearFirst < year) {
-              result.insert(originIndex, " - ");
+              result.insert(originIndex, " \u2013 ");
               result.insert(originIndex, yearFirst);
               
               if(originIndex != 0) {
