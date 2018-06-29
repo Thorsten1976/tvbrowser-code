@@ -670,6 +670,7 @@ public class MarkList extends Vector<Program> {
 	
     if(p != null) {
       if (isEmpty()) {
+        result = true;
         super.addElement(p);
         result = true;
       } else {
