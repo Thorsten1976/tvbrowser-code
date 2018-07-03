@@ -55,7 +55,17 @@ public class JavaVersion {
    * @return VERSION_ - Value acording to the Java-Version
    */
   public static int getVersion() {
-    String[] ver = System.getProperty("java.version").split("\\.");
+    String version = System.getProperty("java.version").trim();
+    
+    if(version.contains("-")) {
+      version = version.substring(0, version.indexOf("-")).trim();      
+    }
+    
+    if(version.length() == 1) {
+      version += ".0";
+    }
+    
+    String[] ver = version.split("\\.");
 
     if (ver.length < 2) {
       return -1;
