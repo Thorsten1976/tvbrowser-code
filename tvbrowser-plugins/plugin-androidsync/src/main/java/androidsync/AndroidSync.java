@@ -125,12 +125,13 @@ public class AndroidSync extends Plugin {
   private static final String SELECTED_INTERNAL_PLUGINS = "SELECTED_INTERNAL_PLUGINS";
   private static final String SELECTED_FILTER = "SELECTED_FILTER";
   private static final String SYNCHRONIZE_REMINDER = "SYNCHRONIZE_REMINDER";
+  private static final String SYNCHRONIZE_HIGHLIGHTED = "SYNCHRONIZE_HIGHLIGHTED";
   private static final String TYPE = "TYPE";
   
   private static final String PLUGIN_TYPE = "PLUGIN_TYPE";
   private static final String FILTER_TYPE = "FILTER_TYPE";
   
-  private static final Version mVersion = new Version(0, 25, 2, true);
+  private static final Version mVersion = new Version(0, 26, 0, true);
   private final String CrLf = "\r\n";
   private Properties mProperties;
   
@@ -269,7 +270,7 @@ public class AndroidSync extends Plugin {
       public void actionPerformed(ActionEvent e) {
         new Thread() {
           public void run() {
-            upload(FAVORITE_SYNC_ADDRESS,true);
+            updateFavorites(true);
           }
         }.start();
       }
@@ -346,7 +347,7 @@ public class AndroidSync extends Plugin {
       Date lastUpload = new Date(Short.parseShort(parts[0]), Short.parseShort(parts[1]), Short.parseShort(parts[2]));
       
       if(lastUpload.compareTo(Date.getCurrentDate()) < 0) {
-        upload(FAVORITE_SYNC_ADDRESS,false);
+        updateFavorites(false);
         Date today = Date.getCurrentDate();
         mProperties.setProperty(LAST_UPLOAD, today.getYear() + "-" + today.getMonth() + "-" + today.getDayOfMonth());
         
@@ -359,6 +360,12 @@ public class AndroidSync extends Plugin {
       }
       
       updateChannels();
+    }
+  }
+  
+  private void updateFavorites(final boolean info) {
+    if(info || mProperties.getProperty(SYNCHRONIZE_HIGHLIGHTED, "true").equals("true")) {
+      upload(FAVORITE_SYNC_ADDRESS,info);
     }
   }
   
@@ -375,6 +382,7 @@ public class AndroidSync extends Plugin {
       private JRadioButton mFilterType;
       private JComboBox mFilterSelection;
       private DefaultMarkingPrioritySelectionPanel mMarkingsPanel;
+      private JCheckBox mSynchroHighlighted;
       private JCheckBox mSynchroReminders;
       private UserPanel mUserPanel;
       
@@ -418,6 +426,7 @@ public class AndroidSync extends Plugin {
         mProperties.setProperty(SELECTED_INTERNAL_PLUGINS, internal.toString());
         mProperties.setProperty(SELECTED_PLUGINS, plugins.toString());
         mProperties.setProperty(SYNCHRONIZE_REMINDER,String.valueOf(mSynchroReminders.isSelected()));
+        mProperties.setProperty(SYNCHRONIZE_HIGHLIGHTED,String.valueOf(mSynchroHighlighted.isSelected()));
         
         mProperties.setProperty(SELECTED_FILTER, ((ProgramFilter)mFilterSelection.getSelectedItem()).getName());
         
@@ -463,7 +472,7 @@ public class AndroidSync extends Plugin {
       @Override
       public JPanel createSettingsPanel() {
         PanelBuilder pb = new PanelBuilder(new FormLayout("5dlu,10dlu,50dlu,3dlu,default:grow",
-            "default,10dlu,default,5dlu,default,5dlu,default,default,3dlu,default,default,default,fill:10dlu:grow,default"));
+            "default,10dlu,default,5dlu,default,default,5dlu,default,default,3dlu,default,default,default,fill:10dlu:grow,default"));
         
         pb.border(Borders.createEmptyBorder("5dlu,0dlu,0dlu,0dlu"));
         
@@ -511,6 +520,7 @@ public class AndroidSync extends Plugin {
         }
         
         mSynchroReminders = new JCheckBox(mLocalizer.msg("synchronizeReminder", "Synchronize Reminder automatically"), mProperties.getProperty(SYNCHRONIZE_REMINDER,"true").equals("true"));
+        mSynchroHighlighted = new JCheckBox(mLocalizer.msg("synchronizeHighlighted", "Synchronize highlighted programs automatically"), mProperties.getProperty(SYNCHRONIZE_HIGHLIGHTED,"true").equals("true"));
         mPluginType = new JRadioButton(mLocalizer.msg("pluginType","Hightlighted programs of Plugins"));
         mFilterType = new JRadioButton(mLocalizer.msg("filterType","Accepted programs of Filter"));
         
@@ -535,16 +545,16 @@ public class AndroidSync extends Plugin {
         pb.add(mUserPanel = new UserPanel(mProperties.getProperty(KEY_CAR,""), mProperties.getProperty(KEY_BICYCLE,""), true), CC.xyw(2, 1, 4));
         
         pb.addSeparator(mLocalizer.msg("exportPlugins", "Export programs of"), CC.xyw(1, 3, 5));
-        
         pb.add(mSynchroReminders, CC.xyw(2, 5, 4));
-        pb.add(mPluginType, CC.xyw(2, 7, 4));
-        pb.add(mPluginSelection, CC.xyw(3, 8, 3));
-        pb.add(mFilterType, CC.xyw(2, 10, 4));
-        pb.add(mFilterSelection, CC.xyw(3, 11, 3));
+        pb.add(mSynchroHighlighted, CC.xyw(2, 6, 4));
+        pb.add(mPluginType, CC.xyw(2, 8, 4));
+        pb.add(mPluginSelection, CC.xyw(3, 9, 3));
+        pb.add(mFilterType, CC.xyw(2, 11, 4));
+        pb.add(mFilterSelection, CC.xyw(3, 12, 3));
         
-        pb.add(mMarkingsPanel, CC.xyw(2, 12, 4));
+        pb.add(mMarkingsPanel, CC.xyw(2, 13, 4));
         
-        pb.add(UiUtilities.createHtmlHelpTextArea("The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License."), CC.xyw(2, 14, 4));
+        pb.add(UiUtilities.createHtmlHelpTextArea("The Android robot is reproduced or modified from work created and shared by Google and used according to terms described in the Creative Commons 3.0 Attribution License."), CC.xyw(2, 15, 4));
         
         
         return pb.getPanel();
