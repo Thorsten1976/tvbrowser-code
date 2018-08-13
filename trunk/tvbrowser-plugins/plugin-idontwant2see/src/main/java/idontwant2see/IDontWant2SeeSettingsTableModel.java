@@ -24,6 +24,8 @@
 package idontwant2see;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
@@ -36,14 +38,20 @@ import devplugin.Date;
  * @author René Mach
  */
 public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
+  public static final int TYPE_SORT_ALPHABETICALLY = 1;
+  public static final int TYPE_SORT_OUTDATED = 2;
+  
+  private ArrayList<IDontWant2SeeSettingsTableEntry> mDataFull = new ArrayList<IDontWant2SeeSettingsTableEntry>();
   private ArrayList<IDontWant2SeeSettingsTableEntry> mData = new ArrayList<IDontWant2SeeSettingsTableEntry>();
+  
   private String mLastChangedValue;
   private JTable mTable;
+
+  private String mFilter;
   
-  protected IDontWant2SeeSettingsTableModel(
-      final ArrayList<IDontWant2SeeListEntry> entries,
-      final String lastEnteredExclusionString) {
+  protected IDontWant2SeeSettingsTableModel(final ArrayList<IDontWant2SeeListEntry> entries, final String lastEnteredExclusionString) {
     mLastChangedValue = lastEnteredExclusionString;
+    mFilter = "";
     
     for(IDontWant2SeeListEntry entry : entries) {
       int index = mData.size();
@@ -57,7 +65,10 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
         }
       }
       
-      mData.add(index,new IDontWant2SeeSettingsTableEntry(entry));
+      final IDontWant2SeeSettingsTableEntry tableEntry = new IDontWant2SeeSettingsTableEntry(entry);
+      
+      mData.add(index, tableEntry);
+      mDataFull.add(index, tableEntry);
     }
   }
   
@@ -78,6 +89,8 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
    */
   public void addRow() {
     mData.add(new IDontWant2SeeSettingsTableEntry(new IDontWant2SeeListEntry("DUMMY-ENTRY",true)));
+    mDataFull.add(mData.get(mData.size()-1));
+    
     fireTableRowsInserted(mData.size()-1,mData.size()-1);
   }
   
@@ -107,7 +120,8 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
    * @param row
    */
   public void deleteRow(final int row) {
-    mData.remove(row);
+    mDataFull.remove(mData.remove(row));
+    
     fireTableRowsDeleted(row,row);
   }
 
@@ -149,7 +163,7 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
   protected ArrayList<IDontWant2SeeListEntry> getChangedList() {
     final ArrayList<IDontWant2SeeListEntry> newList = new ArrayList<IDontWant2SeeListEntry>();
     
-    for(IDontWant2SeeSettingsTableEntry entry : mData) {
+    for(IDontWant2SeeSettingsTableEntry entry : mDataFull) {
       if(entry.isValid()) {
         newList.add(entry.doChanges());
       }
@@ -162,10 +176,77 @@ public class IDontWant2SeeSettingsTableModel extends AbstractTableModel {
     return mLastChangedValue;
   }
   
+  protected int filter(final String filter) {
+    final boolean wasEmpty = mFilter.trim().isEmpty(); 
+    
+    mFilter = filter;
+    int row = updateTable();
+    
+    if(wasEmpty) {
+      row = -1;
+    }
+    
+    return row;
+  }
+  
+  protected int sort(final int type) {
+    mData.clear();
+    
+    switch (type) {
+      case TYPE_SORT_ALPHABETICALLY: Collections.sort(mDataFull);break;
+      case TYPE_SORT_OUTDATED: Collections.sort(mDataFull,IDontWant2SeeSettingsTableEntry.COMPARATOR_OUTDATED);break;
+    }
+    
+    return updateTable();
+  }
+  
+  private int updateTable() {
+    int result = -1;
+    
+    mData.clear();
+    
+    for(IDontWant2SeeSettingsTableEntry entry : mDataFull) {
+      if(mFilter.isEmpty() || entry.mNewSearchText.toLowerCase().replace("*", "").contains(mFilter)) {
+        mData.add(entry);
+        
+        if(result == -1 && entry.isLastChanged(mLastChangedValue)) {
+          result = mData.size()-1;
+        }
+      }
+    }
+    
+    fireTableDataChanged();
+    
+    return result;
+  }
+  
   /**
    * The table entry class.
    */
   protected static class IDontWant2SeeSettingsTableEntry implements Comparable<Object> {
+    private static final Comparator<IDontWant2SeeSettingsTableEntry> COMPARATOR_OUTDATED = new Comparator<IDontWant2SeeSettingsTableModel.IDontWant2SeeSettingsTableEntry>() {
+      @Override
+      public int compare(IDontWant2SeeSettingsTableEntry o1, IDontWant2SeeSettingsTableEntry o2) {
+        int result = 0;
+        
+        if(o1.mLastMatchedDate == null && o2.mLastMatchedDate != null) {
+          result = -1;
+        }
+        else if(o2.mLastMatchedDate == null && o1.mLastMatchedDate != null) {
+          result = 1;
+        }
+        else if(o1.mLastMatchedDate != null && o2.mLastMatchedDate != null) {
+          result = o1.mLastMatchedDate.compareTo(o2.mLastMatchedDate);
+        }
+        
+        if(result == 0) {
+          result = o1.compareTo(o2);
+        }
+        
+        return result;
+      }
+    };
+    
     private IDontWant2SeeListEntry mListEntry;
     
     private boolean mWasChanged;

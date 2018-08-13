@@ -47,27 +47,30 @@ public class IDontWant2SeeSettingsTableRenderer extends
     DefaultTableCellRenderer {
   protected final static Color NOT_VALID_COLOR = new Color(220,0,0,60);
   protected final static Color LAST_CHANGED_COLOR = new Color(72,116,241,100);
-  protected final static Color LAST_USAGE_7_COLOR = new Color(255,255,0,60);
-  protected final static Color LAST_USAGE_30_COLOR = new Color(255,176,39,80);
-  protected final static short OUTDATED_7_DAY_COUNT = 7;
-  protected final static short OUTDATED_30_DAY_COUNT = 30;
-  
+  protected final static Color LAST_USAGE_FIRST_COLOR = new Color(255,255,0,60);
+  protected final static Color LAST_USAGE_SECOND_COLOR = new Color(255,176,39,80);
   transient private Date mLastUsedDate;
   
-  protected IDontWant2SeeSettingsTableRenderer(final Date lastUsedDate) {
+  private final IDontWant2SeeSettings mSettings;
+  
+  protected IDontWant2SeeSettingsTableRenderer(final Date lastUsedDate, final IDontWant2SeeSettings settings) {
     mLastUsedDate = lastUsedDate;
+    mSettings = settings;
   }
   
   public Component getTableCellRendererComponent(final JTable table,
       final Object value, final boolean isSelected, final boolean hasFocus,
       final int row, final int column) {
     if(value != null) {
+      final int first = mSettings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST);
+      final int second = mSettings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND);
+      
       if(column == 0) {
         final JPanel background = new JPanel(new FormLayout("fill:0dlu:grow",
             "fill:default:grow")) {
           protected void paintComponent(Graphics g) {
             if(getBackground().equals(NOT_VALID_COLOR) || getBackground().equals(LAST_CHANGED_COLOR) ||
-                getBackground().equals(LAST_USAGE_7_COLOR) || getBackground().equals(LAST_USAGE_30_COLOR)) {
+                getBackground().equals(LAST_USAGE_FIRST_COLOR) || getBackground().equals(LAST_USAGE_SECOND_COLOR)) {
               g.setColor(Color.white);
               g.fillRect(0, 0, getWidth(), getHeight());
             }
@@ -88,12 +91,13 @@ public class IDontWant2SeeSettingsTableRenderer extends
           background.setBackground(LAST_CHANGED_COLOR);
           label.setForeground(Color.black);
         }
-        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,OUTDATED_30_DAY_COUNT) && !isSelected) {
-          background.setBackground(LAST_USAGE_30_COLOR);
+        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,first) && !isSelected &&
+            (first > second || !((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,second))) {
+          background.setBackground(LAST_USAGE_FIRST_COLOR);
           label.setForeground(Color.black);
         }
-        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,OUTDATED_7_DAY_COUNT) && !isSelected) {
-          background.setBackground(LAST_USAGE_7_COLOR);
+        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,second) && !isSelected) {
+          background.setBackground(LAST_USAGE_SECOND_COLOR);
           label.setForeground(Color.black);
         }
         else if(!isSelected) {
@@ -114,7 +118,7 @@ public class IDontWant2SeeSettingsTableRenderer extends
             "0dlu:grow,default,0dlu:grow", "0dlu:grow,default,0dlu:grow")){
           protected void paintComponent(Graphics g) {
             if(getBackground().equals(NOT_VALID_COLOR) || getBackground().equals(LAST_CHANGED_COLOR) ||
-                getBackground().equals(LAST_USAGE_7_COLOR) || getBackground().equals(LAST_USAGE_30_COLOR)) {
+                getBackground().equals(LAST_USAGE_FIRST_COLOR) || getBackground().equals(LAST_USAGE_SECOND_COLOR)) {
               g.setColor(Color.white);
               g.fillRect(0, 0, getWidth(), getHeight());
             }
@@ -144,11 +148,12 @@ public class IDontWant2SeeSettingsTableRenderer extends
         else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isLastChangedRow(row) && !isSelected) {
           background.setBackground(LAST_CHANGED_COLOR);
         }
-        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,OUTDATED_30_DAY_COUNT) && !isSelected) {
-          background.setBackground(LAST_USAGE_30_COLOR);
+        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,first) && !isSelected &&
+            (!((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,second) || first > second)) {
+          background.setBackground(LAST_USAGE_FIRST_COLOR);
         }
-        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,OUTDATED_7_DAY_COUNT) && !isSelected) {
-          background.setBackground(LAST_USAGE_7_COLOR);
+        else if(((IDontWant2SeeSettingsTableModel)table.getModel()).isRowOutdated(row,mLastUsedDate,second) && !isSelected) {
+          background.setBackground(LAST_USAGE_SECOND_COLOR);
         }
         
         background.add(checkBox, new CellConstraints().xy(2,2));

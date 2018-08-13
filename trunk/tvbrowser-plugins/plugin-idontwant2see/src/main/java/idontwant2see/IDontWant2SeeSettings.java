@@ -33,7 +33,9 @@ import devplugin.Program;
  *
  */
 public class IDontWant2SeeSettings {
-
+  protected final static short OUTDATED_DAY_COUNT_DEFAULT_FIRST = 7;
+  protected final static short OUTDATED_DAY_COUNT_DEFAULT_SECOND = 30;
+  
   private boolean mSimpleMenu = true;
   private boolean mSwitchToMyFilter = true;
   private boolean mDefaultCaseSensitive = true;
@@ -44,10 +46,14 @@ public class IDontWant2SeeSettings {
   private String mPassword;
   
   private byte mProgramImportance = Program.DEFAULT_PROGRAM_IMPORTANCE;
-
+  private Integer mOutdatedFirst;
+  private Integer mOutdatedSecond;
+  
   public IDontWant2SeeSettings() {
     mUserName = "";
     mPassword = "";
+    mOutdatedFirst = Integer.valueOf(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST);
+    mOutdatedSecond = Integer.valueOf(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND);
   }
 
   public void setSimpleMenu(final boolean value) {
@@ -130,5 +136,23 @@ public class IDontWant2SeeSettings {
   
   public void setDefaultCaseSensitive(boolean isCaseSensitive) {
     mDefaultCaseSensitive = isCaseSensitive;
+  }
+  
+  public Integer getOutdated(final short type) {
+    Integer result = null;
+    
+    switch(type) {
+      case IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST: result = mOutdatedFirst;break;
+      case IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND: result = mOutdatedSecond;break;
+    }
+    
+    return result;
+  }
+  
+  public void setOutdated(final short type, final Integer value) {
+    switch (type) {
+      case IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST: mOutdatedFirst = value;break;
+      case IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND: mOutdatedSecond = value;break;
+    }
   }
 }
