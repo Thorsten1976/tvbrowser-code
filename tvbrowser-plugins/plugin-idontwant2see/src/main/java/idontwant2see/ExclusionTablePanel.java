@@ -23,10 +23,13 @@
  */
 package idontwant2see;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -36,24 +39,33 @@ import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.factories.CC;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Sizes;
+
+import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.settings.util.ColorLabel;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.Sizes;
 
 /**
  * The exclusion table panel for settings of this plugin.
@@ -68,7 +80,7 @@ public class ExclusionTablePanel extends JPanel {
   protected ExclusionTablePanel(final IDontWant2SeeSettings settings) {
     mTableModel = new IDontWant2SeeSettingsTableModel(settings.getSearchList(),settings.getLastEnteredExclusionString());
     
-    final IDontWant2SeeSettingsTableRenderer renderer = new IDontWant2SeeSettingsTableRenderer(settings.getLastUsedDate());        
+    final IDontWant2SeeSettingsTableRenderer renderer = new IDontWant2SeeSettingsTableRenderer(settings.getLastUsedDate(), settings);        
     mTable = new JTable(mTableModel);
     mTableModel.setTable(mTable);
     mTable.setRowHeight(25);
@@ -164,14 +176,85 @@ public class ExclusionTablePanel extends JPanel {
       }
     });
     
+    final JButton clearFilter = new JButton(IconLoader.getInstance().getIconFromTheme("actions", "process-stop", 16));
+    final PanelBuilder pb1 = new PanelBuilder(
+        new FormLayout("default,3dlu,default,10dlu,default,3dlu,default:grow,1dlu,default", "default"));
+    
+    final JComboBox<String> sort = new JComboBox<String>();
+    
+    sort.addItem(mLocalizer.msg("sort.alphabetically","Alphabetically"));
+    sort.addItem(mLocalizer.msg("sort.unused","Last used"));
+    
+    final JTextField filter = new JTextField();
+    filter.addCaretListener(new CaretListener() {
+      private String mPreviousText = "";
+      
+      @Override
+      public void caretUpdate(CaretEvent e) {
+        if(!mPreviousText.equals(filter.getText())) {
+          int row = mTableModel.filter(filter.getText().trim());
+          
+          if(!filter.getText().trim().isEmpty()) {
+            mTable.scrollRectToVisible(mTable.getCellRect(0,0,true));
+          }
+          else if(sort.getSelectedIndex() == 0 && row >= 0) {
+            mTable.scrollRectToVisible(mTable.getCellRect(row,0,true));
+          }
+          
+          clearFilter.setEnabled(!filter.getText().trim().isEmpty());
+          mPreviousText = filter.getText();
+        }
+      }
+    });
+    
+    clearFilter.setEnabled(false);
+    clearFilter.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    clearFilter.setPressedIcon(IconLoader.getInstance().getIconFromTheme(
+        "actions", "close-pressed", 16));
+    clearFilter.setToolTipText(mLocalizer.msg("filter.clear","Clear filter"));
+    clearFilter.setContentAreaFilled(false);
+    clearFilter.setFocusable(false);
+    clearFilter.setOpaque(false);
+    clearFilter.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        filter.setText("");
+      }
+    });
+    
+    
+    sort.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        if(e.getStateChange() == ItemEvent.SELECTED) {
+          int row = mTableModel.sort(sort.getSelectedIndex() == 1 ? IDontWant2SeeSettingsTableModel.TYPE_SORT_OUTDATED : IDontWant2SeeSettingsTableModel.TYPE_SORT_ALPHABETICALLY);
+          
+          if(sort.getSelectedIndex() == 1) {
+            row = 0;
+          }
+          
+          mTable.scrollRectToVisible(mTable.getCellRect(row > 0 ? row : 0,0,true));
+        }
+      }
+    });
+    
+    pb1.addLabel(mLocalizer.msg("sort","Sorting"), CC.xy(1, 1));
+    pb1.add(sort, CC.xy(3, 1));
+    pb1.addLabel(mLocalizer.msg("filter","Filter:"), CC.xy(5, 1));
+    pb1.add(filter, CC.xy(7, 1));
+    pb1.add(clearFilter, CC.xy(9, 1));
+    
     final FormLayout layout = new FormLayout("default,0dlu:grow,default,0dlu:grow,default",
-        "fill:default:grow,1dlu,default,4dlu,default,5dlu,pref");
+        "default,3dlu,fill:default:grow,1dlu,default,4dlu,default,5dlu,pref");
     final PanelBuilder pb = new PanelBuilder(layout, this);
-    final CellConstraints cc = new CellConstraints();
     
     int y = 1;
     
-    pb.add(scrollPane, cc.xyw(1,y++,5));
+    pb.add(pb1.getPanel(), CC.xyw(1, y, 5));
+    
+    y += 2;
+    
+    pb.add(scrollPane, CC.xyw(1,y++,5));
     
     final PanelBuilder pb2 = new PanelBuilder(
         new FormLayout("default,3dlu:grow,default,3dlu:grow,default,3dlu:grow,default",
@@ -180,31 +263,45 @@ public class ExclusionTablePanel extends JPanel {
     final ColorLabel blueLabel = new ColorLabel(
         IDontWant2SeeSettingsTableRenderer.LAST_CHANGED_COLOR);
     blueLabel.setText(mLocalizer.msg("changed","Last change"));
-    pb2.add(blueLabel, cc.xy(1,1));
+    pb2.add(blueLabel, CC.xy(1,1));
     
-    final ColorLabel yellowLabel = new ColorLabel(
-        IDontWant2SeeSettingsTableRenderer.LAST_USAGE_7_COLOR);
-    yellowLabel.setText(mLocalizer.msg("unusedSince","Not used for {0} days",IDontWant2SeeSettingsTableRenderer.OUTDATED_7_DAY_COUNT));
-    pb2.add(yellowLabel, cc.xy(3,1));
+    final ColorLabelComboBox yellowLabel = new ColorLabelComboBox(IDontWant2SeeSettingsTableRenderer.LAST_USAGE_FIRST_COLOR, settings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST));
+    yellowLabel.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        if(e.getStateChange() == ItemEvent.SELECTED) {
+          settings.setOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST, (Integer)e.getItem());
+          mTableModel.fireTableDataChanged();
+        }
+      }
+    });
+    pb2.add(yellowLabel, CC.xy(3,1));
     
-    final ColorLabel orangeLabel = new ColorLabel(
-        IDontWant2SeeSettingsTableRenderer.LAST_USAGE_30_COLOR);
-    orangeLabel.setText(mLocalizer.msg("unusedSince","Not used for {0} days",IDontWant2SeeSettingsTableRenderer.OUTDATED_30_DAY_COUNT));
-    pb2.add(orangeLabel, cc.xy(5,1));
+    final ColorLabelComboBox orangeLabel = new ColorLabelComboBox(IDontWant2SeeSettingsTableRenderer.LAST_USAGE_SECOND_COLOR,settings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND));
+    orangeLabel.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        if(e.getStateChange() == ItemEvent.SELECTED) {
+          settings.setOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND, (Integer)e.getItem());
+          mTableModel.fireTableDataChanged();
+        }
+      }
+    });
+    pb2.add(orangeLabel, CC.xy(5,1));
     
     final ColorLabel redLabel = new ColorLabel(
         IDontWant2SeeSettingsTableRenderer.NOT_VALID_COLOR);
     redLabel.setText(mLocalizer.msg("invalid","Invalid"));
-    pb2.add(redLabel, cc.xy(7,1));
+    pb2.add(redLabel, CC.xy(7,1));
     
-    pb.add(pb2.getPanel(), cc.xyw(1,++y,5));
+    pb.add(pb2.getPanel(), CC.xyw(1,++y,5));
     
     y++;
-    pb.add(add, cc.xy(1,++y));
-    pb.add(removeDuplicateEntries, cc.xy(3, y));
-    pb.add(delete, cc.xy(5,y++));
+    pb.add(add, CC.xy(1,++y));
+    pb.add(removeDuplicateEntries, CC.xy(3, y));
+    pb.add(delete, CC.xy(5,y++));
     pb.add(UiUtilities.createHelpTextArea(mLocalizer.msg("settings.help",
-    "To edit a value double click a cell. You can use wildcard * to search for any text.")), cc.xyw(1,++y,5));
+    "To edit a value double click a cell. You can use wildcard * to search for any text.")), CC.xyw(1,++y,5));
   }
   
   private void removeDuplicateRows() {
@@ -296,6 +393,49 @@ public class ExclusionTablePanel extends JPanel {
     }
     
     IDontWant2See.getInstance().updateFilter(true);}catch(Throwable t) {t.printStackTrace();}
+  }
+  
+  private static final class ColorLabelComboBox extends JPanel {
+    private static final int GAP = 5;
+    private ColorLabel mColorLabel;
+    private JComboBox<Integer> mSelection;
+    
+    public ColorLabelComboBox(final Color color, final Integer selection) {
+      mColorLabel = new ColorLabel(color);
+      mSelection = new JComboBox<Integer>();
+      
+      mSelection.addItem(7);
+      mSelection.addItem(14);
+      mSelection.addItem(30);
+      mSelection.addItem(90);
+      mSelection.addItem(180);
+      mSelection.addItem(365);
+      mSelection.setSelectedItem(selection);
+      
+      setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+      
+      final String pre = mLocalizer.msg("unusedSince.pre", "Not used for");
+      final String post = mLocalizer.msg("unusedSince.post", "days");
+      
+      add(mColorLabel);
+      
+      if(!pre.trim().isEmpty()) {
+        add(Box.createRigidArea(new Dimension(GAP, 0)));
+        add(new JLabel(pre));
+      }
+      
+      add(Box.createRigidArea(new Dimension(GAP, 0)));
+      add(mSelection);
+      
+      if(!post.trim().isEmpty()) {
+        add(Box.createRigidArea(new Dimension(GAP, 0)));
+        add(new JLabel(post));
+      }
+    }
+    
+    public void addItemListener(final ItemListener listener) {
+      mSelection.addItemListener(listener);
+    }
   }
 }
 

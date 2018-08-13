@@ -108,7 +108,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
   private static final String DONT_WANT_TO_SEE_IMPORT_SYNC_ADDRESS = "https://www.tvbrowser-app.de/data/scripts/syncDown.php?type=dontWantToSee";
   
   private static final boolean PLUGIN_IS_STABLE = true;
-  private static final Version PLUGIN_VERSION = new Version(0, 16, 2, PLUGIN_IS_STABLE);
+  private static final Version PLUGIN_VERSION = new Version(0, 17, 0, PLUGIN_IS_STABLE);
 
   private static final String RECEIVE_TARGET_EXCLUDE_EXACT = "target_exclude_exact";
 
@@ -525,7 +525,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
           
           conn.setDoOutput(true);
 
-          String postData = "";
+       //   String postData = "";
           
           byte[] xmlData = getCompressedData(value.getBytes("UTF-8"));
           
@@ -861,6 +861,10 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       if(version >= 9) {
         mSettings.setDefaultCaseSensitive(in.readBoolean());
       }
+      if(version >= 10) {
+        mSettings.setOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST, in.readInt());
+        mSettings.setOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND, in.readInt());
+      }
     }
   }
 
@@ -873,7 +877,7 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
       }
     });
 
-    out.writeInt(9); //version
+    out.writeInt(10); //version
     out.writeInt(mSettings.getSearchList().size());
 
     for(IDontWant2SeeListEntry entry : mSettings.getSearchList()) {
@@ -893,6 +897,8 @@ public final class IDontWant2See extends Plugin implements AWTEventListener {
     out.writeUTF(mSettings.getPassword());
     
     out.writeBoolean(mSettings.isDefaultCaseSensitive());
+    out.writeInt(mSettings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_FIRST));
+    out.writeInt(mSettings.getOutdated(IDontWant2SeeSettings.OUTDATED_DAY_COUNT_DEFAULT_SECOND));
   }
 
   public SettingsTab getSettingsTab() {
