@@ -57,8 +57,6 @@ import util.exc.TvBrowserException;
 import util.programkeyevent.ProgramKeyAndContextMenuListener;
 import util.programkeyevent.ProgramKeyEventHandler;
 import util.programmouseevent.AutoScrollerAndClickKeyHandler;
-import util.programmouseevent.ProgramMouseAndContextMenuListener;
-import util.programmouseevent.ProgramMouseEventHandler;
 import util.settings.PluginPictureSettings;
 import util.settings.ProgramPanelSettings;
 
@@ -66,7 +64,7 @@ import util.settings.ProgramPanelSettings;
  * This Class extends a JList for showing Programs
  */
 public class ProgramList extends JList<Object> implements ChangeListener,
-    ListDataListener, PluginStateListener, ProgramMouseAndContextMenuListener, 
+    ListDataListener, PluginStateListener, 
     ProgramKeyAndContextMenuListener, AutoScrollerAndClickKeyHandler.ProgramAutoScrollListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(ProgramList.class);
   
@@ -76,10 +74,10 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   private Vector<Program> mPrograms = new Vector<Program>();
   private boolean mSeparatorsCreated = false;
   
-  private ProgramMouseEventHandler mMouseEventHandler;
   private ContextMenuIf mCaller;
   private ProgramKeyEventHandler mKeyEventHandler;
   private JPopupMenu mPopupMenu;
+  private AutoScrollerAndClickKeyHandler mAutoScroller;
 
   /**
    * Creates the JList and adds the default MouseListeners (PopUpBox)
@@ -135,7 +133,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
     setToolTipText("");
     UiUtilities.addKeyRotation(this);
     
-    new AutoScrollerAndClickKeyHandler(this, this);
+    mAutoScroller = new AutoScrollerAndClickKeyHandler(this, this);
   }
 
   /**
@@ -297,11 +295,9 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * @since 3.3.1
    */
   public void addMouseAndKeyListeners(final ContextMenuIf caller) {
-    if(mMouseEventHandler == null) {
-      mMouseEventHandler = new ProgramMouseEventHandler(this, caller);
-      addMouseListener(mMouseEventHandler);
-      mCaller = caller;
-    }
+    mAutoScroller.setOwner(caller);
+    mCaller = caller;
+    
     if(mKeyEventHandler == null) {
       mCaller = caller;
       mKeyEventHandler = new ProgramKeyEventHandler(this, caller);
