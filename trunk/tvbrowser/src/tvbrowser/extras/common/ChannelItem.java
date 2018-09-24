@@ -30,7 +30,7 @@ import java.io.ObjectOutputStream;
 import devplugin.Channel;
 
 /**
- * A class that contains informations about a channel.
+ * A class that contains information about a channel.
  * Used to keep channel values even if channel is
  * currently not available.
  * 

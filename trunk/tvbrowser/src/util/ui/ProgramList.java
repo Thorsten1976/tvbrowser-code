@@ -56,6 +56,7 @@ import tvbrowser.core.plugin.PluginStateListener;
 import util.exc.TvBrowserException;
 import util.programkeyevent.ProgramKeyAndContextMenuListener;
 import util.programkeyevent.ProgramKeyEventHandler;
+import util.programmouseevent.AutoScrollerAndClickKeyHandler;
 import util.programmouseevent.ProgramMouseAndContextMenuListener;
 import util.programmouseevent.ProgramMouseEventHandler;
 import util.settings.PluginPictureSettings;
@@ -66,7 +67,7 @@ import util.settings.ProgramPanelSettings;
  */
 public class ProgramList extends JList<Object> implements ChangeListener,
     ListDataListener, PluginStateListener, ProgramMouseAndContextMenuListener, 
-    ProgramKeyAndContextMenuListener {
+    ProgramKeyAndContextMenuListener, AutoScrollerAndClickKeyHandler.ProgramAutoScrollListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(ProgramList.class);
   
   /** Key for separator list entry */
@@ -133,6 +134,8 @@ public class ProgramList extends JList<Object> implements ChangeListener,
     setCellRenderer(new ProgramListCellRenderer(settings));
     setToolTipText("");
     UiUtilities.addKeyRotation(this);
+    
+    new AutoScrollerAndClickKeyHandler(this, this);
   }
 
   /**
@@ -873,5 +876,51 @@ public class ProgramList extends JList<Object> implements ChangeListener,
         ensureIndexIsVisible(row);
       }
     }
+  }
+
+  @Override
+  public Program getProgramAt(int x, int y) {
+    int index = locationToIndex(new Point(x,y));
+    
+    if(index >= 0 && index < mPrograms.size()) {
+      return mPrograms.get(index);
+    }
+    
+    return null;
+  }
+
+  @Override
+  public boolean isSelectedItemAt(int x, int y) {
+    return getSelectedIndex() == locationToIndex(new Point(x,y));
+  }
+
+  @Override
+  public void selectItemAt(int x, int y) {
+    setSelectedIndex(locationToIndex(new Point(x,y)));
+  }
+
+  @Override
+  public void deSelectItem() {
+    setSelectedIndex(-1);
+  }
+
+  @Override
+  public void handleMousePressed(MouseEvent evt) {}
+
+  @Override
+  public void handleMouseReleased(MouseEvent evt) {}
+
+  @Override
+  public void handleMouseExited(MouseEvent evt) {}
+
+  @Override
+  public void handleMouseDragged(MouseEvent evt) {}
+
+  @Override
+  public void handleMouseMoved(MouseEvent evt) {}
+
+  @Override
+  public boolean isAutoScrollingEnabled() {
+    return true;
   }
 }

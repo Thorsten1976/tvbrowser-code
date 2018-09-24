@@ -31,7 +31,7 @@ import util.ui.html.ExtendedHTMLEditorKit;
 import util.ui.html.HTMLTextHelper;
 
 /**
- * The Info-Dialog shows Informations about an Plugin
+ * The Info-Dialog shows Information about an Plugin
  *
  * @author bodum
  */

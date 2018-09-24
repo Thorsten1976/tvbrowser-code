@@ -72,7 +72,7 @@ public final class SoftwareUpdater {
 	 /**
    * Creates an instance of this class.
    *
-   * @param url The url to download the informations from.
+   * @param url The url to download the information from.
    * @param baseInfos The base infos for all available plugins.
    * @throws IOException Thrown if an IO operation went wrong.
    */
@@ -88,7 +88,7 @@ public final class SoftwareUpdater {
   /**
    * Creates an instance of this class.
    *
-   * @param url The url to download the informations from.
+   * @param url The url to download the information from.
    * @param dialogType The type of this update dialog.
    * @param baseInfos The base infos for all available plugins.
    * @throws IOException Thrown if an IO operation went wrong.
@@ -117,7 +117,7 @@ public final class SoftwareUpdater {
 	/**
 	 * Creates an instance of this class.
 	 *
-	 * @param url The url to download the informations from.
+	 * @param url The url to download the information from.
 	 * @param dialogType The type of this update dialog.
 	 * @param dragNdrop If the plugin was dropped.
 	 * @throws IOException Thrown if an IO operation went wrong.

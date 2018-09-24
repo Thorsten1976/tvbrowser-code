@@ -27,7 +27,7 @@ package tvbrowser.core.plugin;
 import devplugin.Version;
 
 /**
- * A class that contains basic informations
+ * A class that contains basic information
  * like ID and version about a Plugin.
  * <p>
  * @author René Mach

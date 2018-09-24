@@ -403,7 +403,7 @@ public class TvDataUpdater {
         
         if(showDialog) {
           final JDialog infoDialog = new JDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()));
-          infoDialog.setTitle(mLocalizer.msg("afterUpdateInfo","Informations of data update"));
+          infoDialog.setTitle(mLocalizer.msg("afterUpdateInfo","Information of data update"));
           
           JScrollPane scrollPane = new JScrollPane(centerPanel);
           scrollPane.setBorder(BorderFactory.createEmptyBorder());
