@@ -26,7 +26,7 @@ package devplugin;
 import javax.swing.JPanel;
 
 /**
- * A panel with informations that should
+ * A panel with information that should
  * be shown by a {@link Plugin} after a data update.
  * <p>
  * @author René Mach

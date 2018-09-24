@@ -11,7 +11,7 @@ import util.ui.Localizer;
 
 /**
  * Holds all Information needed to Display the additional
- * Informations to a Program, like Black and White..
+ * Information to a Program, like Black and White..
  * 
  * @author bodo
  */

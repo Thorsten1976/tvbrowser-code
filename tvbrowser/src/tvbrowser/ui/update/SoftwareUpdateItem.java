@@ -36,7 +36,7 @@ import devplugin.PluginAccess;
 import devplugin.Version;
 
 /**
- * Contains informations about a software update.
+ * Contains information about a software update.
  */
 public abstract class SoftwareUpdateItem {
   private static final String VERSION_KEY = "version";
