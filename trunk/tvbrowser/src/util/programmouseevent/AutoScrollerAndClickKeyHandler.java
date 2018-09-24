@@ -33,6 +33,7 @@ import javax.swing.JComponent;
 import javax.swing.JViewport;
 import javax.swing.SwingUtilities;
 
+import devplugin.ContextMenuIf;
 import devplugin.Plugin;
 import devplugin.Program;
 
@@ -133,6 +134,10 @@ public class AutoScrollerAndClickKeyHandler {
 
     setDraggingPoint(evt.getPoint());
     setDraggingPointOnScreen(new Point(evt.getXOnScreen(), evt.getYOnScreen()));
+  }
+  
+  public void setOwner(final ContextMenuIf owner) {
+    mProgramMouseEventHandler.setOwner(owner);
   }
   
   private void handleMouseReleased(MouseEvent evt) {

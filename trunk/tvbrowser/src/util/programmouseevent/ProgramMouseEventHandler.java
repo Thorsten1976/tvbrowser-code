@@ -61,6 +61,13 @@ public class ProgramMouseEventHandler extends MouseAdapter {
     mOwner = owner;
   }
   
+  /**
+  * @param owner The ContextMenuIf that wants to react on mouse events.
+  */
+  public void setOwner(final ContextMenuIf owner) {
+    mOwner = owner;
+  }
+  
   @Override
   public void mouseClicked(MouseEvent e) {
     if(mContextMenuListener instanceof ProgramMouseActionListener) {
