@@ -1306,4 +1306,9 @@ public class ProgramTable extends JPanel
   public boolean isAutoScrollingEnabled() {
     return Settings.propProgramTableMouseAutoScroll.getBoolean();
   }
+
+  @Override
+  public boolean isClickAndContextMenuHandlingEnabled() {
+    return true;
+  }
 }
