@@ -78,6 +78,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   private ProgramKeyEventHandler mKeyEventHandler;
   private JPopupMenu mPopupMenu;
   private AutoScrollerAndClickKeyHandler mAutoScroller;
+  private boolean mHandleClicks = false;
 
   /**
    * Creates the JList and adds the default MouseListeners (PopUpBox)
@@ -290,13 +291,18 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    * The caller ContextMenuIfs menus are not shown, if you want to have all
    * available menus just use <code>null</code> for caller.
    * 
+   * ATTENTION: This call is only handled once, a second call will not change anything.
+   * 
    * @param caller
    *          The ContextMenuIf that called this.
    * @since 3.3.1
    */
   public void addMouseAndKeyListeners(final ContextMenuIf caller) {
-    mAutoScroller.setOwner(caller);
-    mCaller = caller;
+    if(!mHandleClicks) {
+      mAutoScroller.setOwner(caller);
+      mCaller = caller;
+      mHandleClicks = true;
+    }
     
     if(mKeyEventHandler == null) {
       mCaller = caller;
@@ -918,5 +924,10 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   @Override
   public boolean isAutoScrollingEnabled() {
     return true;
+  }
+
+  @Override
+  public boolean isClickAndContextMenuHandlingEnabled() {
+    return mHandleClicks;
   }
 }

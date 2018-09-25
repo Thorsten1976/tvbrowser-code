@@ -67,12 +67,18 @@ public class AutoScrollerAndClickKeyHandler {
     mProgramMouseEventHandler = new ProgramMouseEventHandler(listener, null) {
       public void mousePressed(MouseEvent evt) {
         handleMousePressed(evt);
-        super.mousePressed(evt);
+        
+        if(listener.isClickAndContextMenuHandlingEnabled()) {
+          super.mousePressed(evt);
+        }
       }
       
       public void mouseReleased(MouseEvent evt) {
         handleMouseReleased(evt);
-        super.mouseReleased(evt);
+        
+        if(listener.isClickAndContextMenuHandlingEnabled()) {
+          super.mouseReleased(evt);
+        }
       }
       
       public void mouseClicked(MouseEvent evt) {
@@ -89,7 +95,7 @@ public class AutoScrollerAndClickKeyHandler {
             }
           }
         }
-        else {
+        else if(listener.isClickAndContextMenuHandlingEnabled()) {
           super.mouseClicked(evt);
         }
       }
@@ -330,5 +336,6 @@ public class AutoScrollerAndClickKeyHandler {
     public void handleMouseDragged(MouseEvent evt);
     public void handleMouseMoved(MouseEvent evt);
     public boolean isAutoScrollingEnabled();
+    public boolean isClickAndContextMenuHandlingEnabled();
   }
 }
