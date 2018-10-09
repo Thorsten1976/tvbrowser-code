@@ -104,7 +104,7 @@ public class Database {
   private int mColUrl;
   private int mColUrlLow;
   private int mColUrlHD;
-  private int mColMax;
+  private int mColMax = 15;
   
   /**
    * association of programs and file lines for each channel group
@@ -214,7 +214,18 @@ public class Database {
       
       String item;
       while ((item=sc.findWithinHorizon(ITEM_PATTERN,8192))!=null) {
-        String[] entryLine = ENTRY_PATTERN.split(item);          
+        String[] entryLine = ENTRY_PATTERN.split(item);
+        if (entryLine.length<2) { //Since MediathekView v13.2.1
+          mColMax = 20;
+          mColChannel = 0;
+          mColTheme = 1;
+          mColTitle = 2;
+          mColDate = 3;
+          mColUrl = 8;
+          mColUrlLow = 12;
+          mColUrlHD = 14;
+          continue;
+        }
         String[] entry = SEPARATOR_PATTERN.split(entryLine[1]);
         
         if (entryLine[0].equals("\"Filmliste") && (entry.length >5)) { //heading
