@@ -153,7 +153,7 @@ public class PrimaryDataManager {
     
     // Update the news
     for (int i=0; i<mGroupNameArr.length; i++) {
-      updateNews(mGroupNameArr[i]);
+      updateNewsAndForcedUpdateFiles(mGroupNameArr[i]);
     }
 
     //Create the channel list file
@@ -259,48 +259,54 @@ public class PrimaryDataManager {
     }
   }
 
-  private void updateNews(String groupName) {
-    mLog.fine("Updating the group news for group: " + groupName);
-
-    File newsInfo = new File(mConfigDir,groupName+"_news_info.gz");
-    File newsFile = new File(mConfigDir,groupName+"_news.gz");
+  private void updateNewsAndForcedUpdateFiles(String groupName) {
+    mLog.fine("Updating the group news and forced update info for group: " + groupName);
     
-    if(!newsInfo.isFile() || !newsFile.isFile()) {
-      GZIPOutputStream out = null;
-      
-      try {
-        FileOutputStream fileOut = new FileOutputStream(newsInfo);
-        fileOut.getChannel().truncate(0);
+    final File[] infoFiles = {new File(mConfigDir,groupName+"_news_info.gz"),new File(mConfigDir,groupName+"_forced_update_info.gz")};
+    final File newsFile = new File(mConfigDir,groupName+"_news.gz");
+    
+    final boolean[] existing = {!infoFiles[0].isFile() || !newsFile.isFile(), !infoFiles[1].isFile()};
+    
+    for(int i = 0; i < infoFiles.length; i++) {
+      if(existing[i]) {
+        GZIPOutputStream out = null;
         
-        out = new GZIPOutputStream(fileOut);
-        DataOutputStream dataOut = new DataOutputStream(out);
-        
-        dataOut.writeLong(-1);
-      } catch (IOException e) {
-        mLog.info("Writing news info file for group '"+groupName+"' to '" + newsInfo.getAbsolutePath() + "' didn't work.");
-        // Ignore news are not that important
-      }
-      finally {
-        if(out != null) {
-          try {
-            out.flush();
-            out.close();
-          } catch (IOException e) {
-            // Ignore news are not that important
+        try {
+          FileOutputStream fileOut = new FileOutputStream(infoFiles[i]);
+          fileOut.getChannel().truncate(0);
+          
+          out = new GZIPOutputStream(fileOut);
+          DataOutputStream dataOut = new DataOutputStream(out);
+          
+          dataOut.writeLong(-1);
+        } catch (IOException e) {
+          mLog.info("Writing info file for group '"+groupName+"' to '" + infoFiles[i].getAbsolutePath() + "' didn't work.");
+          // Ignore news are not that important
+        }
+        finally {
+          if(out != null) {
+            try {
+              out.flush();
+              out.close();
+            } catch (IOException e) {
+              // Ignore news are not that important
+            }
           }
         }
       }
     }
     
-    File newsInfoTarget = new File(mWorkDir,newsInfo.getName());
-    
-    mLog.info("Copying news info file '" + newsInfo.getAbsolutePath() + "' to '" + newsInfoTarget.getAbsolutePath() + "'");
-    
-    try {
-      IOUtilities.copy(newsInfo, newsInfoTarget);
-    } catch (IOException e1) {
-      mLog.info("Copying of news info file '" + newsInfo.getAbsolutePath() + "' didn't work.");
-      // Ignore news are not that important
+    for(File infoFile : infoFiles) {
+      final File infoFileTarget = new File(mWorkDir,infoFile.getName());
+      
+      mLog.info("Copying info file '" + infoFile.getAbsolutePath() + "' to '" + infoFileTarget.getAbsolutePath() + "'");
+      
+      try {
+        IOUtilities.copy(infoFile, infoFileTarget);
+      } catch (IOException e1) {
+        mLog.info("Copying info file '" + infoFiles[0].getAbsolutePath() + "' didn't work.");
+        // Ignore news are not that important
+      }
     }
     
     if(newsFile.isFile()) {

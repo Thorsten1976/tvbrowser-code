@@ -359,12 +359,18 @@ public class MirrorUpdater {
     // Copy the mirrorlist.gz
     copyGroupFile(mDataTarget,mDataSource,Mirror.MIRROR_LIST_FILE_NAME);
     
-    // Copy the news files
+    // Copy the date info files
     try {
-      if (mChannelGroupArr!=null) {        
+      if (mChannelGroupArr!=null) {
+        final String[] dateInfoFiles = {"_news_info.gz","_forced_update_info.gz"};
+        
         for (String group : mChannelGroupArr) {
-          data = mDataSource.loadFile(group+"_news_info.gz");
-          mDataTarget.writeFile(group+"_news_info.gz", data);
+          for(String dateInfoFile : dateInfoFiles) {
+            if(mDataSource.fileExists(group+dateInfoFile)) {
+              data = mDataSource.loadFile(group+dateInfoFile);
+              mDataTarget.writeFile(group+dateInfoFile, data);
+            }
+          }
           
           if(mDataSource.fileExists(group+"_news.gz")) {
             data = mDataSource.loadFile(group+"_news.gz");

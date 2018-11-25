@@ -128,7 +128,7 @@ public class ProgramFrameDispatcher {
       }
       
       
-      File oldFile = new File(directory,f.getProgramFileName());
+      File oldFile = new File(directory,f.getProgramFileName());System.out.println(oldFile);
       File tmpFile = new File(directory,f.getProgramFileName()+".tmp");
       try {
         f.writeToFile(tmpFile);
