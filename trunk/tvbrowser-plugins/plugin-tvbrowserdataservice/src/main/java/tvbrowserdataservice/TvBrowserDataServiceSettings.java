@@ -28,6 +28,7 @@ public class TvBrowserDataServiceSettings {
   private static final String KEY_SHOW_NEWS = "showNews";
   private static final String KEY_LAST_GROUP_NEWS_DATE_PREFIX = "lastGroupNewsDate_";
   private static final String KEY_LAST_SHOWN_GROUP_NEWS_DATE_PREFIX = "lastShownGroupNewsDate_";
+  private static final String KEY_LAST_FORCED_UPDATE_DATE_PREFIX = "lastForcedUpdateDate_";
 
   public TvBrowserDataServiceSettings(final Properties properties) {
     if (properties != null) {
@@ -109,5 +110,13 @@ public class TvBrowserDataServiceSettings {
   
   public void setLastShownGroupNewsDateForGroupId(String groupId, long value) {
     mProperties.setProperty(KEY_LAST_SHOWN_GROUP_NEWS_DATE_PREFIX+groupId, String.valueOf(value));
+  }
+  
+  public long getLastForcedUpdateDateForGroupId(String groupId) {
+    return Long.parseLong(mProperties.getProperty(KEY_LAST_FORCED_UPDATE_DATE_PREFIX+groupId, "0"));
+  }
+  
+  public void setLastForcedUpdateDateForGroupId(String groupId, long value) {
+    mProperties.setProperty(KEY_LAST_FORCED_UPDATE_DATE_PREFIX+groupId, String.valueOf(value));
   }
 }
