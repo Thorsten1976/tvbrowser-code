@@ -35,6 +35,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,7 +109,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
   public static final util.ui.Localizer mLocalizer
           = util.ui.Localizer.getLocalizerFor(TvBrowserDataService.class);
 
-  private static final Version VERSION = new Version(3,14,1);
+  private static final Version VERSION = new Version(3,15,0);
 
   protected static final String CHANNEL_GROUPS_FILENAME = "groups.txt";
   private static final String DEFAULT_CHANNEL_GROUPS_URL = "http://defaultdata.tvbrowser.org";
@@ -243,25 +244,25 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
     return null;
   }
   
-  private long getNewsInfo(String groupId, Mirror mirror) {
+  private long getTimeInMilliseconds(String groupId, Mirror mirror, String fileName) {
     long time = -1;
-    File newsInfo = new File(mDataDir,groupId+"_news_info.gz");
+    File timeInfo = new File(mDataDir,groupId+fileName);
     
-    if(newsInfo.isFile()) {
-      newsInfo.delete();
+    if(timeInfo.isFile()) {
+      timeInfo.delete();
     }
     
     try {
-      String url = mirror.getUrl()+"/"+newsInfo.getName();
-      IOUtilities.download(new URL(url),newsInfo);
+      String url = mirror.getUrl()+"/"+timeInfo.getName();
+      IOUtilities.download(new URL(url),timeInfo);
     } catch (Exception e) {
       // ignore, can be that not news_info.gz exists because server uses old data tools
     }
     
-    if(newsInfo.isFile()) {
+    if(timeInfo.isFile()) {
       InputStream in = null;
       try {
-        in = IOUtilities.openSaveGZipInputStream(new FileInputStream(newsInfo));
+        in = IOUtilities.openSaveGZipInputStream(new FileInputStream(timeInfo));
         DataInputStream dataIn = new DataInputStream(in);
         time = dataIn.readLong();
       } catch (Exception e) {e.printStackTrace();
@@ -347,7 +348,7 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
           long lastNewsTime = -1;
           
           if(mSettings.showNews()) {
-            lastNewsTime = getNewsInfo(curGroup.getId(), curGroup.getMirror());
+            lastNewsTime = getTimeInMilliseconds(curGroup.getId(), curGroup.getMirror(), "_news_info.gz");
             
             if(lastNewsTime > mSettings.getLastGroupNewsDateForGroupId(curGroup.getId())) {
               GroupNews[] news = loadGroupNewsForGroup(curGroup);
@@ -360,6 +361,35 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
               
               mSettings.setLastGroupNewsDateForGroupId(curGroup.getId(), lastNewsTime);
             }
+          }
+          
+          final long forcedUpdate = getTimeInMilliseconds(curGroup.getId(), curGroup.getMirror(), "_forced_update_info.gz");
+          
+          if(forcedUpdate > mSettings.getLastForcedUpdateDateForGroupId(curGroup.getId()) && 
+              (forcedUpdate + (28 * 24 * 60 * 60000L) > System.currentTimeMillis())) {
+            
+            final Channel[] channels = curGroup.getAvailableChannels();
+            mLog.info("Forced update for group '" + curGroup.getName()+ "', deleting all existing data files for all channels of the group.");
+            
+            for(final Channel channel : channels)  {
+              final String name = "_"+channel.getBaseCountry()+"_"+channel.getId()+"_";
+
+              final File[] toDelete = mDataDir.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                  return pathname.getName().contains(name) && pathname.getName().endsWith("_full.prog.gz");
+                }
+              });
+              
+              if(toDelete != null) {
+                for(File file : toDelete) {
+                  mLog.info("Deleting data file '" + file.getName()+"'");
+                  file.delete();
+                }
+              }
+            }
+            
+            mSettings.setLastForcedUpdateDateForGroupId(curGroup.getId(), forcedUpdate);
           }
         } catch(TvBrowserException e) {
           try {
@@ -444,7 +474,6 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
         try {
           groupIt1.next().saveLocalSummary();
         } catch (IOException e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
         }
       }
@@ -1182,7 +1211,11 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
             downloaded = IOUtilities.download(new URL(url + (url.endsWith("/") ? "" : "/") + CHANNEL_GROUPS_FILENAME), channelGroupFileNew, Plugin.getPluginManager().getTvBrowserSettings().getDefaultNetworkConnectionTimeout());
           }
           
-          if(downloaded) {
+          if(!channelGroupFileOld.isFile() && downloaded) {
+            channelGroupFileNew.renameTo(channelGroupFileOld);
+            mGroupFileWasLoaded = true;
+          }
+          else if(downloaded) {
             final File fileMd5Hash = new File(channelGroupFileNew.getAbsolutePath() + ".md5");
             
             boolean gotHash = false;
@@ -1195,7 +1228,12 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
               }
             }catch(Exception e) {
               url = DEFAULT_CHANNEL_GROUPS_URL;
-              gotHash = IOUtilities.download(new URL(url + (url.endsWith("/") ? "" : "/") + CHANNEL_GROUPS_FILENAME+".md5"), fileMd5Hash, Plugin.getPluginManager().getTvBrowserSettings().getDefaultNetworkConnectionTimeout());
+              
+              try {
+                gotHash = IOUtilities.download(new URL(url + (url.endsWith("/") ? "" : "/") + CHANNEL_GROUPS_FILENAME+".md5"), fileMd5Hash, Plugin.getPluginManager().getTvBrowserSettings().getDefaultNetworkConnectionTimeout());
+              }catch(Exception e1) {
+                // ignore
+              }
             }
             
             if(gotHash && fileMd5Hash.length() > 0) {
@@ -1218,6 +1256,10 @@ public class TvBrowserDataService extends devplugin.AbstractTvDataService {
             if(!fileMd5Hash.delete()) {
               fileMd5Hash.deleteOnExit();
             }
+          }
+          
+          if(channelGroupFileOld.isFile()) {
+            mGroupFileWasLoaded = true;
           }
         } catch (MalformedURLException e) {
           throw new TvBrowserException(TvBrowserDataService.class, "invalidURL", "Invalid URL: {0}", url, e);
