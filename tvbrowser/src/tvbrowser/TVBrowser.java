@@ -57,7 +57,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Formatter;
@@ -79,11 +78,8 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.apache.commons.lang3.StringUtils;
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
-import org.pushingpixels.substance.api.skin.SkinInfo;
 
 import com.jgoodies.looks.LookUtils;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 import ca.beq.util.win32.registry.RegistryKey;
 import ca.beq.util.win32.registry.RegistryValue;
@@ -538,7 +534,7 @@ public class TVBrowser {
     splashRef.get().setMessage(mLocalizer.msg("startScreen.ui", "Starting up..."));
     
     Toolkit.getDefaultToolkit().getSystemEventQueue().push(new TextComponentPopupEventQueue());
-
+    
     // Init the UI
     final boolean fStartMinimized = Settings.propMinimizeAfterStartup.getBoolean() || mMinimized;
     SwingUtilities.invokeLater(() -> {
@@ -547,7 +543,7 @@ public class TVBrowser {
       new Thread("Start finished callbacks") {
         public void run() {
           setPriority(Thread.MIN_PRIORITY);
-
+          
           // first reset "starting" flag of mainframe
           mainFrame.handleTvBrowserStartFinished();
           
@@ -1412,8 +1408,8 @@ public class TVBrowser {
       UIManager.installLookAndFeel("Plastic XP",        "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
       UIManager.installLookAndFeel("Skin",              "com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
 
-      String classPath = System.getProperty("java.class.path","");
-      if (!isStable() || StringUtils.containsIgnoreCase(classPath, "eclipse") || StringUtils.containsIgnoreCase(classPath, "workspace")) {
+      //String classPath = System.getProperty("java.class.path","");
+      /*if (!isStable() || StringUtils.containsIgnoreCase(classPath, "eclipse") || StringUtils.containsIgnoreCase(classPath, "workspace")) {
         Map<String, SkinInfo> substanceSkins = SubstanceLookAndFeel.getAllSkins();
         if (substanceSkins != null) {
           for (SkinInfo skin : substanceSkins.values()) {
@@ -1422,7 +1418,7 @@ public class TVBrowser {
                 StringUtils.replace(StringUtils.replace(className, "Skin", "LookAndFeel"), "skin.", "skin.Substance"));
           }
         }
-      }
+      }*/
     } catch (Exception e1) {
       // ignore any exception for optional skins
       e1.printStackTrace();
@@ -1483,6 +1479,8 @@ public class TVBrowser {
     
     if (Settings.propLookAndFeel.getString().equals(
         "com.l2fprod.gui.plaf.skin.SkinLookAndFeel")) {
+    	Settings.propLookAndFeel.setString(Settings.propLookAndFeel.getDefault());
+    	/*
       String themepack = Settings.propSkinLFThemepack.getString();
       try {
         File themepackFile = new File(themepack);
@@ -1494,13 +1492,13 @@ public class TVBrowser {
           themepackFile = new File("/Library/Application Support/TV-Browser/", themepack);
         }
 
-        SkinLookAndFeel.setSkin(SkinLookAndFeel.loadThemePack(themepackFile.getAbsolutePath()));
+        //SkinLookAndFeel.setSkin(SkinLookAndFeel.loadThemePack(themepackFile.getAbsolutePath()));
       } catch (Exception exc) {
         ErrorHandler.handle(
           "Could not load themepack.\nSkinLF is disabled now",
           exc);
         Settings.propLookAndFeel.setString(Settings.propLookAndFeel.getDefault());
-      }
+      }*/
     } else if (Settings.propLookAndFeel.getString().startsWith("com.jgoodies") && !Settings.propLookAndFeel.getString().startsWith("com.jgoodies.looks.windows.WindowsLookAndFeel")) {
       com.jgoodies.looks.Options.setPopupDropShadowEnabled(Settings.propJGoodiesShadow.getBoolean());
       UIManager.put("jgoodies.popupDropShadowEnabled", Boolean

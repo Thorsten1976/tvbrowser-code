@@ -60,6 +60,7 @@ import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -484,14 +485,13 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
   }
 
   private void expand(FavoriteNode node) {
-    @SuppressWarnings("unchecked")
-    Enumeration<FavoriteNode> e = node.children();
+    Enumeration<TreeNode> e = node.children();
 
     while(e.hasMoreElements()) {
-      FavoriteNode child = e.nextElement();
+      TreeNode child = e.nextElement();
 
-      if(child.isDirectoryNode()) {
-        expand(child);
+      if(child instanceof FavoriteNode && ((FavoriteNode)child).isDirectoryNode()) {
+        expand((FavoriteNode)child);
       }
     }
 
@@ -944,21 +944,23 @@ public class FavoriteTree extends JTree implements DragGestureListener, DropTarg
 
   private FavoriteNode findFavorite(final Favorite favorite, final FavoriteNode root) {
     if (root.isDirectoryNode()) {
-      @SuppressWarnings("unchecked")
-      Enumeration<FavoriteNode> e = root.children();
+      Enumeration<TreeNode> e = root.children();
 
       while(e.hasMoreElements()) {
-        FavoriteNode child = e.nextElement();
-        if(child.isDirectoryNode()) {
-          FavoriteNode result = findFavorite(favorite, child);
-          if (result != null) {
-            return result;
-          }
-        }
-        else {
-          if (child.getFavorite().equals(favorite)) {
-            return child;
-          }
+        TreeNode child = e.nextElement();
+        
+        if(child instanceof FavoriteNode) {
+	        if(((FavoriteNode)child).isDirectoryNode()) {
+	          FavoriteNode result = findFavorite(favorite, (FavoriteNode)child);
+	          if (result != null) {
+	            return result;
+	          }
+	        }
+	        else {
+	          if (((FavoriteNode)child).getFavorite().equals(favorite)) {
+	            return (FavoriteNode)child;
+	          }
+	        }
         }
       }
     }

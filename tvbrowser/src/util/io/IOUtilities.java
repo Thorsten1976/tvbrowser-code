@@ -51,11 +51,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Logger;
+import java.util.zip.DataFormatException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.activation.UnsupportedDataTypeException;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
@@ -1088,10 +1088,10 @@ public class IOUtilities {
      * <p>
      * @param episodeNumbers The array with the episode number to encode.
      * @return The encoded episode number.
-     * @throws UnsupportedDataTypeException Is thrown if the given array didn't match the given conditions. 
+     * @throws DataFormatException Is thrown if the given array didn't match the given conditions. 
      * @since 3.3.3.
      */
-    public static int encodeMultipleEpisodeNumersToSingleFieldValue(int[] episodeNumbers) throws UnsupportedDataTypeException {
+    public static int encodeMultipleEpisodeNumersToSingleFieldValue(int[] episodeNumbers) throws DataFormatException {
       if(episodeNumbers.length == 1) {
         return episodeNumbers[0];
       }
@@ -1131,7 +1131,7 @@ public class IOUtilities {
           int diffAbs = Math.abs(diff);
           
           if(diff == 0 || diffAbs > diffTest) {
-            throw new UnsupportedDataTypeException("Episode difference not in range."); 
+            throw new DataFormatException("Episode difference not in range."); 
           }
           else {
             diffAbs--;
@@ -1149,7 +1149,7 @@ public class IOUtilities {
         return (encoded | encodingMask);
       }
       
-      throw new UnsupportedDataTypeException("Array size not in range or first value to big.");
+      throw new DataFormatException("Array size not in range or first value to big.");
     }
 
     /**

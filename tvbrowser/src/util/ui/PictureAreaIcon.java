@@ -26,18 +26,15 @@ import java.awt.image.FilteredImageSource;
 import java.awt.image.ImageFilter;
 import java.awt.image.RGBImageFilter;
 
-import javax.swing.GrayFilter;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.l2fprod.util.ColorFillFilter;
-
-import tvbrowser.core.Settings;
 import devplugin.Program;
 import devplugin.ProgramFieldType;
+import tvbrowser.core.Settings;
 
 /**
  * A class for painting a picture with copyright and description info.
@@ -189,9 +186,9 @@ public class PictureAreaIcon implements Icon {
 
     y += 3;
     x += 3;
-
+    
     if(mIsGrayFilter && !mIsExpired && mProgram.isExpired()) {
-      ImageFilter filter = UIManager.getDefaults().getColor("List.background").equals(Color.black) ? new ColorFillFilter(new Color(50,50,50)) : new GrayFilter(true, 60);
+      ImageFilter filter = UIManager.getDefaults().getColor("List.background").equals(Color.black) ? new ColorFilter(0,0,0) : new ColorFilter(128,128,128);
       mScaledIcon.setImage(c.createImage(new FilteredImageSource(mScaledIcon.getImage().getSource(),filter)));
       mIsExpired = true;
     }
@@ -223,5 +220,29 @@ public class PictureAreaIcon implements Icon {
       mDescriptionText.paintIcon(null,g,x,y + mScaledIcon.getIconHeight() + mCopyrightText.getIconHeight() + 1);
     }
     g.setColor(color);
+  }
+  
+  private static final class ColorFilter extends RGBImageFilter {
+	  private int mRed;
+	  private int mGreen;
+	  private int mBlue;
+	  
+	  private ColorFilter(int red, int green, int blue) {
+		  mRed = red;
+		  mGreen = green;
+		  mBlue = blue;
+	  }
+
+	@Override
+	public int filterRGB(int x, int y, int rgb) {
+		Color c = new Color(rgb);
+		
+		int red = (c.getRed() + mRed*2)/3;
+		int green = (c.getGreen() + mGreen*2)/3;
+		int blue = (c.getBlue() + mBlue*2)/3;
+		
+		return new Color(red,green,blue).getRGB();
+	}
+	  
   }
 }

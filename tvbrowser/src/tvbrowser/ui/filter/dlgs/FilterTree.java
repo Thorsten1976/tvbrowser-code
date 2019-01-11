@@ -62,6 +62,7 @@ import javax.swing.UIManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -441,14 +442,13 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
   }
 
   private void expand(FilterNode node) {
-    @SuppressWarnings("unchecked")
-    Enumeration<FilterNode> e = node.children();
+    Enumeration<TreeNode> e = node.children();
 
     while(e.hasMoreElements()) {
-      FilterNode child = e.nextElement();
-
-      if(child.isDirectoryNode()) {
-        expand(child);
+      TreeNode child = e.nextElement();
+      
+      if(child instanceof FilterNode && ((FilterNode)child).isDirectoryNode()) {
+        expand((FilterNode)child);
       }
     }
 
@@ -600,9 +600,9 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
   }
   
   void sortAlphabetically(FilterNode node) {
-    FilterList.getInstance().getFilterTreeModel().sort(node, new Comparator<FilterNode>() {
+    FilterList.getInstance().getFilterTreeModel().sort(node, new Comparator<TreeNode>() {
       @Override
-      public int compare(FilterNode node1, FilterNode node2) {
+      public int compare(TreeNode node1, TreeNode node2) {
         return node1.toString().compareToIgnoreCase(node2.toString());
       }
     }, SelectFilterDlg.mLocalizer.msg("sortAlphabetically", "Sort filters alphabetically"));
@@ -851,21 +851,23 @@ public class FilterTree extends JTree implements DragGestureListener, DropTarget
 
   private FilterNode findFilter(final ProgramFilter filter, final FilterNode root) {
     if (root.isDirectoryNode()) {
-      @SuppressWarnings("unchecked")
-      Enumeration<FilterNode> e = root.children();
+      Enumeration<TreeNode> e = root.children();
 
       while(e.hasMoreElements()) {
-        FilterNode child = e.nextElement();
-        if(child.isDirectoryNode()) {
-          FilterNode result = findFilter(filter, child);
-          if (result != null) {
-            return result;
-          }
-        }
-        else {
-          if (child.getFilter().equals(filter)) {
-            return child;
-          }
+        TreeNode child = e.nextElement();
+        
+        if(child instanceof FilterNode) {
+	        if(((FilterNode)child).isDirectoryNode()) {
+	          FilterNode result = findFilter(filter, (FilterNode)child);
+	          if (result != null) {
+	            return result;
+	          }
+	        }
+	        else {
+	          if (((FilterNode)child).getFilter().equals(filter)) {
+	            return (FilterNode)child;
+	          }
+	        }
         }
       }
     }

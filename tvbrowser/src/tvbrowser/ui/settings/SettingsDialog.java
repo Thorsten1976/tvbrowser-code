@@ -677,11 +677,15 @@ public class SettingsDialog implements WindowClosingIf {
       }
 
       mSettingsPn = null;
-      @SuppressWarnings("unchecked")
-      Enumeration<SettingNode> e = children();
+      
+      Enumeration<TreeNode> e = children();
+      
       while (e.hasMoreElements()) {
-        SettingNode node = e.nextElement();
-        node.invalidate();
+        TreeNode node = e.nextElement();
+        
+        if(node instanceof SettingNode) {
+        	((SettingNode)node).invalidate();
+        }
       }
     }
 

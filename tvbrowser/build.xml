@@ -250,7 +250,7 @@
   <target name="make-default" depends="copy-resources">
     <echo message="Compiling the source code ... "/>
     <mkdir dir="${classes.dir}"/>
-    <javac destdir="${classes.dir}" debug="${debug}" deprecation="true" encoding="UTF-8" target="1.8" source="1.8">
+    <javac destdir="${classes.dir}" modulepath="${lib.dir}" debug="${debug}" deprecation="true" encoding="UTF-8" target="11" source="11">
       <src>
         <path refid="sourcepath"/>
       </src>
@@ -329,7 +329,6 @@
     <echo message="Creating the jars ..."/>
 
     <!-- Extract the libraries for the tvbrowser.jar into the temp.dir -->
-    <unjar src="${lib.dir}/${lib.skinlf.name}-${lib.skinlf.version}.jar" dest="${unpacked.dir}/${lib.skinlf.name}.jar"/>
     <unjar src="${lib.dir}/${lib.bsh.name}-${lib.bsh.version}.jar" dest="${unpacked.dir}/${lib.bsh.name}.jar"/>
     <unjar src="${lib.dir}/${lib.jgoodies-common.name}-${lib.jgoodies-common.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-common.name}.jar"/>
     <unjar src="${lib.dir}/${lib.jgoodies-forms.name}-${lib.jgoodies-forms.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-forms.name}.jar"/>
@@ -341,7 +340,6 @@
     <unjar src="${lib.dir}/${lib.opencsv.name}-${lib.opencsv.version}.jar" dest="${unpacked.dir}/${lib.opencsv.name}.jar" />
     <unjar src="${lib.dir}/${lib.htmlparser.name}-${lib.htmlparser.version}.jar" dest="${unpacked.dir}/${lib.htmlparser.name}.jar" />
     <unjar src="${lib.dir}/${lib.texhyphj.name}-${lib.texhyphj.version}.jar" dest="${unpacked.dir}/${lib.texhyphj.name}.jar" />
-    <unjar src="${lib.dir}/${lib.substance.name}-${lib.substance.version}.jar" dest="${unpacked.dir}/${lib.substance.name}.jar" />
     <unjar src="${lib.dir}/${lib.trident.name}-${lib.trident.version}.jar" dest="${unpacked.dir}/${lib.trident.name}.jar" />
   	<unjar src="${lib.dir}/${lib.jnativehook.name}-${lib.jnativehook.version}.jar" dest="${unpacked.dir}/${lib.jnativehook.name}.jar"/>
   	
@@ -359,8 +357,6 @@
       <fileset dir="${classes.dir}" includes="util/**"/>
       <fileset dir="${classes.dir}" includes="com/**"/>
       <fileset dir="${classes.dir}/imgs" includes="splash.png"/>
-      <fileset dir="${unpacked.dir}/${lib.skinlf.name}.jar" includes="com/**"/>
-   	  <fileset dir="${unpacked.dir}/${lib.skinlf.name}.jar" includes="org/**"/>
       <fileset dir="${unpacked.dir}/${lib.bsh.name}.jar" includes="bsh/**"/>
       <fileset dir="${unpacked.dir}/${lib.jgoodies-common.name}.jar" includes="com/**"/>
       <fileset dir="${unpacked.dir}/${lib.jgoodies-forms.name}.jar" includes="com/**"/>
@@ -372,7 +368,6 @@
       <fileset dir="${unpacked.dir}/${lib.opencsv.name}.jar" includes="au/**"/>
       <fileset dir="${unpacked.dir}/${lib.htmlparser.name}.jar" includes="org/**"/>
       <fileset dir="${unpacked.dir}/${lib.texhyphj.name}.jar" includes="net/**"/>
-      <fileset dir="${unpacked.dir}/${lib.substance.name}.jar" includes="org/**"/>
       <fileset dir="${unpacked.dir}/${lib.trident.name}.jar" includes="org/**"/>
       <fileset dir="${unpacked.dir}/${lib.jnativehook.name}.jar" includes="org/**"/>
     </jar>
@@ -1183,24 +1178,6 @@
 		<!-- opencsv -->
 		<antcall target="download-tarred-lib">
 			<param name="lib" value="opencsv"/>
-		</antcall>
-
-		<!-- skinlf -->
-		<antcall target="download-zipped-lib">
-			<param name="lib" value="skinlf"/>
-		</antcall>
-
-		<!-- stax -->
-		<antcall target="download-lib">
-			<param name="lib" value="stax"/>
-		</antcall>
-		<antcall target="download-lib">
-			<param name="lib" value="stax.api"/>
-		</antcall>
-
-		<!-- substance -->
-		<antcall target="download-lib">
-			<param name="lib" value="substance"/>
 		</antcall>
 
 		<!-- texhyphj -->
