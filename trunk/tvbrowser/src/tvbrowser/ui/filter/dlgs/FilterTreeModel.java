@@ -136,19 +136,20 @@ public class FilterTreeModel extends DefaultTreeModel {
 
   private void deleteFilter(FilterNode node, ProgramFilter filter) {
     if(node.isDirectoryNode()) {
-      @SuppressWarnings("unchecked")
-      Enumeration<FilterNode> e = node.children();
+      Enumeration<TreeNode> e = node.children();
 
       while(e.hasMoreElements()) {
-        FilterNode child = e.nextElement();
+        TreeNode child = e.nextElement();
 
-        if(child.isDirectoryNode()) {
-          deleteFilter(child, filter);
-        } else if(child.containsFilter() || child.containsSeparator()) {
-          if(child.contains(filter) && child.isDeletingAllowed()) {
-            node.remove(child);
-            fireFilterRemoved(filter);
-          }
+        if(child instanceof FilterNode) {
+	        if(((FilterNode)child).isDirectoryNode()) {
+	          deleteFilter((FilterNode)child, filter);
+	        } else if(((FilterNode)child).containsFilter() || ((FilterNode)child).containsSeparator()) {
+	          if(((FilterNode)child).contains(filter) && ((FilterNode)child).isDeletingAllowed()) {
+	            node.remove((FilterNode)child);
+	            fireFilterRemoved(filter);
+	          }
+	        }
         }
       }
     }
@@ -330,13 +331,12 @@ public class FilterTreeModel extends DefaultTreeModel {
   
   public void reload(FilterTree tree, TreeNode node) {
     super.reload(node);
-    @SuppressWarnings("unchecked")
-    Enumeration<FilterNode> e = node.children();
+    Enumeration<? extends TreeNode> e = node.children();
 
     while(e.hasMoreElements()) {
-      FilterNode child = e.nextElement();
+      TreeNode child = e.nextElement();
 
-      if(child.isDirectoryNode()) {
+      if(child instanceof FilterNode && ((FilterNode)child).isDirectoryNode()) {
         reload(tree, child);
       }
     }
@@ -456,7 +456,7 @@ public class FilterTreeModel extends DefaultTreeModel {
    * @param comp Comparator for sorting
    * @param title Title of confirmation message dialog
    */
-  public void sort(FilterNode node, Comparator<FilterNode> comp, String title) {
+  public void sort(FilterNode node, Comparator<TreeNode> comp, String title) {
     String msg = mLocalizer.msg("reallySort",
         "Do you really want to sort '{0}'?\n\nThe current order will get lost.", node.toString());
     int result = JOptionPane.showConfirmDialog(UiUtilities
@@ -472,18 +472,19 @@ public class FilterTreeModel extends DefaultTreeModel {
    * @param node
    * @param comp
    */
-  private void sortNodeInternal(FilterNode node, Comparator<FilterNode> comp) {
-    @SuppressWarnings("unchecked")
-    ArrayList<FilterNode> childNodes = Collections.list(node.children());
+  private void sortNodeInternal(FilterNode node, Comparator<TreeNode> comp) {
+    ArrayList<TreeNode> childNodes = Collections.list(node.children());
     Collections.sort(childNodes, comp);
 
     node.removeAllChildren();
 
-    for(FilterNode child : childNodes) {
-      node.add(child);
-      if(child.isDirectoryNode()) {
-        sortNodeInternal(child, comp);
-      }
+    for(TreeNode child : childNodes) {
+    	if(child instanceof FilterNode) {
+	      node.add((FilterNode)child);
+	      if(((FilterNode)child).isDirectoryNode()) {
+	        sortNodeInternal((FilterNode)child, comp);
+	      }
+    	}
     }
   }
 }

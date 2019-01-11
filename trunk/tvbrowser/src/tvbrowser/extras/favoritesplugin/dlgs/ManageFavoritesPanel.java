@@ -67,6 +67,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.jgoodies.forms.factories.Borders;
@@ -1023,7 +1024,7 @@ public class ManageFavoritesPanel extends TabListenerPanel implements ListDropAc
     }
   }
 
-  protected void sortFavorites(Comparator<FavoriteNode> comp, String title) {
+  protected void sortFavorites(Comparator<TreeNode> comp, String title) {
     TreePath path = mFavoriteTree.getSelectionPath();
 
     if(path != null && !((FavoriteNode)path.getLastPathComponent()).isDirectoryNode() && path.getParentPath().getLastPathComponent().equals(mFavoriteTree.getRoot())) {

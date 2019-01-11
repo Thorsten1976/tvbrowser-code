@@ -58,9 +58,10 @@ public class LocalizerClassloader extends ClassLoader {
   public LocalizerClassloader(ClassLoader parent) {
     super(parent);
   }
- 
+  
   @Override
   public InputStream getResourceAsStream(String name) {
+	  System.out.println("RESOURCE");
     try {     
       // Check User-Home
       File file = new File(Settings.getUserSettingsDirName() + "/lang/" +name);
@@ -118,6 +119,7 @@ public class LocalizerClassloader extends ClassLoader {
       mLog.log(Level.SEVERE, "Could not load user defined language properties, using default instead.", e);
     }
     
+    System.out.println("zzz " + getParent());
     // Check Jar
     return getParent().getResourceAsStream(name);
   }

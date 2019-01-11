@@ -29,12 +29,12 @@ import java.util.logging.Logger;
 
 import javax.swing.Icon;
 
+import org.apache.commons.lang3.StringUtils;
+
 import util.io.IOUtilities;
 import util.misc.ChangeTrackingProperties;
 import util.misc.SoftReferenceCache;
 import util.ui.LazyImageIcon;
-
-import com.l2fprod.util.StringUtils;
 
 import devplugin.AbstractTvDataService;
 

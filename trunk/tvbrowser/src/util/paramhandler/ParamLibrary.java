@@ -30,10 +30,10 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.apache.commons.lang3.StringUtils;
+
 import util.misc.TextLineBreakerStringWidth;
 import util.ui.Localizer;
-
-import com.l2fprod.util.StringUtils;
 
 import devplugin.Program;
 import devplugin.ProgramFieldType;

@@ -76,19 +76,21 @@ public class PluginTreeModel extends DefaultTreeModel {
     if (!mDisableUpdate) {
       MutableTreeNode rootNode = (MutableTreeNode) this.getRoot();
       @SuppressWarnings("unchecked")
-      Enumeration<DefaultMutableTreeNode> e = rootNode.children();
+      Enumeration<? extends TreeNode> e = rootNode.children();
       while (e.hasMoreElements() && !mDisableUpdate) {
-        DefaultMutableTreeNode n = e.nextElement();
+        TreeNode n = e.nextElement();
 
-        Object o = n.getUserObject();
-        if (o instanceof Plugin) {
-          Plugin p = (Plugin) o;
-          p.getRootNode().update();
-        }
-        else if(n.equals(FavoritesPlugin.getInstance().getRootNode().getMutableTreeNode())) {
-          FavoritesPlugin.getInstance().getRootNode().update();
-        } else if(n.equals(ReminderPlugin.getRootNode().getMutableTreeNode())) {
-          ReminderPlugin.getRootNode().update();
+        if(n instanceof DefaultMutableTreeNode) {
+	        Object o = ((DefaultMutableTreeNode)n).getUserObject();
+	        if (o instanceof Plugin) {
+	          Plugin p = (Plugin) o;
+	          p.getRootNode().update();
+	        }
+	        else if(n.equals(FavoritesPlugin.getInstance().getRootNode().getMutableTreeNode())) {
+	          FavoritesPlugin.getInstance().getRootNode().update();
+	        } else if(n.equals(ReminderPlugin.getRootNode().getMutableTreeNode())) {
+	          ReminderPlugin.getRootNode().update();
+	        }
         }
       }
     }
@@ -211,8 +213,7 @@ public class PluginTreeModel extends DefaultTreeModel {
 
           if (node == null || pathNodes[0].toString().compareTo("Plugins") != 0) {
             TreeNode n1 = (TreeNode) o[i - 1];
-            @SuppressWarnings("unchecked")
-            Enumeration<DefaultMutableTreeNode> e1 = n1.children();
+            Enumeration<? extends TreeNode> e1 = n1.children();
 
             while (e1.hasMoreElements()) {
               TreeNode n2 = e1.nextElement();

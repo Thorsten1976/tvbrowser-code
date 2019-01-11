@@ -129,13 +129,13 @@ public class FavoriteTreeModel extends DefaultTreeModel {
 
   public void reload(TreeNode node) {
     super.reload(node);
-    @SuppressWarnings("unchecked")
-    Enumeration<FavoriteNode> e = node.children();
+    
+    Enumeration<? extends TreeNode> e = node.children();
 
     while(e.hasMoreElements()) {
-      FavoriteNode child = e.nextElement();
+      TreeNode child = e.nextElement();
 
-      if(child.isDirectoryNode()) {
+      if(child instanceof FavoriteNode && ((FavoriteNode)child).isDirectoryNode()) {
         reload(child);
       }
     }
@@ -143,13 +143,12 @@ public class FavoriteTreeModel extends DefaultTreeModel {
 
   public void reload(FavoriteTree tree, TreeNode node) {
     super.reload(node);
-    @SuppressWarnings("unchecked")
-    Enumeration<FavoriteNode> e = node.children();
+    Enumeration<? extends TreeNode> e = node.children();
 
     while(e.hasMoreElements()) {
-      FavoriteNode child = e.nextElement();
+      TreeNode child = e.nextElement();
 
-      if(child.isDirectoryNode()) {
+      if(child instanceof FavoriteNode && ((FavoriteNode)child).isDirectoryNode()) {
         reload(tree, child);
       }
     }
@@ -195,16 +194,17 @@ public class FavoriteTreeModel extends DefaultTreeModel {
 
   private void fillFavoriteList(FavoriteNode node, ArrayList<Favorite> favoriteList, boolean withChilds) {
     if(node.isDirectoryNode()) {
-      @SuppressWarnings("unchecked")
-      Enumeration<FavoriteNode> e = node.children();
+      Enumeration<? extends TreeNode> e = node.children();
 
       while(e.hasMoreElements()) {
-        FavoriteNode child = e.nextElement();
+        TreeNode child = e.nextElement();
 
-        if(withChilds && child.isDirectoryNode()) {
-          fillFavoriteList(child, favoriteList, withChilds);
-        } else if(child.containsFavorite()) {
-          favoriteList.add(child.getFavorite());
+        if(child instanceof FavoriteNode) {
+	        if(withChilds && ((FavoriteNode)child).isDirectoryNode()) {
+	          fillFavoriteList((FavoriteNode)child, favoriteList, withChilds);
+	        } else if(((FavoriteNode)child).containsFavorite()) {
+	          favoriteList.add(((FavoriteNode)child).getFavorite());
+	        }
         }
       }
     }
@@ -261,18 +261,19 @@ public class FavoriteTreeModel extends DefaultTreeModel {
     boolean value = false;
 
     if(node.isDirectoryNode()) {
-      @SuppressWarnings("unchecked")
-      Enumeration<FavoriteNode> e = node.children();
+      Enumeration<? extends TreeNode> e = node.children();
 
       while(e.hasMoreElements()) {
-        FavoriteNode child = e.nextElement();
+        TreeNode child = e.nextElement();
 
-        if(child.isDirectoryNode()) {
-          value = value || isContainedByOtherFavorites(child, favorite, p);
-        } else if(child.containsFavorite()) {
-          if(!child.equals(favorite)) {
-            value = value || child.getFavorite().contains(p);
-          }
+        if(child instanceof FavoriteNode) {
+	        if(((FavoriteNode)child).isDirectoryNode()) {
+	          value = value || isContainedByOtherFavorites((FavoriteNode)child, favorite, p);
+	        } else if(((FavoriteNode)child).containsFavorite()) {
+	          if(!child.equals(favorite)) {
+	            value = value || ((FavoriteNode)child).getFavorite().contains(p);
+	          }
+	        }
         }
       }
     }
@@ -282,27 +283,28 @@ public class FavoriteTreeModel extends DefaultTreeModel {
 
   private void deleteFavorite(FavoriteNode node, Favorite fav) {
     if(node.isDirectoryNode()) {
-      @SuppressWarnings("unchecked")
-      Enumeration<FavoriteNode> e = node.children();
+      Enumeration<? extends TreeNode> e = node.children();
 
       while(e.hasMoreElements()) {
-        FavoriteNode child = e.nextElement();
+        TreeNode child = e.nextElement();
 
-        if(child.isDirectoryNode()) {
-          deleteFavorite(child, fav);
-        } else if(child.containsFavorite()) {
-          if(child.equals(fav)) {
-            node.remove(child);
-            
-            Program[] progs = fav.getPrograms();
-            
-            for(Program prog : progs) {
-              prog.validateMarking();
-            }
-          }
-          else {
-            child.getFavorite().handleContainingPrograms(fav.getPrograms());
-          }
+        if(child instanceof FavoriteNode) {
+	        if(((FavoriteNode)child).isDirectoryNode()) {
+	          deleteFavorite((FavoriteNode)child, fav);
+	        } else if(((FavoriteNode)child).containsFavorite()) {
+	          if(child.equals(fav)) {
+	            node.remove((FavoriteNode)child);
+	            
+	            Program[] progs = fav.getPrograms();
+	            
+	            for(Program prog : progs) {
+	              prog.validateMarking();
+	            }
+	          }
+	          else {
+	        	  ((FavoriteNode)child).getFavorite().handleContainingPrograms(fav.getPrograms());
+	          }
+	        }
         }
       }
     }
@@ -398,74 +400,75 @@ public class FavoriteTreeModel extends DefaultTreeModel {
     }
 
     if(parentFavorite.isDirectoryNode()) {
-      @SuppressWarnings("unchecked")
-      Enumeration<FavoriteNode> e = parentFavorite.children();
+      Enumeration<TreeNode> e = parentFavorite.children();
 
       while(e.hasMoreElements()) {
-        final FavoriteNode child = e.nextElement();
+        final TreeNode child = e.nextElement();
 
-        if(child.isDirectoryNode()) {
-          PluginTreeNode newNode = new PluginTreeNode(child.toString());
-          newNode.setGroupingByWeekEnabled(true);
-
-          updatePluginTree(newNode, allPrograms, child);
-          if (!newNode.isEmpty()) {
-            node.add(newNode);
-          }
-        } else {
-          Program[] progArr = child.getFavorite().getWhiteListPrograms();
-          if (progArr.length > 0) {
-            PluginTreeNode newNode = new PluginTreeNode(child.toString());
-            newNode.setGroupingByWeekEnabled(true);
-            newNode.getMutableTreeNode().setIcon(FavoritesPlugin.getFavoritesIcon(16));
-            node.add(newNode);
-            Action editFavorite = new AbstractAction() {
-              public void actionPerformed(ActionEvent e) {
-                FavoritesPlugin.getInstance().editFavorite(child.getFavorite());
-              }
-            };
-            editFavorite.putValue(Action.NAME, mLocalizer.ellipsisMsg("editTree","Edit"));
-            editFavorite.putValue(Action.SMALL_ICON, TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
-
-            Action deleteFavorite = new AbstractAction() {
-              public void actionPerformed(ActionEvent e) {
-                FavoritesPlugin.getInstance().askAndDeleteFavorite(child.getFavorite());
-              }
-            };
-            deleteFavorite.putValue(Action.NAME, mLocalizer.ellipsisMsg("deleteTree","Delete"));
-            deleteFavorite.putValue(Action.SMALL_ICON, TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
-            deleteFavorite.putValue(ContextMenuIf.ACTIONKEY_KEYBOARD_EVENT,
-                KeyEvent.VK_DELETE);
-
-            newNode.addAction(editFavorite);
-            newNode.addAction(deleteFavorite);
-
-
-            if(progArr.length <= 10) {
-              newNode.setGroupingByDateEnabled(false);
-            }
-            boolean episodeOnly = progArr.length > 1;
-            for (Program program : progArr) {
-              String episode = program.getTextField(ProgramFieldType.EPISODE_TYPE);
-              if (StringUtils.isBlank(episode)) {
-                episodeOnly = false;
-                break;
-              }
-            }
-
-            for (Program program : progArr) {
-              PluginTreeNode pNode = newNode.addProgramWithoutCheck(program);
-              allPrograms.add(program);
-              if (episodeOnly || progArr.length <= 10) {
-                pNode.setNodeFormatter(new NodeFormatter() {
-                  public String format(ProgramItem pitem) {
-                    Program p = pitem.getProgram();
-                    return FavoriteTreeModel.getFavoriteLabel(child.getFavorite(), p);
-                  }
-                });
-              }
-            }
-          }
+        if(child instanceof FavoriteNode) {
+	        if(((FavoriteNode)child).isDirectoryNode()) {
+	          PluginTreeNode newNode = new PluginTreeNode(child.toString());
+	          newNode.setGroupingByWeekEnabled(true);
+	
+	          updatePluginTree(newNode, allPrograms, (FavoriteNode)child);
+	          if (!newNode.isEmpty()) {
+	            node.add(newNode);
+	          }
+	        } else {
+	          Program[] progArr = ((FavoriteNode)child).getFavorite().getWhiteListPrograms();
+	          if (progArr.length > 0) {
+	            PluginTreeNode newNode = new PluginTreeNode(child.toString());
+	            newNode.setGroupingByWeekEnabled(true);
+	            newNode.getMutableTreeNode().setIcon(FavoritesPlugin.getFavoritesIcon(16));
+	            node.add(newNode);
+	            Action editFavorite = new AbstractAction() {
+	              public void actionPerformed(ActionEvent e) {
+	                FavoritesPlugin.getInstance().editFavorite(((FavoriteNode)child).getFavorite());
+	              }
+	            };
+	            editFavorite.putValue(Action.NAME, mLocalizer.ellipsisMsg("editTree","Edit"));
+	            editFavorite.putValue(Action.SMALL_ICON, TVBrowserIcons.edit(TVBrowserIcons.SIZE_SMALL));
+	
+	            Action deleteFavorite = new AbstractAction() {
+	              public void actionPerformed(ActionEvent e) {
+	                FavoritesPlugin.getInstance().askAndDeleteFavorite(((FavoriteNode)child).getFavorite());
+	              }
+	            };
+	            deleteFavorite.putValue(Action.NAME, mLocalizer.ellipsisMsg("deleteTree","Delete"));
+	            deleteFavorite.putValue(Action.SMALL_ICON, TVBrowserIcons.delete(TVBrowserIcons.SIZE_SMALL));
+	            deleteFavorite.putValue(ContextMenuIf.ACTIONKEY_KEYBOARD_EVENT,
+	                KeyEvent.VK_DELETE);
+	
+	            newNode.addAction(editFavorite);
+	            newNode.addAction(deleteFavorite);
+	
+	
+	            if(progArr.length <= 10) {
+	              newNode.setGroupingByDateEnabled(false);
+	            }
+	            boolean episodeOnly = progArr.length > 1;
+	            for (Program program : progArr) {
+	              String episode = program.getTextField(ProgramFieldType.EPISODE_TYPE);
+	              if (StringUtils.isBlank(episode)) {
+	                episodeOnly = false;
+	                break;
+	              }
+	            }
+	
+	            for (Program program : progArr) {
+	              PluginTreeNode pNode = newNode.addProgramWithoutCheck(program);
+	              allPrograms.add(program);
+	              if (episodeOnly || progArr.length <= 10) {
+	                pNode.setNodeFormatter(new NodeFormatter() {
+	                  public String format(ProgramItem pitem) {
+	                    Program p = pitem.getProgram();
+	                    return FavoriteTreeModel.getFavoriteLabel(((FavoriteNode)child).getFavorite(), p);
+	                  }
+	                });
+	              }
+	            }
+	          }
+	        }
         }
       }
     }
@@ -518,7 +521,7 @@ public class FavoriteTreeModel extends DefaultTreeModel {
    * @param comp Comparator for sorting
    * @param title Title of confirmation message dialog
    */
-  public void sort(FavoriteNode node, Comparator<FavoriteNode> comp, String title) {
+  public void sort(FavoriteNode node, Comparator<TreeNode> comp, String title) {
     String msg = mLocalizer.msg("reallySort",
         "Do you really want to sort '{0}'?\n\nThe current order will get lost.", node.toString());
     int result = JOptionPane.showConfirmDialog(UiUtilities
@@ -537,18 +540,19 @@ public class FavoriteTreeModel extends DefaultTreeModel {
    * @param comp
    */
   private void sortNodeInternal(FavoriteNode node,
-      Comparator<FavoriteNode> comp) {
-    @SuppressWarnings("unchecked")
-    ArrayList<FavoriteNode> childNodes = Collections.list(node.children());
+      Comparator<TreeNode> comp) {
+    ArrayList<TreeNode> childNodes = Collections.list(node.children());
     Collections.sort(childNodes, comp);
 
     node.removeAllChildren();
 
-    for(FavoriteNode child : childNodes) {
-      node.add(child);
-      if(child.isDirectoryNode()) {
-        sortNodeInternal(child, comp);
-      }
+    for(TreeNode child : childNodes) {
+    	if(child instanceof FavoriteNode) {
+	      node.add((FavoriteNode)child);
+	      if(((FavoriteNode)child).isDirectoryNode()) {
+	        sortNodeInternal((FavoriteNode)child, comp);
+	      }
+    	}
     }
   }
 

@@ -190,7 +190,8 @@ public class Localizer {
     }
     try {
       // load the resource bundle including all parents
-      ResourceBundle bundle = ResourceBundle.getBundle(mBaseName, Locale.getDefault(), new LocalizerClassloader(mParentClassLoader));
+      ResourceBundle bundle = ResourceBundle.getBundle(mBaseName, Locale.getDefault(), mParentClassLoader/*new LocalizerClassloader(mParentClassLoader)*/);
+      
       if (bundle != null) {
         // now merge the bundle and all parents into one hash map to save memory
         mResource = new HashMap<String, String>();
@@ -204,6 +205,7 @@ public class Localizer {
     }
     catch (MissingResourceException exc) {
       mLog.warning("ResourceBundle not found: '" + mBaseName + "'");
+      exc.printStackTrace();
     }
     return mResource;
   }
