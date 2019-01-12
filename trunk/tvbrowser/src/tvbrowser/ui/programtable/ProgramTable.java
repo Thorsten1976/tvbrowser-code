@@ -1280,7 +1280,7 @@ public class ProgramTable extends JPanel
   
   @Override
   public void showContextMenu(MouseEvent e) {
-    mAutoScroller.stopAutoScroll();
+    mAutoScroller.stopAutoScroll(true);
     mMouse = e.getPoint();
     repaint();
         
@@ -1299,7 +1299,7 @@ public class ProgramTable extends JPanel
   public void handleMouseReleased(MouseEvent evt) {}
   
   public boolean stopAutoScroll() {
-    return mAutoScroller.stopAutoScroll();
+    return mAutoScroller.stopAutoScroll(true);
   }
 
   @Override
