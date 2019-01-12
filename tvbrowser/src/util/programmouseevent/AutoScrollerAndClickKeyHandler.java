@@ -154,7 +154,7 @@ public class AutoScrollerAndClickKeyHandler {
         && (System.currentTimeMillis() - mLastDragTime < 20)) {
       if (Math.abs(mLastDragDeltaX) >= 3 || Math.abs(mLastDragDeltaY) >= 3) {
         // stop last scroll, if it is still active
-        stopAutoScroll();
+        stopAutoScroll(true);
         startAutoScroll(new Point(mLastDragDeltaX, mLastDragDeltaY), 2);
       }
     }
@@ -170,7 +170,7 @@ public class AutoScrollerAndClickKeyHandler {
     mScrollComponent.setCursor(Cursor.getDefaultCursor());
 
     if (SwingUtilities.isMiddleMouseButton(evt)) {
-      stopAutoScroll();
+      stopAutoScroll(true);
     }
   }
 
@@ -184,8 +184,10 @@ public class AutoScrollerAndClickKeyHandler {
     
     if (getDraggingPoint() != null && !evt.isShiftDown()) {
       if (SwingUtilities.isLeftMouseButton(evt)) {
-        stopAutoScroll();
+        stopAutoScroll(false);
+        mScrollComponent.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
         calcualteLastDragDelta(evt.getX(),evt.getY());
+        scrollBy(mLastDragDeltaX, mLastDragDeltaY);
         /*mLastDragDeltaX = mDraggingPoint.x - evt.getX();
         mLastDragDeltaY = mDraggingPoint.y - evt.getY();
         scrollBy(mLastDragDeltaX, mLastDragDeltaY);
@@ -262,7 +264,7 @@ public class AutoScrollerAndClickKeyHandler {
         viewPos.y = Math.max(viewPos.y, 0);
       }
       if (viewPos.equals(oldViewPos)) {
-        stopAutoScroll();
+        stopAutoScroll(false);
       } else {
         viewport.setViewPosition(viewPos);
       }
@@ -270,8 +272,10 @@ public class AutoScrollerAndClickKeyHandler {
   }
   
 
-  public boolean stopAutoScroll() {
-    mScrollComponent.setCursor(Cursor.getDefaultCursor());
+  public boolean stopAutoScroll(final boolean setCursor) {
+	if(setCursor) {
+	  mScrollComponent.setCursor(Cursor.getDefaultCursor());
+	}
     
     if (mAutoScrollThread != null && mAutoScrollThread.isAlive()) {
       mAutoScrollThread.interrupt();
