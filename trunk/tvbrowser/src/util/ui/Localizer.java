@@ -27,8 +27,10 @@
 package util.ui;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -39,10 +41,14 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.MissingResourceException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
@@ -150,7 +156,7 @@ public class Localizer {
    */
   private static final String ELLIPSIS = "...";
 
-  private ClassLoader mParentClassLoader;
+  private Module mModule;
 
   /**
    * Creates a new instance of Localizer.
@@ -181,27 +187,125 @@ public class Localizer {
       mBaseName = packageName + packageName.substring(lastDot);
     }
 
-    mParentClassLoader = clazz.getClassLoader();
+    mModule = clazz.getModule();
   }
 
+  private boolean loadBundle(String name, final Locale userLocale) {
+	  boolean result = false;
+	  
+	  try {
+		  if(userLocale != null) {
+			  name = name + "_" + userLocale.getLanguage();
+		  }
+		  
+		  name = name.replace(".", "/") + ".properties";
+		  
+	      // Check User-Home
+	      File file = new File(Settings.getUserSettingsDirName() + "/lang/" +name);
+	      
+	      if (file.exists()) {
+	        try {
+	          return loadBundleFromStream(new FileInputStream(file));
+	        } catch (FileNotFoundException e) {
+	          mLog.log(Level.WARNING, "Could not open language properties found in user settings directory.", e);
+	        }
+	      }
+	    
+	      // Check TV-Browser Location
+	      file = new File("lang/" + name);
+	    
+	      if (file.exists()) {
+	        try {
+	          return loadBundleFromStream(new FileInputStream(file));
+	        } catch (FileNotFoundException e) {
+	          mLog.log(Level.WARNING, "Could not open language properties found in program directory.", e);
+	        }
+	      }
+	      
+	      int propertyIndex = name.indexOf(".properties");
+	      int localeIndex = name.indexOf("_");
+	      
+	      if(localeIndex != -1) {
+	        String locale = name.substring(localeIndex,propertyIndex);
+	        
+	        // check user home for zip file with translation 
+	        File zip = new File(Settings.getUserSettingsDirName() + "/languages/tvbrowser-translation" + locale + ".zip");
+	        
+	        if(!zip.isFile()) {
+	          // not in user home, check program directory
+	          zip = new File("/languages/tvbrowser-translation" + locale + ".zip");
+	        }
+	        
+	        if(zip.isFile()) {
+	          
+	          @SuppressWarnings("resource")
+	          ZipFile zipFile = new ZipFile(zip);
+	          
+	          ZipEntry entry = zipFile.getEntry(name);
+	          
+	          if(entry == null) {
+	            entry = zipFile.getEntry(name.replace("/", "\\"));
+	          }
+	          
+	          if(entry != null) {
+	            return loadBundleFromStream(zipFile.getInputStream(entry));
+	          }
+	        }
+	      }
+	    }catch(Throwable e) {
+	      mLog.log(Level.SEVERE, "Could not load user defined language properties, using default instead.", e);
+	    }
+	  
+	  return result;
+  }
+  
+  private boolean loadBundleFromStream(InputStream in) throws IOException {
+	  boolean result = false;
+	  Properties prop = new Properties();
+	  prop.load(in);
+	  
+	  if(!prop.isEmpty()) {
+		  if(mResource == null) {
+			  mResource = new HashMap<String, String>();
+		  }
+		  
+          for (Enumeration<Object> enumKeys = prop.keys(); enumKeys.hasMoreElements();) {
+            String key = enumKeys.nextElement().toString();
+            if (key.startsWith(mKeyPrefix) && !mResource.containsKey(key)) {
+              mResource.put(key, prop.getProperty(key));
+              result = true;
+            }
+          }
+	  }
+	  
+	  return result;
+  }
+  
   private HashMap<String, String> loadResourceBundle() {
     if (mResource != null) {
       return mResource;
     }
     try {
+  	  loadBundle(mBaseName,Locale.getDefault());
+  	  loadBundle(mBaseName,null);
+  	  
       // load the resource bundle including all parents
-      ResourceBundle bundle = ResourceBundle.getBundle(mBaseName, Locale.getDefault(), mParentClassLoader/*new LocalizerClassloader(mParentClassLoader)*/);
+      ResourceBundle bundle = ResourceBundle.getBundle(mBaseName, Locale.getDefault(), mModule);
       
       if (bundle != null) {
         // now merge the bundle and all parents into one hash map to save memory
-        mResource = new HashMap<String, String>();
+    	if(mResource == null) {
+    		mResource = new HashMap<String, String>();
+    	}
+    	
         for (Enumeration<String> enumKeys = bundle.getKeys(); enumKeys.hasMoreElements();) {
           String key = enumKeys.nextElement();
-          if (key.startsWith(mKeyPrefix)) {
+          if (key.startsWith(mKeyPrefix) && !mResource.containsKey(key)) {
             mResource.put(key, bundle.getString(key));
           }
         }
       }
+  
     }
     catch (MissingResourceException exc) {
       mLog.warning("ResourceBundle not found: '" + mBaseName + "'");
