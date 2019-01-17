@@ -36,6 +36,8 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 
+import org.apache.commons.lang3.StringUtils;
+
 import tvbrowser.core.Settings;
 import tvbrowser.ui.mainframe.MainFrame;
 import util.exc.ErrorHandler;
@@ -44,7 +46,6 @@ import util.io.IOUtilities;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WindowClosingIf;
-import bsh.StringUtil;
 
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -80,7 +81,7 @@ public class Launch {
       return;
     }
     // recognize a command line with multiple URLs separated by whitespace
-    String[] urls = StringUtil.split(url, " ");
+    String[] urls = StringUtils.split(url, " ");
     if (urls.length > 1) {
       boolean multiUrls = true;
       for (String partUrl : urls) {

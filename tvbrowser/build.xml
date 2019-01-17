@@ -340,7 +340,6 @@
     <unjar src="${lib.dir}/${lib.opencsv.name}-${lib.opencsv.version}.jar" dest="${unpacked.dir}/${lib.opencsv.name}.jar" />
     <unjar src="${lib.dir}/${lib.htmlparser.name}-${lib.htmlparser.version}.jar" dest="${unpacked.dir}/${lib.htmlparser.name}.jar" />
     <unjar src="${lib.dir}/${lib.texhyphj.name}-${lib.texhyphj.version}.jar" dest="${unpacked.dir}/${lib.texhyphj.name}.jar" />
-    <unjar src="${lib.dir}/${lib.trident.name}-${lib.trident.version}.jar" dest="${unpacked.dir}/${lib.trident.name}.jar" />
   	<unjar src="${lib.dir}/${lib.jnativehook.name}-${lib.jnativehook.version}.jar" dest="${unpacked.dir}/${lib.jnativehook.name}.jar"/>
   	
     <!-- Pack the tvbrowser.jar -->
@@ -368,7 +367,6 @@
       <fileset dir="${unpacked.dir}/${lib.opencsv.name}.jar" includes="au/**"/>
       <fileset dir="${unpacked.dir}/${lib.htmlparser.name}.jar" includes="org/**"/>
       <fileset dir="${unpacked.dir}/${lib.texhyphj.name}.jar" includes="net/**"/>
-      <fileset dir="${unpacked.dir}/${lib.trident.name}.jar" includes="org/**"/>
       <fileset dir="${unpacked.dir}/${lib.jnativehook.name}.jar" includes="org/**"/>
     </jar>
 
@@ -1183,11 +1181,6 @@
 		<!-- texhyphj -->
 		<antcall target="download-zipped-lib">
 			<param name="lib" value="texhyphj"/>
-		</antcall>
-
-		<!-- trident -->
-		<antcall target="download-lib">
-			<param name="lib" value="trident"/>
 		</antcall>
 
 		<delete dir="${lib.dir}">
