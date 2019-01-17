@@ -47,15 +47,15 @@ module tvbrowser {
 	requires java.management;
 	requires org.apache.commons.lang3;
 	requires org.apache.commons.codec;
+	requires bsh.core;
 	requires commons.net;
+	requires htmlparser;
 	requires jgoodies.common;
 	requires jgoodies.forms;
 	requires jgoodies.looks;
 	requires jRegistryKey;
-	requires bsh;
 	requires l2fprod.common.tasks;
 	requires jnativehook;
 	requires texhyphj;
-	requires trident;
 	requires opencsv;
 }
