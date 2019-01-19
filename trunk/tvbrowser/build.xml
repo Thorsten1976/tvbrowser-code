@@ -350,24 +350,13 @@
         <attribute name="Main-Class" value="tvbrowser.TVBrowser"/>
       	<attribute name="SplashScreen-Image" value="splash.png"/>
       </manifest>
+    	<fileset dir="${classes.dir}" includes="module-info.class"/>
       <fileset dir="${classes.dir}" includes="tvbrowser/**"/>
       <fileset dir="${classes.dir}" includes="devplugin/**"/>
       <fileset dir="${classes.dir}" includes="tvdataservice/**"/>
       <fileset dir="${classes.dir}" includes="util/**"/>
       <fileset dir="${classes.dir}" includes="com/**"/>
       <fileset dir="${classes.dir}/imgs" includes="splash.png"/>
-      <fileset dir="${unpacked.dir}/${lib.bsh.name}.jar" includes="bsh/**"/>
-      <fileset dir="${unpacked.dir}/${lib.jgoodies-common.name}.jar" includes="com/**"/>
-      <fileset dir="${unpacked.dir}/${lib.jgoodies-forms.name}.jar" includes="com/**"/>
-      <fileset dir="${unpacked.dir}/${lib.jgoodies-looks.name}.jar" includes="com/**"/>
-      <fileset dir="${unpacked.dir}/${lib.tasks.name}.jar" includes="com/**"/>
-      <fileset dir="${unpacked.dir}/${lib.jregistrykey.name}.jar" includes="ca/**" />
-      <fileset dir="${unpacked.dir}/${lib.commons.codec.name}.jar" includes="org/**" />
-      <fileset dir="${unpacked.dir}/${lib.commons.lang.name}.jar" includes="org/**" />
-      <fileset dir="${unpacked.dir}/${lib.opencsv.name}.jar" includes="au/**"/>
-      <fileset dir="${unpacked.dir}/${lib.htmlparser.name}.jar" includes="org/**"/>
-      <fileset dir="${unpacked.dir}/${lib.texhyphj.name}.jar" includes="net/**"/>
-      <fileset dir="${unpacked.dir}/${lib.jnativehook.name}.jar" includes="org/**"/>
     </jar>
 
     <!-- Copy the other stuff -->
@@ -377,11 +366,16 @@
       <fileset dir="${classes.dir}/imgs" excludes="splash.png"/>
     </copy>
 
-    <copy todir="${tvbrowser-default.runtime.dir}/imgs">
+  	<copy todir="${tvbrowser-default.runtime.dir}/imgs">
 	    <fileset dir="./images/additional">
 		    <include name="*.ico"/>
 	    </fileset>
     </copy>
+  	
+  	<mkdir dir="${tvbrowser-default.runtime.dir}/lib"/>
+  	<copy todir="${tvbrowser-default.runtime.dir}/lib">
+  	    <fileset dir="${lib.dir}"/>
+  	</copy>
   	
   	<mkdir dir="${tvbrowser-default.runtime.dir}/personas"/>
     <copy todir="${tvbrowser-default.runtime.dir}/personas">
