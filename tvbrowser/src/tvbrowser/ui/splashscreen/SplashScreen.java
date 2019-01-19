@@ -32,15 +32,16 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
+import java.awt.IllegalComponentStateException;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.Window;
+import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 
 import tvbrowser.TVBrowser;
 import util.io.IOUtilities;
@@ -80,6 +81,9 @@ public class SplashScreen implements Splash {
       try {
         byte[] image = IOUtilities.loadFileFromJar("splash.png", SplashScreen.class);
         mImage = new ImageIcon(image).getImage();
+      }catch(IOException ioe) {}
+      
+      if(mImage != null) {
         mSplashWindow = new JWindow() {
           public void paint(Graphics g) {
             ((Graphics2D)g).setBackground(new Color(0,0,0,0));
@@ -96,9 +100,6 @@ public class SplashScreen implements Splash {
         setTransparentBackground(true);
         ((JPanel)mSplashWindow.getContentPane()).setOpaque(false);
         ((JPanel)mSplashWindow.getContentPane()).setBackground(new Color(0,0,0,0));
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
       }
     }
   }
@@ -211,8 +212,9 @@ public class SplashScreen implements Splash {
         
         if(mSplashWindow != null) {
           mSplashWindow.setLocationRelativeTo(null);
+          mSplashWindow.setAlwaysOnTop(true);
           mSplashWindow.setVisible(true);
-          mSplashWindow.toFront();
+          SwingUtilities.invokeLater(() -> mSplashWindow.toFront());
         }
       }
     };
@@ -230,26 +232,10 @@ public class SplashScreen implements Splash {
     GraphicsDevice[] devices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
     GraphicsConfiguration config = devices[0].getDefaultConfiguration();
     
-    try {
-      Class<?> awtUtilities = Class.forName("com.sun.awt.AWTUtilities");
-      Method m = awtUtilities.getMethod("isTranslucencyCapable",new Class<?>[] {GraphicsConfiguration.class});
-      
-      if((Boolean)m.invoke(awtUtilities, new Object[] {config})) {
-        m = awtUtilities.getMethod("setWindowOpaque",new Class<?>[] {Window.class,boolean.class});
-        m.invoke(awtUtilities, new Object[] {mSplashWindow,!value});
-      }
-    } catch (Exception e) {e.printStackTrace();
-      
-      
-      try {
-        Method m = config.getClass().getMethod("isTranslucencyCapable()",new Class<?>[] {GraphicsConfiguration.class});
-        
-        if((Boolean)m.invoke(config,new Object[0])) {
-          m = this.getClass().getMethod("setOpacity",new Class<?>[] {float.class});
-          m.invoke(mSplashWindow,new Object[] {(float)(value ? 0 : 1)});
-        }
-      } catch (Exception e1) {}
-    }    
+    if(config.isTranslucencyCapable()) {
+    	try {
+    		mSplashWindow.setOpacity((float)(value ? 0 : 1));
+    	}catch(IllegalComponentStateException e) {}
+    }
   }
-
 }

@@ -35,11 +35,13 @@ module tvbrowser {
 	exports util.tvdataservice;
 	exports tvdataservice;
 	exports tvbrowser.core.plugin;
+	opens tvbrowser.ui.mainframe;
 	exports tvbrowser.ui.pluginview;
 	exports tvbrowser.core;
 	exports tvbrowser.core.icontheme;
 	exports tvbrowser.core.tvdataservice;
 	exports tvbrowser.core.filters;
+	exports tvbrowser.extras.reminderplugin;
 	
 	requires java.rmi;
 	requires java.desktop;
