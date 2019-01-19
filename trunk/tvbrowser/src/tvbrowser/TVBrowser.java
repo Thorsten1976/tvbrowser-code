@@ -81,9 +81,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.jgoodies.looks.LookUtils;
 
-import ca.beq.util.win32.registry.RegistryKey;
-import ca.beq.util.win32.registry.RegistryValue;
-import ca.beq.util.win32.registry.RootKey;
 import devplugin.Date;
 import devplugin.ProgramFieldType;
 import devplugin.Version;
@@ -586,16 +583,16 @@ public class TVBrowser {
         initializeAutomaticDownload();
         if (Launch.isOsWindowsNtBranch()) {
           try {
-            RegistryKey desktopSettings = new RegistryKey(
+            /*RegistryKey desktopSettings = new RegistryKey(
                 RootKey.HKEY_CURRENT_USER, "Control Panel\\Desktop");
             RegistryValue autoEnd = desktopSettings
-                .getValue("AutoEndTasks");
+                .getValue("AutoEndTasks");*/
 
-            if (autoEnd.getData().equals("1")) {
-              RegistryValue killWait = desktopSettings
-                  .getValue("WaitToKillAppTimeout");
+            if (false/*autoEnd.getData().equals("1")*/) {
+             /* RegistryValue killWait = desktopSettings
+                  .getValue("WaitToKillAppTimeout");*/
 
-              int i1 = Integer.parseInt(killWait.getData().toString());
+              int i1 = 5000;//Integer.parseInt(killWait.getData().toString());
 
               if (i1 < 5000) {
                 JOptionPane pane = new JOptionPane();
@@ -630,8 +627,8 @@ public class TVBrowser {
                   mainFrame.quit();
                 } else if (!pane.getValue().equals(dontDoIt)) {
                   try {
-                    killWait.setData("5000");
-                    desktopSettings.setValue(killWait);
+                  //  killWait.setData("5000");
+                  //  desktopSettings.setValue(killWait);
                     JOptionPane
                         .showMessageDialog(
                             UiUtilities.getLastModalChildOf(mainFrame),

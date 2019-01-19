@@ -9,12 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.event.HyperlinkEvent;
 
-import tvbrowser.core.Settings;
-import tvbrowser.ui.settings.util.ColorButton;
-import tvbrowser.ui.settings.util.ColorLabel;
-import util.ui.Localizer;
-import util.ui.UiUtilities;
-
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.factories.Borders;
 import com.jgoodies.forms.factories.CC;
@@ -22,6 +16,11 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import devplugin.SettingsItem;
 import devplugin.SettingsTab;
+import tvbrowser.core.Settings;
+import tvbrowser.ui.settings.util.ColorButton;
+import tvbrowser.ui.settings.util.ColorLabel;
+import util.ui.Localizer;
+import util.ui.UiUtilities;
 
 /**
  * The settings tab for the ON_TIME_TYPE of the ProgramMenuItem.

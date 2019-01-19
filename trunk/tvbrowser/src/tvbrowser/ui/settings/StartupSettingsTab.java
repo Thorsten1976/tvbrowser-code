@@ -47,8 +47,6 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-import ca.beq.util.win32.registry.RegistryKey;
-import ca.beq.util.win32.registry.RootKey;
 import tvbrowser.TVBrowser;
 import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
@@ -166,8 +164,8 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
       layout.insertRow(++y, RowSpec.decode("pref"));
 
       try {
-        RegistryKey shellFolders = new RegistryKey(RootKey.HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders");
-        String path = shellFolders.getValue("Startup").getData().toString();
+       // RegistryKey shellFolders = new RegistryKey(RootKey.HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders");
+        String path = null;//shellFolders.getValue("Startup").getData().toString();
 
         if(path == null || path.length() < 1 || !(new File(path)).isDirectory()) {
           throw new Exception();
