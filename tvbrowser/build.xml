@@ -52,8 +52,6 @@
   <property name="doc.title" value="API documentation for ${programname} ${tvbrowser.version}"/>
   <property name="doc.bottom" value="${programname} ${tvbrowser.version}, Copyright (C) 2004-2008 TV-Browser Team (dev@tvbrowser.org)"/>
 
-  <property name="unpacked.dir" value="unpacked"/>
-
   <property name="runtime.dir" value="runtime"/>
   <property name="tvbrowser-default.runtime.dir" value="${runtime.dir}/tvbrowser_default"/>
 
@@ -188,7 +186,6 @@
   <!-- Deletes the runtime director -->
   <target name="clean">
     <delete dir="${classes.dir}"/>
-    <delete dir="${unpacked.dir}"/>
     <delete dir="${test.classes.dir}"/>
   </target>
 
@@ -329,18 +326,17 @@
     <echo message="Creating the jars ..."/>
 
     <!-- Extract the libraries for the tvbrowser.jar into the temp.dir -->
-    <unjar src="${lib.dir}/${lib.bsh.name}-${lib.bsh.version}.jar" dest="${unpacked.dir}/${lib.bsh.name}.jar"/>
+<!--    <unjar src="${lib.dir}/${lib.bsh.name}-${lib.bsh.version}.jar" dest="${unpacked.dir}/${lib.bsh.name}.jar"/>
     <unjar src="${lib.dir}/${lib.jgoodies-common.name}-${lib.jgoodies-common.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-common.name}.jar"/>
     <unjar src="${lib.dir}/${lib.jgoodies-forms.name}-${lib.jgoodies-forms.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-forms.name}.jar"/>
   	<unjar src="${lib.dir}/${lib.jgoodies-looks.name}-${lib.jgoodies-looks.version}.jar" dest="${unpacked.dir}/${lib.jgoodies-looks.name}.jar"/>
     <unjar src="${lib.dir}/${lib.tasks.name}-${lib.tasks.version}.jar" dest="${unpacked.dir}/${lib.tasks.name}.jar"/>
-    <unjar src="${lib.dir}/${lib.jregistrykey.name}-${lib.jregistrykey.version}.jar" dest="${unpacked.dir}/${lib.jregistrykey.name}.jar" />
     <unjar src="${lib.dir}/${lib.commons.codec.name}-${lib.commons.codec.version}.jar" dest="${unpacked.dir}/${lib.commons.codec.name}.jar" />
     <unjar src="${lib.dir}/${lib.commons.lang.name}-${lib.commons.lang.version}.jar" dest="${unpacked.dir}/${lib.commons.lang.name}.jar" />
     <unjar src="${lib.dir}/${lib.opencsv.name}-${lib.opencsv.version}.jar" dest="${unpacked.dir}/${lib.opencsv.name}.jar" />
     <unjar src="${lib.dir}/${lib.htmlparser.name}-${lib.htmlparser.version}.jar" dest="${unpacked.dir}/${lib.htmlparser.name}.jar" />
     <unjar src="${lib.dir}/${lib.texhyphj.name}-${lib.texhyphj.version}.jar" dest="${unpacked.dir}/${lib.texhyphj.name}.jar" />
-  	<unjar src="${lib.dir}/${lib.jnativehook.name}-${lib.jnativehook.version}.jar" dest="${unpacked.dir}/${lib.jnativehook.name}.jar"/>
+  	<unjar src="${lib.dir}/${lib.jnativehook.name}-${lib.jnativehook.version}.jar" dest="${unpacked.dir}/${lib.jnativehook.name}.jar"/> -->
   	
     <!-- Pack the tvbrowser.jar -->
     <jar jarfile="${tvbrowser-default.runtime.dir}/tvbrowser.jar"
@@ -419,9 +415,9 @@
   	</zip>
 
     <!-- Extract the libraries for the tvbrowser.jar into the temp.dir -->
-    <mkdir dir="${unpacked.dir}/${lib.commons.net.name}.jar"/>
+<!--    <mkdir dir="${unpacked.dir}/${lib.commons.net.name}.jar"/>
     <unjar src="${lib.dir}/${lib.commons.net.name}-${lib.commons.net.version}.jar" dest="${unpacked.dir}/${lib.commons.net.name}.jar"/>
-
+-->
   </target>
 
 
@@ -440,7 +436,6 @@
     </copy>
 	<copy todir="${tvbrowser-transportable.runtime.dir}">
   	  <fileset dir="${tvbrowser-default.runtime.dir}"/>
-      <fileset dir="${win.dir}/jRegistryKey" includes="jRegistryKey.dll" />
 	</copy>
   </target>
 
@@ -450,7 +445,6 @@
     <mkdir dir="${tvbrowser-win.runtime.dir}"/>
     <copy todir="${tvbrowser-win.runtime.dir}">
       <fileset dir="${tvbrowser-default.runtime.dir}"/>
-      <fileset dir="${win.dir}/jRegistryKey" includes="jRegistryKey.dll" />
       <fileset dir="${deployment.dir}" includes="windows.properties"/>
       <fileset dir="${win.dir}" includes="tvbrowser_noDD.txt"/>
     </copy>
@@ -1011,7 +1005,6 @@
         <exclude name="${classes.dir}/**" />
         <exclude name="${public.dir}/**" />
         <exclude name="${runtime.dir}/**" />
-        <exclude name="${unpacked.dir}/**" />
 
       </zipfileset>
     </zip>
@@ -1155,11 +1148,6 @@
 		<!-- jgoodies looks -->
 		<antcall target="download-zipped-lib">
 			<param name="lib" value="jgoodies-looks"/>
-		</antcall>
-
-		<!-- jRegistryKey -->
-		<antcall target="download-zipped-lib">
-			<param name="lib" value="jregistrykey"/>
 		</antcall>
 
 		<!-- l2prod common tasks -->

@@ -55,7 +55,6 @@ module tvbrowser {
 	requires jgoodies.common;
 	requires jgoodies.forms;
 	requires jgoodies.looks;
-	requires jRegistryKey;
 	requires l2fprod.common.tasks;
 	requires jnativehook;
 	requires texhyphj;
