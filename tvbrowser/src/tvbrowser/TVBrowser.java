@@ -119,6 +119,8 @@ import util.exc.ErrorHandler;
 import util.exc.TvBrowserException;
 import util.io.IOUtilities;
 import util.io.Mirror;
+import util.io.windows.registry.RegistryKey;
+import util.io.windows.registry.RegistryValue;
 import util.misc.OperatingSystem;
 import util.ui.ImageUtilities;
 import util.ui.Localizer;
@@ -581,72 +583,75 @@ public class TVBrowser {
       SwingUtilities.invokeLater(() -> {
         ChannelList.completeChannelLoading();
         initializeAutomaticDownload();
+        
         if (Launch.isOsWindowsNtBranch()) {
           try {
-            /*RegistryKey desktopSettings = new RegistryKey(
-                RootKey.HKEY_CURRENT_USER, "Control Panel\\Desktop");
+            RegistryKey desktopSettings = new RegistryKey(
+                RegistryKey.HKEY_CURRENT_USER, "Control Panel\\Desktop");
             RegistryValue autoEnd = desktopSettings
-                .getValue("AutoEndTasks");*/
+                .getValue("AutoEndTasks");
+            
+            if (autoEnd.getData().equals("1")) {
+              RegistryValue killWait = desktopSettings
+                  .getValue("WaitToKillAppTimeout");
 
-            if (false/*autoEnd.getData().equals("1")*/) {
-             /* RegistryValue killWait = desktopSettings
-                  .getValue("WaitToKillAppTimeout");*/
-
-              int i1 = 5000;//Integer.parseInt(killWait.getData().toString());
-
-              if (i1 < 5000) {
-                JOptionPane pane = new JOptionPane();
-
-                String cancel = mLocalizer.msg("registryCancel",
-                    "Close TV-Browser");
-                String dontDoIt = mLocalizer.msg("registryJumpOver",
-                    "Not this time");
-
-                pane.setOptions(new String[] {
-                    Localizer.getLocalization(Localizer.I18N_OK), dontDoIt,
-                    cancel });
-                pane.setOptionType(JOptionPane.YES_NO_CANCEL_OPTION);
-                pane.setMessageType(JOptionPane.WARNING_MESSAGE);
-                pane
-                    .setMessage(mLocalizer
-                        .msg(
-                            "registryWarning",
-                            "The fast shutdown of Windows is activated.\nThe timeout to wait for before Windows is closing an application is too short,\nto give TV-Browser enough time to save all settings.\n\nThe setting hasn't the default value. It was changed by a tool or by you.\nTV-Browser will now try to change the timeout.\n\nIf you don't want to change this timeout select 'Not this time' or 'Close TV-Browser'."));
-
-                pane.setInitialValue(mLocalizer.msg("registryCancel",
-                    "Close TV-Browser"));
-
-                JDialog d = pane.createDialog(UiUtilities
-                    .getLastModalChildOf(mainFrame), UIManager
-                    .getString("OptionPane.messageDialogTitle"));
-                d.setModalityType(ModalityType.DOCUMENT_MODAL);
-                UiUtilities.centerAndShow(d);
-
-                if (pane.getValue() == null
-                    || pane.getValue().equals(cancel)) {
-                  mainFrame.quit();
-                } else if (!pane.getValue().equals(dontDoIt)) {
-                  try {
-                  //  killWait.setData("5000");
-                  //  desktopSettings.setValue(killWait);
-                    JOptionPane
-                        .showMessageDialog(
-                            UiUtilities.getLastModalChildOf(mainFrame),
-                            mLocalizer
-                                .msg("registryChanged",
-                                    "The timeout was changed successfully.\nPlease reboot Windows!"));
-                  } catch (Exception registySetting) {
-                    JOptionPane
-                        .showMessageDialog(
-                            UiUtilities.getLastModalChildOf(mainFrame),
-                            mLocalizer
-                                .msg(
-                                    "registryNotChanged",
-                                    "<html>The Registry value couldn't be changed. Maybe you haven't the right to do it.<br>If it is so contact you Administrator and let him do it for you.<br><br><b><Attention:/b> The following description is for experts. If you change or delete the wrong value in the Registry you could destroy your Windows installation.<br><br>To get no warning on TV-Browser start the Registry value <b>WaitToKillAppTimeout</b> in the Registry path<br><b>HKEY_CURRENT_USER\\Control Panel\\Desktop</b> have to be at least <b>5000</b> or the value for <b>AutoEndTasks</b> in the same path have to be <b>0</b>.</html>"),
-                            Localizer.getLocalization(Localizer.I18N_ERROR),
-                            JOptionPane.ERROR_MESSAGE);
-                  }
-                }
+              if(!killWait.isUnknown()) {
+	              int i1 = Integer.parseInt(killWait.getData());
+	
+	              if (i1 < 5000) {
+	                JOptionPane pane = new JOptionPane();
+	
+	                String cancel = mLocalizer.msg("registryCancel",
+	                    "Close TV-Browser");
+	                String dontDoIt = mLocalizer.msg("registryJumpOver",
+	                    "Not this time");
+	
+	                pane.setOptions(new String[] {
+	                    Localizer.getLocalization(Localizer.I18N_OK), dontDoIt,
+	                    cancel });
+	                pane.setOptionType(JOptionPane.YES_NO_CANCEL_OPTION);
+	                pane.setMessageType(JOptionPane.WARNING_MESSAGE);
+	                pane
+	                    .setMessage(mLocalizer
+	                        .msg(
+	                            "registryWarning",
+	                            "The fast shutdown of Windows is activated.\nThe timeout to wait for before Windows is closing an application is too short,\nto give TV-Browser enough time to save all settings.\n\nThe setting hasn't the default value. It was changed by a tool or by you.\nTV-Browser will now try to change the timeout.\n\nIf you don't want to change this timeout select 'Not this time' or 'Close TV-Browser'."));
+	
+	                pane.setInitialValue(mLocalizer.msg("registryCancel",
+	                    "Close TV-Browser"));
+	
+	                JDialog d = pane.createDialog(UiUtilities
+	                    .getLastModalChildOf(mainFrame), UIManager
+	                    .getString("OptionPane.messageDialogTitle"));
+	                d.setModalityType(ModalityType.DOCUMENT_MODAL);
+	                UiUtilities.centerAndShow(d);
+	
+	                if (pane.getValue() == null
+	                    || pane.getValue().equals(cancel)) {
+	                  mainFrame.quit();
+	                } else if (!pane.getValue().equals(dontDoIt)) {
+	                  try {
+	                  //  killWait.setData("5000");
+	                  //  desktopSettings.setValue(killWait);
+	                    JOptionPane
+	                        .showMessageDialog(
+	                            UiUtilities.getLastModalChildOf(mainFrame),
+	                            mLocalizer
+	                                .msg("registryChanged",
+	                                    "The timeout was changed successfully.\nPlease reboot Windows!"));
+	                  } catch (Exception registySetting) {
+	                    JOptionPane
+	                        .showMessageDialog(
+	                            UiUtilities.getLastModalChildOf(mainFrame),
+	                            mLocalizer
+	                                .msg(
+	                                    "registryNotChanged",
+	                                    "<html>The Registry value couldn't be changed. Maybe you haven't the right to do it.<br>If it is so contact you Administrator and let him do it for you.<br><br><b><Attention:/b> The following description is for experts. If you change or delete the wrong value in the Registry you could destroy your Windows installation.<br><br>To get no warning on TV-Browser start the Registry value <b>WaitToKillAppTimeout</b> in the Registry path<br><b>HKEY_CURRENT_USER\\Control Panel\\Desktop</b> have to be at least <b>5000</b> or the value for <b>AutoEndTasks</b> in the same path have to be <b>0</b>.</html>"),
+	                            Localizer.getLocalization(Localizer.I18N_ERROR),
+	                            JOptionPane.ERROR_MESSAGE);
+	                  }
+	                }
+	              }
               }
             }
           } catch (Throwable registry) {

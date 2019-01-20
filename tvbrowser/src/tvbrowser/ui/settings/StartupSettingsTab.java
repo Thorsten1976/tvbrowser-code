@@ -52,6 +52,7 @@ import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.ui.mainframe.MainFrame;
 import tvbrowser.ui.mainframe.PeriodItem;
+import util.io.windows.registry.RegistryKey;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.WideComboBox;
@@ -164,9 +165,9 @@ public class StartupSettingsTab implements devplugin.SettingsTab {
       layout.insertRow(++y, RowSpec.decode("pref"));
 
       try {
-       // RegistryKey shellFolders = new RegistryKey(RootKey.HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders");
-        String path = null;//shellFolders.getValue("Startup").getData().toString();
-
+        RegistryKey shellFolders = new RegistryKey(RegistryKey.HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders");
+        String path = shellFolders.getValue("Startup").getData().toString();
+        
         if(path == null || path.length() < 1 || !(new File(path)).isDirectory()) {
           throw new Exception();
         }
