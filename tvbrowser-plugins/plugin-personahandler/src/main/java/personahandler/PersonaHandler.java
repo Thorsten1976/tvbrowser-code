@@ -2,7 +2,6 @@ package personahandler;
 
 import java.awt.Color;
 import java.awt.Frame;
-
 import java.awt.event.ActionEvent;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -21,29 +20,27 @@ import javax.swing.Icon;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-import org.apache.commons.lang3.StringEscapeUtils;
-
+import devplugin.ActionMenu;
+import devplugin.Plugin;
+import devplugin.PluginInfo;
+import devplugin.SettingsTab;
+import devplugin.Version;
 import util.io.IOUtilities;
 import util.ui.Localizer;
 import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaInfo;
 import util.ui.persona.PersonaListener;
-import devplugin.ActionMenu;
-import devplugin.Plugin;
-import devplugin.PluginInfo;
-import devplugin.SettingsTab;
-import devplugin.Version;
 
 public class PersonaHandler extends Plugin implements PersonaListener {
   private final static Localizer mLocalizer = Localizer.getLocalizerFor(PersonaHandler.class);
-  private static Version mVersion = new Version(0,13,2,true);
+  private static Version mVersion = new Version(0,14,0,true);
   private PluginInfo mPluginInfo;
   
   private static PersonaHandler mInstance;
   private PersonaDialog mPersonaDialog;
   
-  public PersonaHandler() {
+  public PersonaHandler() {System.out.println("gg");
     mInstance = this;
     mPluginInfo = new PluginInfo(PersonaHandler.class,"PersonaHandler",mLocalizer.msg("description","Let's you install, create, delete and edit Personas for TV-Browser in an easy way."),"Ren\u00e9 Mach","GPL",mLocalizer.msg("website","http://enwiki.tvbrowser.org/index.php/PersonaHandler"));
     Persona.getInstance().registerPersonaListener(this);
@@ -163,8 +160,6 @@ try{
     try {
       BufferedInputStream in = new BufferedInputStream(IOUtilities.getStream(new URL(url1)));
       
-      
-      
       int len;
       byte[] buffer = new byte[10240];
       while ((len = (in.read(buffer))) != -1) {
@@ -172,25 +167,13 @@ try{
         string.append(buf);
       }
       
-      
-      
       string.trimToSize();
       
       in.close();
-      
-
-      
     } catch (Exception e1) {
       // TODO Auto-generated catch block
       e1.printStackTrace();
-      
     }
-    
-    //Pattern p = Pattern.compile("<a href=.*?persona=\"([^\"]*)\">");
-    Pattern p = Pattern.compile("data-browsertheme=\"([^\"]*)\"");
-    Matcher m = p.matcher(string.toString());
-
-    int lastPos = 0;
     
     String id = "id";
     String name = "name";
@@ -203,65 +186,58 @@ try{
     String detailURL = "detailURL";
     String iconURL = "iconURL";
     
-    while(m.find(lastPos)) {
-      String persona = StringEscapeUtils.unescapeJava(StringEscapeUtils.unescapeHtml4(m.group(1).replace("{","").replace("}","")));
-      StringBuffer buff = new StringBuffer(persona.replace("&quot;","\"").replace("&amp;","&").replace("&lt;","<").replace("&gt;",">").replace("&#34;","\""));
-      
-      boolean openQuote = false; 
+    final StringBuilder pattern = new StringBuilder("\"(");
+    pattern.append(id).append("|").append(name).append("|").append(description).append("|");
+    pattern.append(headerURL).append("|").append(footerURL).append("|").append(accentcolor).append("|");
+    pattern.append(textcolor).append("|").append(author).append("|").append(detailURL).append("|").append(iconURL);
+    pattern.append(")\":\"(.*?)\"");
 
-      for(int i = 0; i < buff.length(); i++) {
-        Character c = buff.charAt(i);
+    Pattern p1 = Pattern.compile("\\{(.*?"+detailURL+".*?)\\}");
+    Matcher m1 = p1.matcher(string.toString());
+    
+    if(m1.find()) {
+    
+      Pattern p = Pattern.compile(pattern.toString());
+      Matcher m = p.matcher(m1.group(1));
+
+      int lastPos = 0;
+    
+      while(m.find(lastPos)) {
+    	String key = m.group(1);
+        String value = m.group(2);
         
-        if(c == '\"') {
-          openQuote = !openQuote;
+        if(key.equals(id)) {
+          id = value;
         }
-        else if(openQuote && c == ',') {
-          buff.setCharAt(i,'$');
+        else if(key.equals(name)) {
+          name = value;
         }
+        else if(key.equals(description)) {
+          description = value;
+        }
+        else if(key.equals(headerURL)) {
+          headerURL = value.replace("\\u002F", "/") ;
+        }
+        else if(key.equals(footerURL)) {
+          footerURL = value.replace("\\u002F", "/") ;
+        }
+        else if(key.equals(accentcolor)) {
+          accentcolor = value;
+        }
+        else if(key.equals(textcolor)) {
+          textcolor = value;
+        }
+        else if(key.equals(author)) {
+          author = value;
+        }
+        else if(key.equals(detailURL)) {
+          detailURL = value.replace("\\u002F", "/") ;
+        }
+        else if(key.equals(iconURL)) {
+          iconURL = value.replace("\\u002F", "/") ;
+        }
+    	lastPos = m.end();
       }
-      
-      String[] parts = buff.toString().replace("\"","").split(",");
-      
-      for(String part : parts) {
-        int index = part.indexOf(":");
-        
-        if(index != -1) {
-          String key = part.substring(0,index);
-          String value = part.substring(index+1);
-          
-          if(key.equals(id)) {
-            id = value;
-          }
-          else if(key.equals(name)) {
-            name = value;
-          }
-          else if(key.equals(description)) {
-            description = value;
-          }
-          else if(key.equals(headerURL)) {
-            headerURL = value;
-          }
-          else if(key.equals(footerURL)) {
-            footerURL = value;
-          }
-          else if(key.equals(accentcolor)) {
-            accentcolor = value;
-          }
-          else if(key.equals(textcolor)) {
-            textcolor = value;
-          }
-          else if(key.equals(author)) {
-            author = value;
-          }
-          else if(key.equals(detailURL)) {
-            detailURL = value;
-          }
-          else if(key.equals(iconURL)) {
-            iconURL = value;
-          }
-        }
-      }
-      break;
     }
     
     File versionDir = new File(Persona.getUserPersonaDir(),id);
@@ -273,111 +249,96 @@ try{
         File headerImage = new File(versionDir,"header.jpg");        
         File footerImage = new File(versionDir,"footer.jpg");
         File iconImage = new File(versionDir,"icon");
+        boolean accepted = false;
         
         try {
           IOUtilities.download(new URL(headerURL),headerImage);
+          accepted = true;
           IOUtilities.download(new URL(footerURL),footerImage);
           IOUtilities.download(new URL(iconURL),iconImage);
         } catch (MalformedURLException e1) {
-          // TODO Auto-generated catch block
-          e1.printStackTrace();
+          // ignore
         } catch (IOException e1) {
-          // TODO Auto-generated catch block
-          e1.printStackTrace();
+          // ignore
         }
         
-        prop.setProperty(Persona.NAME_KEY, name.replace("$",",") + " by " + author);
-        prop.setProperty(Persona.DESCRIPTION_KEY, description.replace("$",",").replace("null",""));
-        prop.setProperty(Persona.HEADER_IMAGE_KEY, Persona.USER_PERSONA + "/" + headerImage.getName());
-        prop.setProperty(Persona.FOOTER_IMAGE_KEY, Persona.USER_PERSONA + "/" + footerImage.getName());
-        prop.setProperty(Persona.DETAIL_URL_KEY, detailURL);
-        
-        Color textColor = UIManager.getColor("Menu.foreground");
-        
-        if(!textcolor.equals("null") && textcolor.length() == 7) {
-          textColor = new Color(Integer.parseInt(textcolor.substring(1,3),16),Integer.parseInt(textcolor.substring(3,5),16),Integer.parseInt(textcolor.substring(5,7),16));          
+        if(accepted) {
+	        prop.setProperty(Persona.NAME_KEY, name.replace("$",",") + " by " + author);
+	        prop.setProperty(Persona.DESCRIPTION_KEY, description.replace("$",",").replace("null",""));
+	        prop.setProperty(Persona.HEADER_IMAGE_KEY, Persona.USER_PERSONA + "/" + headerImage.getName());
+	        prop.setProperty(Persona.FOOTER_IMAGE_KEY, Persona.USER_PERSONA + "/" + footerImage.getName());
+	        prop.setProperty(Persona.DETAIL_URL_KEY, detailURL);
+	        
+	        Color textColor = UIManager.getColor("Menu.foreground");
+	        
+	        if(!textcolor.equals("null") && textcolor.length() == 7) {
+	          textColor = new Color(Integer.parseInt(textcolor.substring(1,3),16),Integer.parseInt(textcolor.substring(3,5),16),Integer.parseInt(textcolor.substring(5,7),16));          
+	        }
+	        
+	        prop.setProperty(Persona.TEXT_COLOR_KEY, textColor.getRed() + "," + textColor.getGreen() + "," + textColor.getBlue());
+	                      
+	        double test = (0.2126 * textColor.getRed()) + (0.7152 * textColor.getGreen()) + (0.0722 * textColor.getBlue()); 
+	        
+	        Color accentColor = null;
+	        
+	        if(!accentcolor.equals("null") && accentcolor.length() == 7) {
+	          accentColor = new Color(Integer.parseInt(accentcolor.substring(1,3),16),Integer.parseInt(accentcolor.substring(3,5),16),Integer.parseInt(accentcolor.substring(5,7),16));
+	        }
+	        else if(test <= 127) {
+	          accentColor = textColor.brighter().brighter().brighter();
+	        }
+	        else if(test > 127) {
+	          accentColor = textColor.darker().darker().darker();
+	        }
+	        
+	        prop.setProperty(Persona.ACCENT_COLOR_KEY, accentColor.getRed() + "," + accentColor.getGreen() + "," + accentColor.getBlue());
+	        
+	        Color shadowColor = null;
+	        
+	        if(test <= 30) {
+	          shadowColor = textColor;
+	        }
+	        else if(test <= 40) {
+	          shadowColor = textColor.brighter().brighter().brighter().brighter().brighter().brighter();
+	        }
+	        else if(test <= 60) {
+	          shadowColor = textColor.brighter().brighter().brighter();
+	        }
+	        else if(test <= 100) {
+	          shadowColor = textColor.brighter().brighter();
+	        }
+	        else if(test <= 145) {
+	          shadowColor = textColor;
+	        }
+	        else if(test <= 170) {
+	          shadowColor = textColor.darker();
+	        }
+	        else if(test <= 205) {
+	          shadowColor = textColor.darker().darker();
+	        }
+	        else if(test <= 220){
+	          shadowColor = textColor.darker().darker().darker();
+	        }
+	        else if(test <= 235){
+	          shadowColor = textColor.darker().darker().darker().darker();
+	        }
+	        else {
+	          shadowColor = textColor.darker().darker().darker().darker().darker();
+	        }
+	        
+	        prop.setProperty(Persona.SHADOW_COLOR_KEY, shadowColor.getRed() + "," + shadowColor.getGreen() + "," + shadowColor.getBlue());
+	
+	        try {
+	          FileOutputStream out = new FileOutputStream(new File(versionDir,"persona.prop"));
+	          prop.store(out,"");
+	          out.close();
+	        } catch (Exception e1) {
+	          // TODO Auto-generated catch block
+	          e1.printStackTrace();
+	        }
+	        
+	        Persona.getInstance().loadPersonas();
         }
-        
-        prop.setProperty(Persona.TEXT_COLOR_KEY, textColor.getRed() + "," + textColor.getGreen() + "," + textColor.getBlue());
-                      
-        double test = (0.2126 * textColor.getRed()) + (0.7152 * textColor.getGreen()) + (0.0722 * textColor.getBlue()); 
-        
-        Color accentColor = null;
-        
-        if(!accentcolor.equals("null") && accentcolor.length() == 7) {
-          accentColor = new Color(Integer.parseInt(accentcolor.substring(1,3),16),Integer.parseInt(accentcolor.substring(3,5),16),Integer.parseInt(accentcolor.substring(5,7),16));
-        }
-        else if(test <= 127) {
-          accentColor = textColor.brighter().brighter().brighter();
-        }
-        else if(test > 127) {
-          accentColor = textColor.darker().darker().darker();
-        }
-        
-        prop.setProperty(Persona.ACCENT_COLOR_KEY, accentColor.getRed() + "," + accentColor.getGreen() + "," + accentColor.getBlue());
-        
-        Color shadowColor = null;
-        
-        if(test <= 30) {
-          shadowColor = textColor;
-        }
-        else if(test <= 40) {
-          shadowColor = textColor.brighter().brighter().brighter().brighter().brighter().brighter();
-        }
-        else if(test <= 60) {
-          shadowColor = textColor.brighter().brighter().brighter();
-        }
-        else if(test <= 100) {
-          shadowColor = textColor.brighter().brighter();
-        }
-        else if(test <= 145) {
-          shadowColor = textColor;
-        }
-        else if(test <= 170) {
-          shadowColor = textColor.darker();
-        }
-        else if(test <= 205) {
-          shadowColor = textColor.darker().darker();
-        }
-        else if(test <= 220){
-          shadowColor = textColor.darker().darker().darker();
-        }
-        else if(test <= 235){
-          shadowColor = textColor.darker().darker().darker().darker();
-        }
-        else {
-          shadowColor = textColor.darker().darker().darker().darker().darker();
-        }
-        
-        
-        /*if(test <= 50) {
-          shadowColor = textColor;
-        }
-        else if(test <= 100) {
-          shadowColor = textColor.brighter().brighter();
-        }
-        else if(test <= 155) {
-          shadowColor = textColor;
-        }
-        else if(test <= 205) {
-          shadowColor = textColor.darker().darker();
-        }
-        else {
-          shadowColor = textColor.darker().darker().darker();
-        }*/
-        
-        prop.setProperty(Persona.SHADOW_COLOR_KEY, shadowColor.getRed() + "," + shadowColor.getGreen() + "," + shadowColor.getBlue());
-
-        try {
-          FileOutputStream out = new FileOutputStream(new File(versionDir,"persona.prop"));
-          prop.store(out,"");
-          out.close();
-        } catch (Exception e1) {
-          // TODO Auto-generated catch block
-          e1.printStackTrace();
-        }
-        
-        Persona.getInstance().loadPersonas();
         
         return Persona.getInstance().getPersonaInfo(id);
       }
