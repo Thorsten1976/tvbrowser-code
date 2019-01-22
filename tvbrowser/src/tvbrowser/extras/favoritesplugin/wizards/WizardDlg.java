@@ -177,7 +177,7 @@ public class WizardDlg extends JDialog implements WindowClosingIf {
     getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(stroke,"BACK");
     getRootPane().getActionMap().put("BACK", a);
     
-    stroke = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, InputEvent.ALT_MASK);
+    stroke = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, InputEvent.ALT_DOWN_MASK);
     getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(stroke,"BACK");
     getRootPane().getActionMap().put("BACK", a);
     

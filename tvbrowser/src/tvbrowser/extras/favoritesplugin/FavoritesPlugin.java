@@ -997,7 +997,7 @@ public class FavoritesPlugin {
             "Show new programs found at last data update again"));
     showNew.setText(mLocalizer.msg("showNewTitle",
         "Show new programs"));
-    showNew.putValue(InternalPluginProxyIf.KEYBOARD_ACCELERATOR, KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+    showNew.putValue(InternalPluginProxyIf.KEYBOARD_ACCELERATOR, KeyStroke.getKeyStroke(KeyEvent.VK_E, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
     showNew.putValue(Plugin.ACTION_ID_KEY, ID_ACTION_SHOW_NEW);
     
     final ActionMenu m = new ActionMenu(getName(), getIconFromTheme(ICON_CATEGORY, ICON_NAME, 16), new Action[] {action,showNew});

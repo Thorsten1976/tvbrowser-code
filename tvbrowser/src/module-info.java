@@ -41,19 +41,23 @@ module tvbrowser {
 	exports tvbrowser.core.icontheme;
 	exports tvbrowser.core.tvdataservice;
 	exports tvbrowser.core.filters;
+	exports tvbrowser.core.filters.filtercomponents;
 	exports tvbrowser.extras.reminderplugin;
+	exports tvbrowser.ui.settings.channel;
+	exports tvbrowser.ui.pluginview.contextmenu;
+	exports tvbrowser.ui.settings.util;
 	
 	requires java.rmi;
-	requires java.desktop;
-	requires java.logging;
+	requires transitive java.desktop;
+	requires transitive java.logging;
 	requires java.management;
 	requires org.apache.commons.lang3;
 	requires org.apache.commons.codec;
 	requires bsh.core;
 	requires commons.net;
 	requires htmlparser;
-	requires jgoodies.common;
-	requires jgoodies.forms;
+	requires transitive jgoodies.common;
+	requires transitive jgoodies.forms;
 	requires jgoodies.looks;
 	requires l2fprod.common.tasks;
 	requires jnativehook;

@@ -26,8 +26,6 @@
 
 package tvbrowser.extras.reminderplugin;
 
-import java.applet.Applet;
-import java.applet.AudioClip;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -40,6 +38,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -148,7 +147,7 @@ public class ReminderPlugin {
 
   static KeyStroke getKeyStrokeFrameReminders() {
     if(STROKE_FRAME_REMINDERS_SHOW == null) {
-      STROKE_FRAME_REMINDERS_SHOW = KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+      STROKE_FRAME_REMINDERS_SHOW = KeyStroke.getKeyStroke(KeyEvent.VK_R, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
     }
     
     return STROKE_FRAME_REMINDERS_SHOW;
@@ -187,7 +186,7 @@ public class ReminderPlugin {
     toggleTimer.putValue(ToolBar.ACTION_TYPE_KEY, ToolBar.TOOGLE_BUTTON_ACTION);
     toggleTimer.putValue(ToolBar.ACTION_IS_SELECTED, false);
     toggleTimer.putValue(InternalPluginProxyIf.KEYBOARD_ACCELERATOR, KeyStroke
-        .getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+        .getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
     
     mWrapper = new PluginCenterPanelWrapper() {  
       ReminderCenterPanel centerPanel = new ReminderCenterPanel();
@@ -1108,8 +1107,7 @@ public class ReminderPlugin {
           return line;
         }else {
           URL url = new File(fileName).toURI().toURL();
-          AudioClip clip= Applet.newAudioClip(url);
-          clip.play();
+          playAudioClip(url);
         }
       }
 
@@ -1118,8 +1116,7 @@ public class ReminderPlugin {
         URL url;
         try {
           url = new File(fileName).toURI().toURL();
-          AudioClip clip= Applet.newAudioClip(url);
-          clip.play();
+          playAudioClip(url);
         } catch (MalformedURLException e1) {
         }
       }
@@ -1334,5 +1331,24 @@ public class ReminderPlugin {
     }
     
     return valueList.toArray(new RemindValue[valueList.size()]);
+  }
+  
+  // Use applet method to play audio clip as long as available
+  private static void playAudioClip(final URL url) {
+	try {
+		final Class<?> clazz = Class.forName("java.applet.AudioClip");
+		
+		Method m = Class.forName("java.applet.Applet").getDeclaredMethod("newAudioClip", URL.class);
+		m.setAccessible(true);
+		
+		Object o = m.invoke(null, url);
+		o = clazz.cast(o);
+		
+		m = clazz.getMethod("play");
+		m.setAccessible(true);
+		m.invoke(o);
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
   }
 }

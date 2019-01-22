@@ -281,7 +281,7 @@ public class ProgramList extends JList<Object> implements ChangeListener,
    *          The ContextMenuIf that called this.
    * @deprecated since 3.3.1 use {@link #addMouseAndKeyListeners(ContextMenuIf)} instead.
    */
-  public void addMouseListeners(final ContextMenuIf caller) {
+  @Deprecated public void addMouseListeners(final ContextMenuIf caller) {
     addMouseAndKeyListeners(caller);
   }
   

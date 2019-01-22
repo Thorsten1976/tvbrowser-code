@@ -239,7 +239,8 @@ public class ContextMenuManager {
    * @param cleanSeparator If true, all Separators that follow directly another Separator will be removed
    * @return The available context menu interfaces.
    */
-  public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems, boolean cleanSeparator) {
+  @SuppressWarnings("unlikely-arg-type")
+public ContextMenuIf[] getAvailableContextMenuIfs(boolean includingDisabledItems, boolean cleanSeparator) {
     InternalPluginProxyIf[] internalPluginProxies = InternalPluginProxyList.getInstance().getAvailableProxys();
     PluginProxy[] pluginArr = PluginProxyManager.getInstance().getActivatedPlugins();
     TvDataServiceProxy[] dataServiceArr = TvDataServiceProxyManager.getInstance().getDataServices();

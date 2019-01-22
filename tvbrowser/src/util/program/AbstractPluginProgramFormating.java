@@ -21,6 +21,9 @@ public abstract class AbstractPluginProgramFormating {
   protected String mTitleValue;
   protected String mContentValue;
   protected String mEncodingValue;
+  
+  @SuppressWarnings("unused")
+  private AbstractPluginProgramFormating() {}
 
   protected AbstractPluginProgramFormating(String id, String name, String titleValue, String contentValue,
       String encodingValue) {
@@ -121,7 +124,7 @@ public abstract class AbstractPluginProgramFormating {
     String clazz = (String)in.readObject();
 
     try {
-      AbstractPluginProgramFormating instance = (AbstractPluginProgramFormating)Class.forName(clazz).newInstance();
+      AbstractPluginProgramFormating instance = (AbstractPluginProgramFormating)Class.forName(clazz).getConstructor().newInstance();
       instance.loadData(in);
 
       if(instance instanceof GlobalPluginProgramFormating) {

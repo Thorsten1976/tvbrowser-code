@@ -422,7 +422,7 @@ class ProgramInfoDialog {
         JEditorPane editor = (JEditorPane) e.getSource();
 
         Point pt = new Point(e.getX(), e.getY());
-        int pos = editor.viewToModel(pt);
+        int pos = editor.viewToModel2D(pt);
         
         if (pos >= 0) {
           String link = HTMLTextHelper.getLink(pos, editor);

@@ -2081,6 +2081,7 @@ public class Settings {
    */
   public static final StringArrayProperty propCurrentlyUsedDataServiceIds = new StringArrayProperty(mProp, "currentDataServices", new String[0]);
 
+  @SuppressWarnings("exports")
   public static final BlockedPluginArrayProperty propBlockedPluginArray = new BlockedPluginArrayProperty(mProp, "blockedPlugins");
 
   /**

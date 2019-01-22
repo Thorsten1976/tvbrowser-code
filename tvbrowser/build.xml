@@ -247,7 +247,7 @@
   <target name="make-default" depends="copy-resources">
     <echo message="Compiling the source code ... "/>
     <mkdir dir="${classes.dir}"/>
-    <javac destdir="${classes.dir}" modulepath="${lib.dir}" debug="${debug}" deprecation="true" encoding="UTF-8" target="11" source="11">
+    <javac destdir="${classes.dir}" includeantruntime="false" modulepath="${lib.dir}" debug="${debug}" deprecation="true" encoding="UTF-8" target="11" source="11">
       <src>
         <path refid="sourcepath"/>
       </src>

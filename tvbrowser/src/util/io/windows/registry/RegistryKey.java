@@ -1,3 +1,26 @@
+/*
+ * TV-Browser
+ * Copyright (C) 2019 TV-Browser team (dev@tvbrowser.org)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * SVN information:
+ *     $Date$
+ *   $Author$
+ * $Revision$
+ */
 package util.io.windows.registry;
 
 import java.io.File;
@@ -8,6 +31,12 @@ import java.util.regex.Pattern;
 import util.browserlauncher.Launch;
 import util.io.ExecutionHandler;
 
+/**
+ * Class to access windows registry.
+ * 
+ * @author René Mach
+ * @since 4.1
+ */
 public class RegistryKey {
 	public static final String HKEY_LOCAL_MACHINE = "HKLM";
 	public static final String HKEY_CURRENT_USER = "HKCU";
@@ -19,19 +48,36 @@ public class RegistryKey {
 	
 	private Pattern mPatternQuery = Pattern.compile("\\s{2,}(.*?)\\s+(REG_.*?)\\s+(.*?)$",Pattern.DOTALL);
 	
+	/**
+	 * @return <code>true</code> if the registry is accessible, <code>false</code> otherwise.
+	 */
 	public static boolean isUsable() {
 		return mRegTool.isFile();
 	}
 	
-	public RegistryKey(final String key, final String path) throws RuntimeException {
+	/**
+	 * Creates a registry key to access.
+	 * 
+	 * @param hkey The H key to access either {@value #HKEY_CURRENT_USER} or {@value #HKEY_LOCAL_MACHINE}
+	 * @param path The path to access.
+	 * @throws RuntimeException Thrown if the registry is not accessible or if operating system is not Windows.
+	 */
+	public RegistryKey(final String hkey, final String path) throws RuntimeException {
 		if(!isUsable() || Launch.getOs() != Launch.OS_WINDOWS) {
 			throw new RuntimeException("Reg tool '" + mRegTool.getAbsolutePath() + "' not available. No access to Windows Registry");
 		}
 		
-		mKey = key;
+		mKey = hkey;
 		mPath = path;
 	}
 	
+	
+	/**
+	 * Get the value of the given key.
+	 * 
+	 * @param key The key to get the value for.
+	 * @return The result of the registry query.
+	 */
 	public RegistryValue getValue(final String key) {
 		final ArrayList<String> cmdList = new ArrayList<>();
 		cmdList.add(mRegTool.getAbsolutePath());

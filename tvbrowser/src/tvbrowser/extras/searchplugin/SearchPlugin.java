@@ -91,7 +91,7 @@ public class SearchPlugin {
   
   static KeyStroke getKeyStroke() {
     if(STROKE_SEARCH_DIALOG == null) {
-      STROKE_SEARCH_DIALOG = KeyStroke.getKeyStroke(KeyEvent.VK_F, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask());
+      STROKE_SEARCH_DIALOG = KeyStroke.getKeyStroke(KeyEvent.VK_F, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
     }
     
     return STROKE_SEARCH_DIALOG;

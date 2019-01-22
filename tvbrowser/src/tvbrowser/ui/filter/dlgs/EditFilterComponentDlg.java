@@ -32,6 +32,7 @@ import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
@@ -218,24 +219,40 @@ public class EditFilterComponentDlg extends JDialog implements ActionListener, D
         if(clazzes != null) {
           for(Class<? extends PluginsFilterComponent> clazz : clazzes) {
             try {
-              set.add(clazz.newInstance());
+              set.add(clazz.getConstructor().newInstance());
             } catch (InstantiationException e) {
               e.printStackTrace();
             } catch (IllegalAccessException e) {
               e.printStackTrace();
-            }
+            } catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				e.printStackTrace();
+			}
           }
         }
       }
     }
     else {
       try {
-        set.add(filterComponentClass.newInstance());
+        set.add(filterComponentClass.getConstructor().newInstance());
       } catch (InstantiationException e) {
         e.printStackTrace();
       } catch (IllegalAccessException e) {
         e.printStackTrace();
-      }
+      } catch (IllegalArgumentException e) {
+		e.printStackTrace();
+	} catch (InvocationTargetException e) {
+		e.printStackTrace();
+	} catch (NoSuchMethodException e) {
+		e.printStackTrace();
+	} catch (SecurityException e) {
+		e.printStackTrace();
+	}
     }
 
     Iterator<FilterComponent> it = set.iterator();

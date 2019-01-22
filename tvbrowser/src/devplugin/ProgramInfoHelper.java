@@ -113,7 +113,7 @@ public class ProgramInfoHelper {
      * @return the info icon URLs array
      * @deprecated since 3.3.4 use {@link #getInfoIconURLs()} instead.
      */
-    public static final String[] getInfoIconFilenames() {
+    @Deprecated public static final String[] getInfoIconFilenames() {
       return getInfoIconURLs();
     }
     

@@ -34,7 +34,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.StrBuilder;
 
 import devplugin.Channel;
 import devplugin.ChannelDayProgram;
@@ -154,7 +153,8 @@ public abstract class AbstractSearcher implements ProgramSearcher {
       }
     }
 
-    StrBuilder buffer = new StrBuilder();
+    StringBuilder buffer = new StringBuilder();
+    
     for (ProgramFieldType fieldType : fieldArr) {
       // Get the field value as String
       String value = null;
@@ -189,14 +189,16 @@ public abstract class AbstractSearcher implements ProgramSearcher {
     }
 
     /* Remove special characters */
-
+    String result = buffer.toString();
+    
     if(mReplaceSpCh) {
-      buffer.replaceAll("\\p{Punct}", ";");
+    	result = result.replaceAll("\\p{Punct}", ";");
     }
 
     // remove line breaks
-    buffer.replaceAll('\n', ' ');
-    return buffer.trim().toString();
+    result = result.replace('\n', ' ');
+    
+    return result.trim();
   }
 
   public synchronized Program[] search(ProgramFieldType[] fieldArr, Date startDate,

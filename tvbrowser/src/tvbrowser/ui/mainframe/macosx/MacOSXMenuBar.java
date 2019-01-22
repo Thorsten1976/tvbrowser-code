@@ -72,7 +72,7 @@ public class MacOSXMenuBar extends MenuBar {
           mEditMenu.add(mSettingsMI);
         }
     
-        int commandModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        int commandModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
     
         // shortcuts as defined in the Apple guidelines
         // command Q

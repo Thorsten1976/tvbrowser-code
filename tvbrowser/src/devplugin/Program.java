@@ -187,11 +187,11 @@ public interface Program {
   public static final int STATE_WAS_DELETED = 2;
 
   /** @deprecated since 3.4.5 use {@link #STATE_IS_VALID} instead */
-  public static final int IS_VALID_STATE = STATE_IS_VALID;
+  @Deprecated public static final int IS_VALID_STATE = STATE_IS_VALID;
   /** @deprecated since 3.4.5 use {@link #STATE_WAS_UPDATED} instead */
-  public static final int WAS_UPDATED_STATE = STATE_WAS_UPDATED;
+  @Deprecated public static final int WAS_UPDATED_STATE = STATE_WAS_UPDATED;
   /** @deprecated since 3.4.5 use {@link #STATE_WAS_DELETED} instead */
-  public static final int WAS_DELETED_STATE = STATE_WAS_DELETED;
+  @Deprecated public static final int WAS_DELETED_STATE = STATE_WAS_DELETED;
 
   public static final int PRIORITY_MARK_NONE = -1;
   public static final int PRIORITY_MARK_MIN = 0;
@@ -201,17 +201,17 @@ public interface Program {
   public static final int PRIORITY_MARK_MAX = 4;
   
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_NONE} instead */
-  public static final int NO_MARK_PRIORITY = PRIORITY_MARK_NONE;
+  @Deprecated public static final int NO_MARK_PRIORITY = PRIORITY_MARK_NONE;
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_MIN} instead */
-  public static final int MIN_MARK_PRIORITY = PRIORITY_MARK_MIN;
+  @Deprecated public static final int MIN_MARK_PRIORITY = PRIORITY_MARK_MIN;
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_MEDIUM_LOWER} instead */
-  public static final int LOWER_MEDIUM_MARK_PRIORITY = PRIORITY_MARK_MEDIUM_LOWER;
+  @Deprecated public static final int LOWER_MEDIUM_MARK_PRIORITY = PRIORITY_MARK_MEDIUM_LOWER;
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_MEDIUM} instead */
-  public static final int MEDIUM_MARK_PRIORITY = PRIORITY_MARK_MEDIUM;
+  @Deprecated public static final int MEDIUM_MARK_PRIORITY = PRIORITY_MARK_MEDIUM;
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_MEDIUM_HIGHER} instead */
-  public static final int HIGHER_MEDIUM_MARK_PRIORITY = PRIORITY_MARK_MEDIUM_HIGHER;
+  @Deprecated public static final int HIGHER_MEDIUM_MARK_PRIORITY = PRIORITY_MARK_MEDIUM_HIGHER;
   /** @deprecated since 3.4.5 use {@link #PRIORITY_MARK_MAX} instead */
-  public static final int MAX_MARK_PRIORITY = PRIORITY_MARK_MAX;
+  @Deprecated public static final int MAX_MARK_PRIORITY = PRIORITY_MARK_MAX;
 
   public static final byte IMPORTANCE_PROGRAM_DEFAULT = -1;
   public static final byte IMPORTANCE_PROGRAM_MIN = 1;
@@ -221,17 +221,17 @@ public interface Program {
   public static final byte IMPORTANCE_PROGRAM_MAX = 10;
   
   /** @deprecated since 3.4.5 use {@link #IMPORTANCE_PROGRAM_DEFAULT} instead */
-  public static final byte DEFAULT_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_DEFAULT;
+  @Deprecated public static final byte DEFAULT_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_DEFAULT;
   /** @deprecated since 3.4.5 use {@link #IMPORTANCE_PROGRAM_MIN} instead */
-  public static final byte MIN_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MIN;
+  @Deprecated public static final byte MIN_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MIN;
   /** @deprecated since 3.4.5 use {@link #IMPORTANCE_PROGRAM_MEDIUM_LOWER} instead */
-  public static final byte LOWER_MEDIUM_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MEDIUM_LOWER;
+  @Deprecated public static final byte LOWER_MEDIUM_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MEDIUM_LOWER;
   /** @deprecated since 3.4.5 use {@link #IMPORTANCE_PROGRAM_MEDIUM} instead */
-  public static final byte MEDIUM_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MEDIUM;
+  @Deprecated public static final byte MEDIUM_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MEDIUM;
   /** @deprecated since 3.4.5 use {@link #IMPORTANCE_PROGRAM_MEDIUM_HIGHER} instead */
-  public static final byte HIGHER_MEDIUM_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MEDIUM_HIGHER;
+  @Deprecated public static final byte HIGHER_MEDIUM_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MEDIUM_HIGHER;
   /** @deprecated since 3.4.5 use {@link #IMPORTANCE_PROGRAM_MAX} instead */
-  public static final byte MAX_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MAX;
+  @Deprecated public static final byte MAX_PROGRAM_IMPORTANCE = IMPORTANCE_PROGRAM_MAX;
   
   /** The key for the value of an action, to put the mark priority in
    * @since 2.6 */

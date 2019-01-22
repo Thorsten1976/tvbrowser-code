@@ -437,6 +437,7 @@ public class FilterList {
     return className;
   }
   
+  @SuppressWarnings("exports")
   public FilterTreeModel getFilterTreeModel() {
     return mFilterTreeModel;
   }

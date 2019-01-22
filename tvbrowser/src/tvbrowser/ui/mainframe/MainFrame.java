@@ -338,8 +338,8 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       public void keyPressed(final KeyEvent e) {
         if(Settings.propTypeAsYouFindEnabled.getBoolean() && mProgramTableScrollPane != null && !mProgramTableScrollPane.getProgramTable().isSelected()) {
           if(((e.getModifiersEx() & KeyEvent.ALT_DOWN_MASK) != KeyEvent.ALT_DOWN_MASK) &&
-              ((e.getModifiersEx() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) != 
-              Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()) &&
+              ((e.getModifiersEx() & Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()) != 
+              Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()) &&
               ((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) != KeyEvent.CTRL_DOWN_MASK) &&
               ((e.getModifiersEx() & KeyEvent.META_DOWN_MASK) != KeyEvent.META_DOWN_MASK)) {
             if(Character.isLetterOrDigit(e.getKeyChar()) || e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -525,7 +525,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       }
     };
     println("POS 5");
-    KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_MASK);
+    KeyStroke stroke = KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.CTRL_DOWN_MASK);
     
     // Remove ctrl-up from normal focus traversal
     Set<AWTKeyStroke> forwardKeys = new HashSet<AWTKeyStroke>(mCenterTabPane.getFocusTraversalKeys(KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS));

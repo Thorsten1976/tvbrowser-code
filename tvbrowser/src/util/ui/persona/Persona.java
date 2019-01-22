@@ -121,7 +121,7 @@ public final class Persona {
    * @param listener The listener to remove.
    * @deprecated since 3.3.4 because of typo use {@link #removePersonaListener(PersonaListener)} instead.
    */
-  public void removePersonaListerner(PersonaListener listener) {
+  @Deprecated public void removePersonaListerner(PersonaListener listener) {
     removePersonaListener(listener);
   }
   
