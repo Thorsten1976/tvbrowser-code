@@ -819,6 +819,7 @@ public class TVBrowser {
 		// finally add program arguments		
 		String[] cmdarr = new String[cmd.size()];
 		for(int i=0;i<cmd.size();++i){
+			System.out.println(cmd.get(i));
 			cmdarr[i] = cmd.get(i);
 		}
 		return cmdarr;
@@ -1408,8 +1409,7 @@ public class TVBrowser {
       UIManager.installLookAndFeel("Plastic",           "com.jgoodies.looks.plastic.PlasticLookAndFeel");
       UIManager.installLookAndFeel("Plastic 3D",        "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
       UIManager.installLookAndFeel("Plastic XP",        "com.jgoodies.looks.plastic.PlasticXPLookAndFeel");
-      UIManager.installLookAndFeel("Skin",              "com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
-
+      
       //String classPath = System.getProperty("java.class.path","");
       /*if (!isStable() || StringUtils.containsIgnoreCase(classPath, "eclipse") || StringUtils.containsIgnoreCase(classPath, "workspace")) {
         Map<String, SkinInfo> substanceSkins = SubstanceLookAndFeel.getAllSkins();
@@ -1506,7 +1506,7 @@ public class TVBrowser {
       UIManager.put("jgoodies.popupDropShadowEnabled", Boolean
           .valueOf(Settings.propJGoodiesShadow.getBoolean()));
       try {
-        LookUtils.setLookAndTheme((LookAndFeel) Class.forName(Settings.propLookAndFeel.getString()).newInstance(), Class.forName(Settings.propJGoodiesTheme.getString()).newInstance());
+        LookUtils.setLookAndTheme((LookAndFeel) Class.forName(Settings.propLookAndFeel.getString()).getConstructor().newInstance(), Class.forName(Settings.propJGoodiesTheme.getString()).getConstructor().newInstance());
       } catch (Throwable e) {
         ErrorHandler.handle("Could not load themepack.\nJGoodies is disabled now", e);
         Settings.propLookAndFeel.setString(Settings.propLookAndFeel.getDefault());

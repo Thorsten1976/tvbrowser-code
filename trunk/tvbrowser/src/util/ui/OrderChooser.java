@@ -231,7 +231,7 @@ public class OrderChooser<E> extends JPanel implements ListDropAction<Selectable
    * @return The order of selected items.
    * @deprecated since 3.4.5 use {@link #getOrderList()} instead
    */
-  public Object[] getOrder() {
+  @Deprecated public Object[] getOrder() {
     ArrayList<E> objList = new ArrayList<E>();
     for (int i = 0; i < mListModel.size(); i++) {
       SelectableItem<E> item = mListModel.elementAt(i);

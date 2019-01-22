@@ -64,7 +64,7 @@ public class ActionMenu {
    * @param subItems The actions for the sub items of this ActionMenu
    * @deprecated since 3.0, use {@link #ActionMenu(String, Icon, ActionMenu[])} instead
    */
-  public ActionMenu(Action action, ActionMenu[] subItems) {
+  @Deprecated public ActionMenu(Action action, ActionMenu[] subItems) {
     mAction = action;
     mSubItems = subItems;
   }
@@ -136,7 +136,7 @@ public class ActionMenu {
    * @param subItems The actions for the sub items of this ActionMenu
    * @deprecated since 3.0, use {@link #ActionMenu(String, Icon, Action[])} instead
    */
-  public ActionMenu(Action action, Action[] subItems) {
+  @Deprecated public ActionMenu(Action action, Action[] subItems) {
     mAction = action;
     mSubItems = new ActionMenu[subItems.length];
     for (int i=0; i<mSubItems.length; i++) {
@@ -169,7 +169,7 @@ public class ActionMenu {
    * @param subItems sub menu items, can be Actions or ActionMenus in mixed order
    * @deprecated since 3.0, use {@link #ActionMenu(String, Icon, Object[])} instead
    */
-  public ActionMenu(Action action, Object[] subItems) {
+  @Deprecated public ActionMenu(Action action, Object[] subItems) {
     mAction = action;
     ArrayList<ActionMenu> subMenus = new ArrayList<ActionMenu>();
     for (Object subItem : subItems) {

@@ -89,7 +89,7 @@ public class InternalPluginProxyList {
    * @return All available internal plugin proxies.
    */
   public InternalPluginProxyIf[] getAvailableProxys() {
-    return mList.toArray(new InternalPluginProxyIf[mList.size()]);
+    return mList.toArray(new InternalPluginProxyIf[0]);
   }
 
   /**

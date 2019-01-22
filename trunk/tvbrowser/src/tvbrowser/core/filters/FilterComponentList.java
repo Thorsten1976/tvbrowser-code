@@ -322,7 +322,7 @@ public class FilterComponentList {
           if(clazzes != null) {
             for(Class<? extends PluginsFilterComponent> clazz : clazzes) {
               if(clazz.getName().compareTo(className) == 0) {
-                filterComponent = clazz.newInstance();
+                filterComponent = clazz.getConstructor().newInstance();
                 break;
               }
             }

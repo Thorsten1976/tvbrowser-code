@@ -75,7 +75,7 @@ public class PluginTreeModel extends DefaultTreeModel {
   public void update() {
     if (!mDisableUpdate) {
       MutableTreeNode rootNode = (MutableTreeNode) this.getRoot();
-      @SuppressWarnings("unchecked")
+      
       Enumeration<? extends TreeNode> e = rootNode.children();
       while (e.hasMoreElements() && !mDisableUpdate) {
         TreeNode n = e.nextElement();

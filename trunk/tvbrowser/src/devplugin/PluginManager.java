@@ -56,16 +56,16 @@ public interface PluginManager {
 
   /** Specifies, that the search term has to match exactly. 
    * @deprecated sine 3.4.4 use {@link #TYPE_SEARCHER_EXACTLY} instead */
-  public static final int SEARCHER_TYPE_EXACTLY = TYPE_SEARCHER_EXACTLY;
+  @Deprecated public static final int SEARCHER_TYPE_EXACTLY = TYPE_SEARCHER_EXACTLY;
   /** Specifies, that the search term is a keyword (= substring). 
    * @deprecated sine 3.4.4 use {@link #TYPE_SEARCHER_KEYWORD} instead*/
-  public static final int SEARCHER_TYPE_KEYWORD = TYPE_SEARCHER_KEYWORD;
+  @Deprecated public static final int SEARCHER_TYPE_KEYWORD = TYPE_SEARCHER_KEYWORD;
   /** Specifies, that the search term is a regular expression. 
    * @deprecated sine 3.4.4 use {@link #TYPE_SEARCHER_REGULAR_EXPRESSION} instead*/
-  public static final int SEARCHER_TYPE_REGULAR_EXPRESSION = TYPE_SEARCHER_REGULAR_EXPRESSION;
+  @Deprecated public static final int SEARCHER_TYPE_REGULAR_EXPRESSION = TYPE_SEARCHER_REGULAR_EXPRESSION;
   /** Specifies, that the search term is a boolean expression. 
    * @deprecated sine 3.4.4 use {@link #TYPE_SEARCHER_BOOLEAN} instead*/
-  public static final int SEARCHER_TYPE_BOOLEAN = TYPE_SEARCHER_BOOLEAN;
+  @Deprecated public static final int SEARCHER_TYPE_BOOLEAN = TYPE_SEARCHER_BOOLEAN;
 
   /**
    * Gets a program.
@@ -198,7 +198,7 @@ public interface PluginManager {
    * @since 2.7
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramSingleClick(Program program);
+  @Deprecated public void handleProgramSingleClick(Program program);
 
 
   /**
@@ -213,7 +213,7 @@ public interface PluginManager {
    * @since 2.7
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramSingleClick(Program program, ContextMenuIf caller);
+  @Deprecated public void handleProgramSingleClick(Program program, ContextMenuIf caller);
   
   /**
    * Handles a single left click on a program with Ctrl being held.
@@ -227,7 +227,7 @@ public interface PluginManager {
    * @since 3.0
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramSingleCtrlClick(Program program, ContextMenuIf caller);
+  @Deprecated public void handleProgramSingleCtrlClick(Program program, ContextMenuIf caller);
   
   /**
    * Handles a double click on a program.
@@ -241,7 +241,7 @@ public interface PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramDoubleClick(Program program);
+  @Deprecated public void handleProgramDoubleClick(Program program);
 
 
   /**
@@ -256,7 +256,7 @@ public interface PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramDoubleClick(Program program, ContextMenuIf caller);
+  @Deprecated public void handleProgramDoubleClick(Program program, ContextMenuIf caller);
 
   
   /**
@@ -271,7 +271,7 @@ public interface PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramMiddleClick(Program program);
+  @Deprecated public void handleProgramMiddleClick(Program program);
 
 
   /**
@@ -286,7 +286,7 @@ public interface PluginManager {
    * @since 1.1
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramMiddleClick(Program program, ContextMenuIf caller);
+  @Deprecated public void handleProgramMiddleClick(Program program, ContextMenuIf caller);
   
   /**
    * Handles a middle click on a program.
@@ -300,7 +300,7 @@ public interface PluginManager {
    * @since 3.0
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramMiddleDoubleClick(Program program);
+  @Deprecated public void handleProgramMiddleDoubleClick(Program program);
   
   /**
    * Handles a middle double click on a program.
@@ -313,7 +313,7 @@ public interface PluginManager {
    * @since 3.0
    * @deprecated since 3.3.1 Use {@link util.programmouseevent.ProgramMouseEventHandler} and/or {@link util.programkeyevent.ProgramKeyEventHandler} instead.
    */
-  public void handleProgramMiddleDoubleClick(Program program, ContextMenuIf caller);
+  @Deprecated public void handleProgramMiddleDoubleClick(Program program, ContextMenuIf caller);
   
   /**
    * Returns some settings a plugin may need.

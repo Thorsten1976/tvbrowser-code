@@ -608,7 +608,7 @@ public class PluginLoader {
       }catch(Throwable ti) {}
 
       if(!isBlockedDataService) {
-        plugin = pluginClass.newInstance();
+        plugin = pluginClass.getConstructor().newInstance();
       }
     }
     catch (Throwable thr) {

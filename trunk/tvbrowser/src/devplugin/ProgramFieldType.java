@@ -83,28 +83,28 @@ public class ProgramFieldType {
    * unknown field format, should not occur
    * @deprecated since 3.4.5, use {@link #FORMAT_UNKNOWN}
    */
-  public static final int UNKNOWN_FORMAT = FORMAT_UNKNOWN;
+  @Deprecated public static final int UNKNOWN_FORMAT = FORMAT_UNKNOWN;
   
   /**
    * program field format for binary fields (like pictures)
    * @deprecated since 3.4.5, use {@link #FORMAT_BINARY}
    */
-  public static final int BINARY_FORMAT = FORMAT_BINARY;
+  @Deprecated public static final int BINARY_FORMAT = FORMAT_BINARY;
   /**
    * program field format for strings
    * @deprecated since 3.4.5, use {@link #FORMAT_TEXT}
    */
-  public static final int TEXT_FORMAT = FORMAT_TEXT;
+  @Deprecated public static final int TEXT_FORMAT = FORMAT_TEXT;
   /**
    * program field format for numbers
    * @deprecated since 3.4.5, use {@link #FORMAT_INT}
    */
-  public static final int INT_FORMAT = FORMAT_INT;
+  @Deprecated public static final int INT_FORMAT = FORMAT_INT;
   /**
    * program field format for times (in numbers after midnight)
    * @deprecated since 3.4.5, use {@link #FORMAT_TIME}
    */
-  public static final int TIME_FORMAT = FORMAT_TIME;
+  @Deprecated public static final int TIME_FORMAT = FORMAT_TIME;
   
   /**
    * number of Object fields (TEXT and BINARY format)
@@ -506,22 +506,22 @@ public class ProgramFieldType {
         mKnownTypeArray[type.getTypeId()] = type;
       }
       // check for invalid/duplicate storage index fields
-      if (((format == TEXT_FORMAT || format == BINARY_FORMAT) && (storageIndex >= OBJECT_FIELDS_COUNT))
-        || ((format == INT_FORMAT || format == TIME_FORMAT) && (storageIndex >= INT_FIELDS_COUNT))) {
+      if (((format == FORMAT_TEXT || format == FORMAT_BINARY) && (storageIndex >= OBJECT_FIELDS_COUNT))
+        || ((format == FORMAT_INT || format == FORMAT_TIME) && (storageIndex >= INT_FIELDS_COUNT))) {
         System.err.println("ProgramFieldType " + name + " cannot use storage index "+ storageIndex +".");
         System.err.println("Increase either OBJECT_FIELDS_COUNT or INT_FIELDS_COUNT (depending on the format).");
         System.exit(1);
       }
-      if (((format == TEXT_FORMAT || format == BINARY_FORMAT) && (usedObjectField[storageIndex]))
-          || ((format == INT_FORMAT || format == TIME_FORMAT) && (usedIntField[storageIndex]))) {
+      if (((format == FORMAT_TEXT || format == FORMAT_BINARY) && (usedObjectField[storageIndex]))
+          || ((format == FORMAT_INT || format == FORMAT_TIME) && (usedIntField[storageIndex]))) {
         System.err.println("ProgramFieldType " + name + " cannot use storage index "+ storageIndex +".");
         System.err.println("Another program field already uses that index. Use another number.");
         System.exit(1);
       }
-      if (format == TEXT_FORMAT || format == BINARY_FORMAT) {
+      if (format == FORMAT_TEXT || format == FORMAT_BINARY) {
         usedObjectField[storageIndex] = true;
       }
-      if (format == INT_FORMAT || format == TIME_FORMAT) {
+      if (format == FORMAT_INT || format == FORMAT_TIME) {
         usedIntField[storageIndex] = true;
       }
     }
@@ -583,7 +583,7 @@ public class ProgramFieldType {
 
   public boolean isRightFormat(int format) {
     return (mFormat == format)
-      || (format == UNKNOWN_FORMAT) || (mFormat == UNKNOWN_FORMAT);
+      || (format == FORMAT_UNKNOWN) || (mFormat == FORMAT_UNKNOWN);
   }
 
 

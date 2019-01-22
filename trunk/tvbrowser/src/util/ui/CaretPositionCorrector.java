@@ -12,6 +12,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.text.Position;
 
 /**
  * A class for correction of the caret position of a JFormattedTextField.
@@ -122,7 +123,7 @@ public class CaretPositionCorrector {
       
       public void mouseReleased(MouseEvent e) {
         mMouseDown = false;
-        mCaretPosition = field.getUI().viewToModel(field, e.getPoint());
+        mCaretPosition = field.getUI().viewToModel2D(field, e.getPoint(), new Position.Bias[0]);
         
         if(mCaretPosition <= field.getText().length() && mCaretPosition > 0 &&
             field.getSelectedText() == null &&
@@ -149,7 +150,7 @@ public class CaretPositionCorrector {
         
         SwingUtilities.invokeLater(() -> {
           if(mClickLocation != null) {
-            mCaretPosition = field.getUI().viewToModel(field, mClickLocation);
+            mCaretPosition = field.getUI().viewToModel2D(field, mClickLocation,new Position.Bias[0]);
           }
           
           mClickLocation = null;

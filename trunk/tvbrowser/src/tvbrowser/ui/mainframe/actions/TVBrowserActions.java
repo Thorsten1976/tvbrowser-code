@@ -57,7 +57,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction fontSizeLarger = new TVBrowserAction("fontSizeLarger", TVBrowserIcons
       .zoomIn(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_PLUS, Toolkit
-      .getDefaultToolkit().getMenuShortcutKeyMask(), ToolBar.BUTTON_ACTION) {
+      .getDefaultToolkit().getMenuShortcutKeyMaskEx(), ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -67,7 +67,7 @@ public final class TVBrowserActions {
 
   public final static TVBrowserAction fontSizeLargerNumPad = new TVBrowserAction("fontSizeLargerNumPad", TVBrowserIcons
       .zoomIn(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_ADD, Toolkit
-      .getDefaultToolkit().getMenuShortcutKeyMask(), ToolBar.BUTTON_ACTION) {
+      .getDefaultToolkit().getMenuShortcutKeyMaskEx(), ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -80,7 +80,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction fontSizeSmaller = new TVBrowserAction("fontSizeSmaller", TVBrowserIcons
       .zoomOut(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_MINUS,
-      Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), ToolBar.BUTTON_ACTION) {
+      Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(), ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -93,7 +93,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction fontSizeSmallerNumPad = new TVBrowserAction("fontSizeSmallerNumPad", TVBrowserIcons
       .zoomOut(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_SUBTRACT,
-      Toolkit.getDefaultToolkit().getMenuShortcutKeyMask(), ToolBar.BUTTON_ACTION) {
+      Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx(), ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -105,7 +105,7 @@ public final class TVBrowserActions {
    * set program table font size to default
    */
   public final static TVBrowserAction fontSizeDefault = new TVBrowserAction("fontSizeDefault", KeyEvent.VK_0, Toolkit
-      .getDefaultToolkit().getMenuShortcutKeyMask()) {
+      .getDefaultToolkit().getMenuShortcutKeyMaskEx()) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -117,7 +117,7 @@ public final class TVBrowserActions {
    * set program table font size to default
    */
   public final static TVBrowserAction fontSizeDefaultNumPad = new TVBrowserAction("fontSizeDefaultNumPad", KeyEvent.VK_NUMPAD0, Toolkit
-      .getDefaultToolkit().getMenuShortcutKeyMask()) {
+      .getDefaultToolkit().getMenuShortcutKeyMaskEx()) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -130,7 +130,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction columnWidthLarger = new TVBrowserAction("columnWidthLarger", TVBrowserIcons
       .zoomIn(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_PLUS,
-      InputEvent.ALT_MASK, ToolBar.BUTTON_ACTION) {
+      InputEvent.ALT_DOWN_MASK, ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -143,7 +143,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction columnWidthLargerNumPad = new TVBrowserAction("columnWidthLargerNumPad", TVBrowserIcons
       .zoomIn(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomIn(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_ADD,
-      InputEvent.ALT_MASK, ToolBar.BUTTON_ACTION) {
+      InputEvent.ALT_DOWN_MASK, ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -156,7 +156,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction columnWidthSmaller = new TVBrowserAction("columnWidthSmaller", TVBrowserIcons
       .zoomOut(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_MINUS,
-      InputEvent.ALT_MASK, ToolBar.BUTTON_ACTION) {
+      InputEvent.ALT_DOWN_MASK, ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -169,7 +169,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction columnWidthSmallerNumPad = new TVBrowserAction("columnWidthSmallerNumPad", TVBrowserIcons
       .zoomOut(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.zoomOut(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_SUBTRACT,
-      InputEvent.ALT_MASK, ToolBar.BUTTON_ACTION) {
+      InputEvent.ALT_DOWN_MASK, ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -181,7 +181,7 @@ public final class TVBrowserActions {
    * set column width to default size
    */
   public final static TVBrowserAction columnWidthDefault = new TVBrowserAction("columnWidthDefault", KeyEvent.VK_0,
-      InputEvent.ALT_MASK) {
+      InputEvent.ALT_DOWN_MASK) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -193,7 +193,7 @@ public final class TVBrowserActions {
    * set column width to default size
    */
   public final static TVBrowserAction columnWidthDefaultNumPad = new TVBrowserAction("columnWidthDefaultNumPad", KeyEvent.VK_NUMPAD0,
-      InputEvent.ALT_MASK) {
+      InputEvent.ALT_DOWN_MASK) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -229,7 +229,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction settings = new TVBrowserAction("settings", TVBrowserIcons
       .preferences(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.preferences(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_S,
-      InputEvent.CTRL_MASK, ToolBar.BUTTON_ACTION) {
+      InputEvent.CTRL_DOWN_MASK, ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -295,7 +295,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction goToPreviousDay = new TVBrowserAction("goToPreviousDay", TVBrowserIcons
       .left(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.left(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_LEFT,
-      InputEvent.ALT_MASK, ToolBar.BUTTON_ACTION) {
+      InputEvent.ALT_DOWN_MASK, ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -320,7 +320,7 @@ public final class TVBrowserActions {
    */
   public final static TVBrowserAction goToNextDay = new TVBrowserAction("goToNextDay", TVBrowserIcons
       .right(TVBrowserIcons.SIZE_SMALL), TVBrowserIcons.right(TVBrowserIcons.SIZE_LARGE), KeyEvent.VK_RIGHT,
-      InputEvent.ALT_MASK, ToolBar.BUTTON_ACTION) {
+      InputEvent.ALT_DOWN_MASK, ToolBar.BUTTON_ACTION) {
 
     @Override
     public void actionPerformed(ActionEvent e) {
