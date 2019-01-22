@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -37,6 +38,7 @@ import javax.swing.event.ListSelectionListener;
 import util.browserlauncher.Launch;
 import util.ui.LinkButton;
 import util.ui.Localizer;
+import util.ui.UiUtilities;
 import util.ui.persona.Persona;
 import util.ui.persona.PersonaInfo;
 
@@ -297,6 +299,9 @@ public class PersonaHandlerPanel extends JPanel {
     if(info != null) {
       mPersonaListModel.addElement(info);
       mPersonaList.ensureIndexIsVisible(mPersonaListModel.getSize()-1);
+    }
+    else {
+    	JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(PersonaHandler.getInstance().getSuperFrame()), mLocalizer.msg("install.unsupported.msg", "The Persona could not be installed,\nbecause it's not supported by TV-Browser."), mLocalizer.msg("install.unsupported.title", "Install error"), JOptionPane.ERROR_MESSAGE);
     }
   }
   
