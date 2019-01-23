@@ -198,6 +198,9 @@ FunctionEnd
 Function un.onInit
   # Extract InstallOptions INI files
  # !insertmacro MUI_INSTALLOPTIONS_EXTRACT_AS "${NSISDIR}\UninstallSettings.ini" "UninstallSettings.ini"
+    ${If} ${RunningX64}
+      SetRegView 64
+    ${EndIf}
     !insertmacro MUI_UNGETLANGUAGE
 FunctionEnd
 
@@ -214,49 +217,9 @@ FunctionEnd
 #  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "UninstallSettings.ini"
 #FunctionEnd
 
-!define MIN_JAVA_VERSION_STRING "1.8"
-!define MIN_JAVA_VERSION 18
-
-Var JAVA_HOME
-Var JAVA_VER
-Var JAVA_INSTALLATION_MSG
-
-Function LocateJVM
-    ;Check for Java version and location
-    Push $0
-    Push $1
-    StrCpy $JAVA_VER "0"
-
-    ReadRegStr $JAVA_VER HKLM "SOFTWARE\JavaSoft\Java Runtime Environment" CurrentVersion
-    StrCmp "" "$JAVA_VER" JavaNotPresent CheckJavaVer
-
-    JavaNotPresent:
-        StrCpy $JAVA_INSTALLATION_MSG "Java Runtime Environment is not installed on your computer. You need version ${MIN_JAVA_VERSION_STRING} or newer to run this program."
-        Goto Done
-
-    CheckJavaVer:
-        ReadRegStr $0 HKLM "SOFTWARE\JavaSoft\Java Runtime Environment\$JAVA_VER" JavaHome
-        GetFullPathName /SHORT $JAVA_HOME "$0"
-        StrCpy $0 $JAVA_VER 1 0
-        StrCpy $1 $JAVA_VER 1 2
-        StrCpy $JAVA_VER "$0$1"
-        IntCmp ${MIN_JAVA_VERSION} $JAVA_VER FoundCorrectJavaVer FoundCorrectJavaVer JavaVerNotCorrect
-
-    FoundCorrectJavaVer:
-        IfFileExists "$JAVA_HOME\bin\javaw.exe" 0 JavaNotPresent
-        ;MessageBox MB_OK "Found Java: $JAVA_VER at $JAVA_HOME"
-        Goto Done
-
-    JavaVerNotCorrect:
-        StrCpy $JAVA_INSTALLATION_MSG "The version of Java Runtime Environment installed on your computer is $JAVA_VER. Version ${MIN_JAVA_VERSION_STRING} or newer is required to run this program."
-
-    Done:
-        Pop $1
-        Pop $0
-FunctionEnd
-
 Function InstallJRE
 	${If} ${FileExists} "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
+	  MessageBox MB_OK "$(INSTALL_JRE)" 
 	  Exec "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
 	${EndIf}
 FunctionEnd
@@ -510,11 +473,6 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
 
   !insertmacro registerFirewall "$INSTDIR\tvbrowser.exe" "${PROG_NAME}"
   !insertmacro registerFirewall "$INSTDIR\tvbrowser_noDD.exe" "$(WITHOUT_DIRECTX)"
-  Call LocateJVM
-  ${If} $JAVA_VER > 0
-    !insertmacro registerFirewall "$JAVA_HOME\bin\java.exe" "Java"
-    !insertmacro registerFirewall "$JAVA_HOME\bin\javaw.exe" "Java"
-  ${EndIf}
   
   Call InstallJRE
 SectionEnd # main section
@@ -598,8 +556,7 @@ SectionEnd # link section
 Section "Uninstall"
   !insertmacro removeFirewall "$INSTDIR\tvbrowser.exe" "${PROG_NAME}"
   !insertmacro removeFirewall "$INSTDIR\tvbrowser_noDD.exe" "$(WITHOUT_DIRECTX)"
-  # no removeFirewall for Java because other applications may need that
-
+  
   ; remove known files in installation directory
   Delete "$INSTDIR\COPYRIGHT.txt"
   Delete "$INSTDIR\enwiki"
@@ -624,7 +581,9 @@ Section "Uninstall"
 
   IfFileExists "$INSTDIR\java\bin\java.exe" deleteJREDir noDeleteJREDir
   deleteJREDir:
-  RMDir /r "$INSTDIR\java"
+    !insertmacro removeFirewall "$INSTDIR\java\bin\java.exe" "${PROG_NAME} JRE CMD"
+    !insertmacro removeFirewall "$INSTDIR\java\bin\javaw.exe" "${PROG_NAME} JRE GUI"
+    RMDir /r "$INSTDIR\java"
   noDeleteJREDir:
 
   IfFileExists "$INSTDIR\imgs\tvbrowser128.png" deleteImageDir noDeleteImageDir
