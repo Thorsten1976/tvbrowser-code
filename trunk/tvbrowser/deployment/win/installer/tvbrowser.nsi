@@ -219,7 +219,7 @@ FunctionEnd
 
 Function InstallJRE
 	${If} ${FileExists} "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
-	  MessageBox MB_OK "$(INSTALL_JRE)" 
+	  MessageBox MB_OK "$(INSTALL_JRE)"
 	  Exec "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
 	${EndIf}
 FunctionEnd
