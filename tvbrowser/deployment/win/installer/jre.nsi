@@ -154,7 +154,7 @@ FunctionEnd
 #--------------------------------
 # The installation types
 
-InstType "$(INSTALLATION_TYPE_NORMAL)" #"Normal"
+#InstType "$(INSTALLATION_TYPE_NORMAL)" #"Normal"
 
 #--------------------------------
 #Installer Sections

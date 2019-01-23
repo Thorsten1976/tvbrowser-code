@@ -792,7 +792,7 @@
     <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/nsisFirewall.dll"/>
     <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/nsisFirewallW.dll"/>
   	<mkdir dir="${public.dir}"/>
-  	<delete dir="${env.TEMP}/nsis/jre"/>
+  	<delete dir="${public.dir}/jre"/>
   	<mkdir dir="${public.dir}/jre"/>
   	<touch file="${public.dir}/jre/dummy.txt"/>
     <exec executable="${env.TEMP}/nsis/nsis-${nsis.version}/makensis.exe" failonerror="true">
