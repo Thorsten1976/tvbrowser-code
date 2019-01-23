@@ -19,6 +19,9 @@ LangString LICENSE_TXT ${LANG_GERMAN} "Lizenz"
 LangString WITHOUT_DIRECTX ${LANG_GERMAN} "${PROG_NAME} (ohne DirectX)"
 LangString UNINSTALL_TXT ${LANG_GERMAN} "${PROG_NAME} deinstallieren"
 
+# install JRE
+LangString INSTALL_JRE ${LANG_GERMAN} "Als Nächstes wird die Installation des TV-Browser JRE gestartet.$\r$\nDas TV-Browser JRE ist für die Funktion von TV-Browser erforderlich."
+
 # section descriptions
 LangString DESC_SEC_STANDARD ${LANG_GERMAN} "TV-Browser-Hauptprogramm und zusätzliche Dateien"
 LangString DESC_SEC_DESKTOP ${LANG_GERMAN} "Eine Verknüpfung zum TV-Browser auf dem Desktop anlegen."
