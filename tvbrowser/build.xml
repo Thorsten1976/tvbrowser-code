@@ -452,7 +452,7 @@
   <target name="do-jlink" depends="do-runtime-win">
   	<echo message="Creating jlink image in ${jlink.image.dir}"/>
   	<echo message="Executing: ${jlink.command}"/>
-  	<exec executable="${jlink.command}">
+  	<exec executable="${jlink.command}" failonerror="true">
   	 	<arg value="--module-path"/>
   		<arg value="${tvbrowser-win.runtime.dir}/lib;${tvbrowser-win.runtime.dir}"/>
   		<arg value="--add-modules"/>
@@ -772,24 +772,64 @@
   		txtproductversion="${tvbrowser.version}"/>
   </target>
 
+  <target name="nsis-check">
+  	<condition property="nsis.notfound">
+  	  <not>
+  	    <available file="${env.TEMP}/nsis-${nsis.version}.zip"/>
+  	  </not>
+  	</condition>
+  </target>
+	
+  <target name="download-nsis" if="nsis.notfound">
+  	<get ignoreerrors="true" dest="${env.TEMP}/nsis-${nsis.version}.zip" src="http://sourceforge.net/projects/nsis/files/NSIS%203/${nsis.version}/nsis-${nsis.version}.zip/download"/>
+  </target>
+	
   <!-- Creates the release binaries (.exe installer) for windows platforms -->
-  <target name="public-win" depends="exe" description="Creates binaries for the Microsoft Windows Platforms (requires Windows)">
-    <delete dir="${env.TEMP}/nsis"></delete>
-    <get ignoreerrors="true" dest="${env.TEMP}/nsis.zip" src="http://sourceforge.net/projects/nsis/files/NSIS%202/${nsis.version}/nsis-${nsis.version}.zip/download"/>
-  	<unzip dest="${env.TEMP}/nsis" src="${env.TEMP}/nsis.zip"/>
-  	<copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins" file="${deployment.dir}/win/installer/Plugins/LockedList.dll"/>
-    <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins" file="${deployment.dir}/win/installer/Plugins/nsisFirewall.dll"/>
-    <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins" file="${deployment.dir}/win/installer/Plugins/nsisFirewallW.dll"/>
+  <target name="public-win" depends="exe, nsis-check, download-nsis" description="Creates binaries for the Microsoft Windows Platforms (requires Windows)">
+    <delete dir="${env.TEMP}/nsis"/>
+  	<unzip dest="${env.TEMP}/nsis" src="${env.TEMP}/nsis-${nsis.version}.zip"/>
+  	<copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/LockedList.dll"/>
+    <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/nsisFirewall.dll"/>
+    <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/nsisFirewallW.dll"/>
   	<mkdir dir="${public.dir}"/>
+  	<delete dir="${env.TEMP}/nsis/jre"/>
+  	<mkdir dir="${public.dir}/jre"/>
+  	<touch file="${public.dir}/jre/dummy.txt"/>
     <exec executable="${env.TEMP}/nsis/nsis-${nsis.version}/makensis.exe" failonerror="true">
       <arg value="/NOCD"/>
       <arg value="/DVERSION=${tvbrowser.version}"/>
       <arg value="/DVERSION_FILE=${tvbrowser.version.file}"/>
       <arg value="/DPROG_NAME=${programname}"/>
-      <arg value="/DPROG_NAME_FILE=${programname.file}"/>
+      <arg value="/DPROG_NAME_FILE=${programname.file}-lite"/>
       <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
       <arg value="/DINSTALLER_DIR=${installer.dir}"/>
       <arg value="/DPUBLIC_DIR=${public.dir}"/>
+      <arg value="/DJRE_VERSION=${jre.version}"/>
+      <arg value="${installer.dir}\tvbrowser.nsi"/>
+    </exec>
+  	
+  	<exec executable="${env.TEMP}/nsis/nsis-${nsis.version}/makensis.exe" failonerror="true">
+      <arg value="/NOCD"/>
+      <arg value="/DVERSION=${jre.version}"/>
+      <arg value="/DVERSION_FILE=${jre.version}"/>
+      <arg value="/DPROG_NAME=${programname} JRE"/>
+      <arg value="/DPROG_NAME_FILE=${programname.file}-jre"/>
+      <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
+      <arg value="/DINSTALLER_DIR=${installer.dir}"/>
+      <arg value="/DPUBLIC_DIR=${public.dir}"/>
+      <arg value="${installer.dir}\jre.nsi"/>
+    </exec>
+  	
+  	<exec executable="${env.TEMP}/nsis/nsis-${nsis.version}/makensis.exe" failonerror="true">
+      <arg value="/NOCD"/>
+      <arg value="/DVERSION=${tvbrowser.version}"/>
+      <arg value="/DVERSION_FILE=${tvbrowser.version.file}"/>
+      <arg value="/DPROG_NAME=${programname}"/>
+      <arg value="/DPROG_NAME_FILE=${programname.file}-full"/>
+      <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
+      <arg value="/DINSTALLER_DIR=${installer.dir}"/>
+      <arg value="/DPUBLIC_DIR=${public.dir}"/>
+      <arg value="/DJRE_VERSION=${jre.version}"/>
       <arg value="${installer.dir}\tvbrowser.nsi"/>
     </exec>
   	<delete dir="${env.TEMP}/nsis"></delete>
