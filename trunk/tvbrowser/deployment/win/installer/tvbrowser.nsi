@@ -29,7 +29,7 @@
 #   RUNTIME_DIR
 #   INSTALLER_DIR
 #   PUBLIC_DIR
-
+#   JRE_VERSION
 
 #--------------------------------
 # Includes
@@ -37,6 +37,7 @@
 !AddIncludeDir "${INSTALLER_DIR}"
 !include MUI.nsh
 !include LogicLib.nsh
+!include x64.nsh
 
 #--------------------------------
 # Configuration
@@ -139,6 +140,10 @@ Function .onInit
     call CheckMultipleInstance
     # have language selection for the user
     !insertmacro MUI_LANGDLL_DISPLAY
+    ${If} ${RunningX64}
+      SetRegView 64
+    ${EndIf}
+    
   push $0
   # Get Account Type of the current user
   UserInfo::GetAccountType
@@ -178,7 +183,12 @@ Function .onInit
   goto end
   errors:
   # The default installation directory
-  StrCpy $INSTDIR "$PROGRAMFILES\${PROG_NAME}"
+    ${If} ${RunningX64}
+      StrCpy $INSTDIR "$PROGRAMFILES64\${PROG_NAME}"
+    ${Else}
+      StrCpy $INSTDIR "$PROGRAMFILES32\${PROG_NAME}"
+    ${EndIf}
+  
   # The default start menu folder
   StrCpy $7 "${PROG_NAME}"
   end:
@@ -245,6 +255,11 @@ Function LocateJVM
         Pop $0
 FunctionEnd
 
+Function InstallJRE
+	${If} ${FileExists} "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
+	  Exec "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
+	${EndIf}
+FunctionEnd
 
 !macro registerFirewall fileName displayText
     nsisFirewall::AddAuthorizedApplication "${fileName}" "${displayText}"
@@ -293,7 +308,6 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
   File "${RUNTIME_DIR}\tvbrowser_noDD.txt"
   File "${RUNTIME_DIR}\tvbrowser.jar"
   File "${RUNTIME_DIR}\windows.properties"
-  File "${RUNTIME_DIR}\jRegistryKey.dll"
 
   WriteUninstaller "Uninstall.exe"
 
@@ -317,7 +331,10 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
 
   SetOutPath "$INSTDIR\themepacks"
   File "${RUNTIME_DIR}\themepacks\*.*"
-
+  
+  SetOutPath "$PLUGINSDIR"
+  File "${PUBLIC_DIR}\jre\*.*"
+  
   # Register uninstaller at Windows (Add/Remove programs)
   !define UPDATE_INFO_URL "http://tvbrowser.sourceforge.net"
   !define SUPPORT_URL "http://tvbrowser.org/forum.html"
@@ -498,6 +515,8 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
     !insertmacro registerFirewall "$JAVA_HOME\bin\java.exe" "Java"
     !insertmacro registerFirewall "$JAVA_HOME\bin\javaw.exe" "Java"
   ${EndIf}
+  
+  Call InstallJRE
 SectionEnd # main section
 
 
@@ -602,6 +621,11 @@ Section "Uninstall"
   deleteHyphenDir:
   RMDir /r "$INSTDIR\hyphen"
   noDeleteHyphenDir:
+
+  IfFileExists "$INSTDIR\java\bin\java.exe" deleteJREDir noDeleteJREDir
+  deleteJREDir:
+  RMDir /r "$INSTDIR\java"
+  noDeleteJREDir:
 
   IfFileExists "$INSTDIR\imgs\tvbrowser128.png" deleteImageDir noDeleteImageDir
   deleteImageDir:
