@@ -359,7 +359,7 @@
     <echo message="Copying the images and all the other stuff ..."/>
     <mkdir dir="${tvbrowser-default.runtime.dir}/imgs"/>
     <copy todir="${tvbrowser-default.runtime.dir}/imgs">
-      <fileset dir="${classes.dir}/imgs" excludes="splash.png"/>
+      <fileset dir="${classes.dir}/imgs"/>
     </copy>
 
   	<copy todir="${tvbrowser-default.runtime.dir}/imgs">
@@ -439,8 +439,7 @@
 	</copy>
   </target>
 
-  <!-- Creates the runtime folder for the windows platform -->
-  <target name="runtime-win" depends="clean-win, make-win, runtime">
+  <target name="do-runtime-win" depends="clean-win, make-win, runtime">
     <echo message="deployment dir is ${deployment.dir}, win is ${win.dir}" />
     <mkdir dir="${tvbrowser-win.runtime.dir}"/>
     <copy todir="${tvbrowser-win.runtime.dir}">
@@ -448,9 +447,23 @@
       <fileset dir="${deployment.dir}" includes="windows.properties"/>
       <fileset dir="${win.dir}" includes="tvbrowser_noDD.txt"/>
     </copy>
-
   </target>
-
+  
+  <target name="do-jlink" depends="do-runtime-win">
+  	<echo message="Creating jlink image in ${jlink.image.dir}"/>
+  	<echo message="Executing: ${jlink.command}"/>
+  	<exec executable="${jlink.command}">
+  	 	<arg value="--module-path"/>
+  		<arg value="${tvbrowser-win.runtime.dir}/lib;${tvbrowser-win.runtime.dir}"/>
+  		<arg value="--add-modules"/>
+  		<arg value="tvbrowser"/>
+  		<arg value="--output"/>
+  		<arg value="${tvbrowser-win.runtime.dir}/java"/>
+  	</exec>
+  </target>
+	
+  <!-- Creates the runtime folder for the windows platform -->
+  <target name="runtime-win" depends="do-jlink"/>
 
   <!-- Creates the runtime folder for the Mac platform -->
   <target name="runtime-mac" depends="clean-mac, make-mac, runtime">
@@ -734,9 +747,8 @@
 
   </target>
 
-
   <!-- Creates the windows exe file -->
-  <target name="exe" depends="runtime-win">
+  <target name="only-exe">
   	<launch4j configFile="${deployment.dir}/win/launch4j/tvbrowser.xml"
   		fileversion="${tvbrowser.version.file}"
   		productversion="${tvbrowser.version.file}"
@@ -749,6 +761,8 @@
   		txtproductversion="${tvbrowser.version}"/>
   </target>
 
+  <target name="exe" depends="runtime-win,only-exe" />
+	
   <!-- Creates the windows transportable exe file -->
   <target name="transportable-exe" depends="runtime-transportable">
   	<launch4j configFile="${deployment.dir}/win/launch4j/tvbrowser-transportable.xml"
