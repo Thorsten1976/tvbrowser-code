@@ -13,20 +13,20 @@
   <stayAlive>false</stayAlive>
   <icon>../../../runtime/tvbrowser_win/imgs/desktop.ico</icon>
   <jre>
-    <path></path>
-    <minVersion>1.8.0</minVersion>
+    <path>java</path>
+    <minVersion>11.0</minVersion>
     <dontUsePrivateJres>false</dontUsePrivateJres>
     <initialHeapSize>0</initialHeapSize>
-    <maxHeapSize>512</maxHeapSize>
-    <opt>-XX:+IgnoreUnrecognizedVMOptions --add-modules=ALL-SYSTEM -Dpropertiesfile=windows.properties</opt>
+    <maxHeapSize>1024</maxHeapSize>
+    <opt>--module-path "lib;tvbrowser.jar" -m tvbrowser/tvbrowser.TVBrowser -splash:imgs/splash.png -Dpropertiesfile=windows.properties</opt>
   </jre>
   <versionInfo>
-    <fileVersion>4.0.0.0</fileVersion>
-    <txtFileVersion>4.0</txtFileVersion>
+    <fileVersion>4.0.9.5</fileVersion>
+    <txtFileVersion>4.0.9.5</txtFileVersion>
     <fileDescription>TV-Browser</fileDescription>
     <copyright>Copyright (c) 04/2003 by Martin Oberhauser, Til Schneider, Bodo Tasche, Rene Mach, Michael Keppler under GNU General Public License.</copyright>
-    <productVersion>4.0.0.0</productVersion>
-    <txtProductVersion>4.0</txtProductVersion>
+    <productVersion>4.0.9.5</productVersion>
+    <txtProductVersion>4.0.9.5</txtProductVersion>
     <productName>TV-Browser</productName>
     <companyName></companyName>
     <internalName>TV-Browser</internalName>
