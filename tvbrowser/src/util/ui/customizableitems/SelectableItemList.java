@@ -45,6 +45,7 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.ListUI;
@@ -148,25 +149,27 @@ public class SelectableItemList<E> extends JPanel implements ListSelectionListen
     
     mList.addMouseListener(new MouseAdapter() {
       public void mousePressed(MouseEvent evt) {
-        int index = mList.locationToIndex(evt.getPoint());
-        
-        if (index != -1) {
-          Rectangle oldCellBounds = mList.getCellBounds(index,index);
-          
-          calculateSize();
-          addEditor(index);
-          
-          if (evt.getX() <= mItemRenderer.getSelectionWidth() && mIsEnabled) {
-            if(oldCellBounds.contains(evt.getPoint())) {
-              SelectableItem<E> item = mListModel.getElementAt(index);
-              if(item.isSelectable()) {
-                item.setSelected(! item.isSelected());
-                handleItemSelectionChanged();
-                mList.repaint();
-              }
-            }
-          }
-        }
+	      if(SwingUtilities.isLeftMouseButton(evt)) {
+	        int index = mList.locationToIndex(evt.getPoint());
+	        
+	        if (index != -1) {
+	          Rectangle oldCellBounds = mList.getCellBounds(index,index);
+	          
+	          calculateSize();
+	          addEditor(index);
+	          
+	          if (evt.getX() <= mItemRenderer.getSelectionWidth() && mIsEnabled) {
+	            if(oldCellBounds.contains(evt.getPoint())) {
+	              SelectableItem<E> item = mListModel.getElementAt(index);
+	              if(item.isSelectable()) {
+	                item.setSelected(! item.isSelected());
+	                handleItemSelectionChanged();
+	                mList.repaint();
+	              }
+	            }
+	          }
+	        }
+	      }
       }
     });
     mList.addKeyListener(new KeyAdapter(){
