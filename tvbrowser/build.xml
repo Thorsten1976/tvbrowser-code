@@ -187,6 +187,7 @@
   <target name="clean">
     <delete dir="${classes.dir}"/>
     <delete dir="${test.classes.dir}"/>
+  	<delete dir="${env.TEMP}/nsis" failonerror="false"/>
   </target>
 
 
@@ -450,13 +451,24 @@
   </target>
   
   <target name="do-jlink" depends="do-runtime-win">
+  	<delete dir="${tvbrowser-win.runtime.dir}/java"/>
   	<echo message="Creating jlink image in ${jlink.image.dir}"/>
   	<echo message="Executing: ${jlink.command}"/>
   	<exec executable="${jlink.command}" failonerror="true">
-  	 	<arg value="--module-path"/>
-  		<arg value="${tvbrowser-win.runtime.dir}/lib;${tvbrowser-win.runtime.dir}"/>
   		<arg value="--add-modules"/>
-  		<arg value="tvbrowser"/>
+  		<arg value="${jlink.modules}"/>
+  		<arg value="--output"/>
+  		<arg value="${tvbrowser-win.runtime.dir}/java"/>
+  	</exec>
+  </target>
+	
+  <target name="do-jlink32" depends="do-runtime-win">
+  	<delete dir="${tvbrowser-win.runtime.dir}/java"/>
+  	<echo message="Creating jlink image in ${jlink.image.dir}"/>
+  	<echo message="Executing: ${jlink.command32}"/>
+  	<exec executable="${jlink.command32}" failonerror="true">
+  		<arg value="--add-modules"/>
+  		<arg value="${jlink.modules}"/>
   		<arg value="--output"/>
   		<arg value="${tvbrowser-win.runtime.dir}/java"/>
   	</exec>
@@ -644,7 +656,7 @@
         todir="${public.dir}"
         package="tvbrowser"
         section="utils"
-        depends="sun-java7-jre | openjdk-7-jre | openjdk-8-jre | default-jre | java7-runtime | java8-runtime "
+        depends="openjdk-11-jre | default-jre"
   	    recommends="openjdk-7-jre">
 
         <version upstream="${tvbrowser.version}"/>
@@ -780,17 +792,25 @@
   	</condition>
   </target>
 	
+  <target name="java32-check">
+  	<condition property="java32.found">
+  	  <available file="${jlink.command32}"/>
+    </condition>
+  </target>
+	
   <target name="download-nsis" if="nsis.notfound">
   	<get ignoreerrors="true" dest="${env.TEMP}/nsis-${nsis.version}.zip" src="http://sourceforge.net/projects/nsis/files/NSIS%203/${nsis.version}/nsis-${nsis.version}.zip/download"/>
   </target>
 	
-  <!-- Creates the release binaries (.exe installer) for windows platforms -->
-  <target name="public-win" depends="exe, nsis-check, download-nsis" description="Creates binaries for the Microsoft Windows Platforms (requires Windows)">
+  <target name="prepare-nsis" depends="nsis-check, download-nsis">
     <delete dir="${env.TEMP}/nsis"/>
   	<unzip dest="${env.TEMP}/nsis" src="${env.TEMP}/nsis-${nsis.version}.zip"/>
   	<copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/LockedList.dll"/>
     <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/nsisFirewall.dll"/>
     <copy todir="${env.TEMP}/nsis/nsis-${nsis.version}/plugins/x86-ansi" file="${deployment.dir}/win/installer/Plugins/nsisFirewallW.dll"/>
+  </target>
+	
+  <target name="create-installer-win64" depends="exe, prepare-nsis">
   	<mkdir dir="${public.dir}"/>
   	<delete dir="${public.dir}/jre"/>
   	<mkdir dir="${public.dir}/jre"/>
@@ -805,6 +825,7 @@
       <arg value="/DINSTALLER_DIR=${installer.dir}"/>
       <arg value="/DPUBLIC_DIR=${public.dir}"/>
       <arg value="/DJRE_VERSION=${jre.version}"/>
+      <arg value="/DPLATFORM=win"/>
       <arg value="${installer.dir}\tvbrowser.nsi"/>
     </exec>
   	
@@ -817,6 +838,7 @@
       <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
       <arg value="/DINSTALLER_DIR=${installer.dir}"/>
       <arg value="/DPUBLIC_DIR=${public.dir}"/>
+  	  <arg value="/DPLATFORM=win64"/>
       <arg value="${installer.dir}\jre.nsi"/>
     </exec>
   	
@@ -830,9 +852,47 @@
       <arg value="/DINSTALLER_DIR=${installer.dir}"/>
       <arg value="/DPUBLIC_DIR=${public.dir}"/>
       <arg value="/DJRE_VERSION=${jre.version}"/>
+  	  <arg value="/DPLATFORM=win64"/>
+      <arg value="${installer.dir}\tvbrowser.nsi"/>
+    </exec>  
+  	<move file="${public.dir}/jre/${programname.file}-jre_${jre.version}_win64.exe" todir="${public.dir}"/>
+  </target>
+		
+  <target name="create-installer-win32" depends="exe, prepare-nsis, do-jlink32" if="java32.found">
+  	<mkdir dir="${public.dir}"/>
+  	<delete dir="${public.dir}/jre"/>
+  	<mkdir dir="${public.dir}/jre"/>
+  	
+  	<exec executable="${env.TEMP}/nsis/nsis-${nsis.version}/makensis.exe" failonerror="true">
+      <arg value="/NOCD"/>
+      <arg value="/DVERSION=${jre.version}"/>
+      <arg value="/DVERSION_FILE=${jre.version}"/>
+      <arg value="/DPROG_NAME=${programname} JRE"/>
+      <arg value="/DPROG_NAME_FILE=${programname.file}-jre"/>
+      <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
+      <arg value="/DINSTALLER_DIR=${installer.dir}"/>
+      <arg value="/DPUBLIC_DIR=${public.dir}"/>
+  	  <arg value="/DPLATFORM=win32"/>
+      <arg value="${installer.dir}\jre.nsi"/>
+    </exec>
+  	
+  	<exec executable="${env.TEMP}/nsis/nsis-${nsis.version}/makensis.exe" failonerror="true">
+      <arg value="/NOCD"/>
+      <arg value="/DVERSION=${tvbrowser.version}"/>
+      <arg value="/DVERSION_FILE=${tvbrowser.version.file}"/>
+      <arg value="/DPROG_NAME=${programname}"/>
+      <arg value="/DPROG_NAME_FILE=${programname.file}-full"/>
+      <arg value="/DRUNTIME_DIR=${tvbrowser-win.runtime.dir}"/>
+      <arg value="/DINSTALLER_DIR=${installer.dir}"/>
+      <arg value="/DPUBLIC_DIR=${public.dir}"/>
+      <arg value="/DJRE_VERSION=${jre.version}"/>
+  	  <arg value="/DPLATFORM=win32"/>
       <arg value="${installer.dir}\tvbrowser.nsi"/>
     </exec>
-  	<delete dir="${env.TEMP}/nsis"></delete>
+  	<delete dir="${env.TEMP}/nsis"></delete>  
+  </target>
+  <!-- Creates the release binaries (.exe installer) for windows platforms -->
+  <target name="public-win" depends="java32-check, create-installer-win64, create-installer-win32" description="Creates binaries for the Microsoft Windows Platforms (requires Windows)">
   </target>
 
    <!-- Creates the release binaries (.dmg) for mac os x -->

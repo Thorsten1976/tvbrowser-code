@@ -30,6 +30,7 @@
 #   INSTALLER_DIR
 #   PUBLIC_DIR
 #   JRE_VERSION
+#   PLATFORM
 
 #--------------------------------
 # Includes
@@ -47,7 +48,7 @@
 Name "${PROG_NAME} ${VERSION}"
 
 # The file to write
-OutFile "${PUBLIC_DIR}\${PROG_NAME_FILE}_${VERSION}_win32.exe"
+OutFile "${PUBLIC_DIR}\${PROG_NAME_FILE}_${VERSION}_${PLATFORM}.exe"
 
 # Use LZMA compression
 SetCompressor /SOLID lzma
@@ -218,9 +219,9 @@ FunctionEnd
 #FunctionEnd
 
 Function InstallJRE
-	${If} ${FileExists} "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
+	${If} ${FileExists} "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_${PLATFORM}.exe"
 	  MessageBox MB_OK "$(INSTALL_JRE)"
-	  Exec "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_win64.exe"
+	  ExecWait "$PLUGINSDIR\tvbrowser-jre_${JRE_VERSION}_${PLATFORM}.exe"
 	${EndIf}
 FunctionEnd
 
@@ -279,6 +280,9 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
 
   SetOutPath "$INSTDIR\imgs"
   File "${RUNTIME_DIR}\imgs\*.*"
+
+  SetOutPath "$INSTDIR\lib"
+  File "${RUNTIME_DIR}\lib\*.*"
   
   SetOutPath "$INSTDIR\plugins"
   File "${RUNTIME_DIR}\plugins\*.*"
@@ -585,6 +589,11 @@ Section "Uninstall"
     !insertmacro removeFirewall "$INSTDIR\java\bin\javaw.exe" "${PROG_NAME} JRE GUI"
     RMDir /r "$INSTDIR\java"
   noDeleteJREDir:
+
+  IfFileExists "$INSTDIR\lib\jgoodies-forms-1.6.0.jar" deleteLibDir noDeleteLibDir
+  deleteLibDir:
+  RMDir /r "$INSTDIR\lib"
+  noDeleteLibDir:
 
   IfFileExists "$INSTDIR\imgs\tvbrowser128.png" deleteImageDir noDeleteImageDir
   deleteImageDir:
