@@ -50,6 +50,7 @@ import devplugin.Date;
 import devplugin.Plugin;
 import devplugin.PluginManager;
 import devplugin.Program;
+import tvbrowser.core.Settings;
 import tvbrowser.core.plugin.PluginProxy;
 import tvbrowser.core.plugin.PluginProxyManager;
 import tvbrowser.core.plugin.PluginStateListener;
@@ -930,4 +931,14 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   public boolean isClickAndContextMenuHandlingEnabled() {
     return mHandleClicks;
   }
+  
+  @Override
+	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+	  if(Settings.propSmootherScrolling.getBoolean()) {
+		return Math.min(super.getScrollableUnitIncrement(visibleRect, orientation, direction), 10);
+	  }
+	  else {
+		return super.getScrollableUnitIncrement(visibleRect, orientation, direction);
+	  }
+	}
 }

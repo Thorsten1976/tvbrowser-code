@@ -2200,6 +2200,9 @@ public class Settings {
   public static final StringArrayProperty propDataPluginPostProcessingOrder = new StringArrayProperty(
       mProp, "dataPluginPostProcessingOrder", new String[0]);
   
+  public static final BooleanProperty propSmootherScrolling = new BooleanProperty(
+	      mProp, "smootherScrolling", true);
+  
   /**
    * Hidden property for blocked filter components for Favorite usage.
    * Add the property favoriteBlockedFilterComponents to the settings.prop
