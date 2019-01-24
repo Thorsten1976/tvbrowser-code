@@ -90,6 +90,8 @@ public class ProgramPanelSettingsTab implements SettingsTab {
 
   private JCheckBox mHyphenator;
   private JCheckBox mShowOriginalTitles;
+  
+  private JCheckBox mSmootherScrolling;
 
   /**
    * Creates the settings panel for this tab.
@@ -258,7 +260,10 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     panel.addParagraph(mLocalizer.msg("text", "Text"));
     panel.addRow();
     panel.add(mHyphenator = new JCheckBox(mLocalizer.msg("hyphenation", "Use hyphenation"), Settings.propProgramPanelHyphenation.getBoolean()), cc.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
-
+    panel.addParagraph(mLocalizer.msg("scrolling", "Scrolling"));
+    panel.addRow();
+    panel.add(mSmootherScrolling = new JCheckBox(mLocalizer.msg("scrolling.smoother", "Smoother scrolling in lists with programs"), Settings.propSmootherScrolling.getBoolean()), cc.xyw(2, panel.getRowCount(), panel.getColumnCount() - 1));
+    
     return panel.getPanel();
   }
 
@@ -397,6 +402,7 @@ public class ProgramPanelSettingsTab implements SettingsTab {
     Settings.propKeyboardSelectedColor.setColor(mProgramItemKeyboardSelectedLb.getColor());
     Settings.propProgramPanelAllowTransparency.setBoolean(mAllowProgramImportance.isSelected());
     Settings.propProgramPanelHyphenation.setBoolean(mHyphenator.isSelected());
+    Settings.propSmootherScrolling.setBoolean(mSmootherScrolling.isSelected());
   }
 
   /**
