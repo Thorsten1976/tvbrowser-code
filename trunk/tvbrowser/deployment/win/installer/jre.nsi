@@ -28,7 +28,7 @@
 #   RUNTIME_DIR
 #   INSTALLER_DIR
 #   PUBLIC_DIR
-
+#   PLATFORM
 
 #--------------------------------
 # Includes
@@ -36,16 +36,17 @@
 !AddIncludeDir "${INSTALLER_DIR}"
 !include MUI.nsh
 !include LogicLib.nsh
+!include x64.nsh
 
 #--------------------------------
 # Configuration
 #--------------------------------
 
 # program name
-Name "${PROG_NAME}"
+Name "${PROG_NAME} ${PLATFORM}"
 
 # The file to write
-OutFile "${PUBLIC_DIR}\jre\${PROG_NAME_FILE}_${VERSION}_win64.exe"
+OutFile "${PUBLIC_DIR}\jre\${PROG_NAME_FILE}_${VERSION}_${PLATFORM}.exe"
 
 # Use LZMA compression
 SetCompressor /SOLID lzma
@@ -108,7 +109,9 @@ Function .onInit
     call CheckMultipleInstance
     # have language selection for the user
     !insertmacro MUI_LANGDLL_DISPLAY
-  SetRegView 64
+    ${If} ${RunningX64}
+      SetRegView 64
+    ${EndIf}
   push $0
   # Get Account Type of the current user
   UserInfo::GetAccountType
@@ -128,7 +131,12 @@ Function .onInit
   goto end
   errors:
   # The default installation directory
-  StrCpy $INSTDIR "$PROGRAMFILES64\TV-Browser\java"
+  ${If} ${RunningX64}
+      StrCpy $INSTDIR "$PROGRAMFILES64\TV-Browser\java"
+  ${Else}
+      StrCpy $INSTDIR "$PROGRAMFILES\TV-Browser\java"
+  ${EndIf}
+  
   end:
   pop $0
 FunctionEnd
