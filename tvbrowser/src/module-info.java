@@ -1,9 +1,28 @@
-/**
- * 
+/*
+ * TV-Browser
+ * Copyright (C) 2012 TV-Browser team (dev@tvbrowser.org)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * SVN information:
+ *     $Date$
+ *   $Author$
+ * $Revision$
  */
 /**
  * @author René Mach
- *
  */
 module tvbrowser {
 	exports devplugin;
@@ -47,20 +66,21 @@ module tvbrowser {
 	exports tvbrowser.ui.pluginview.contextmenu;
 	exports tvbrowser.ui.settings.util;
 	
-	requires java.rmi;
+	requires transitive java.rmi;
 	requires transitive java.desktop;
 	requires transitive java.logging;
-	requires java.management;
-	requires org.apache.commons.lang3;
-	requires org.apache.commons.codec;
-	requires bsh.core;
-	requires commons.net;
-	requires htmlparser;
+	requires transitive java.management;
+	requires transitive java.naming;
+	requires transitive org.apache.commons.lang3;
+	requires transitive org.apache.commons.codec;
+	requires transitive bsh.core;
+	requires transitive commons.net;
+	requires transitive htmlparser;
 	requires transitive jgoodies.common;
 	requires transitive jgoodies.forms;
 	requires jgoodies.looks;
 	requires l2fprod.common.tasks;
 	requires jnativehook;
-	requires texhyphj;
+	requires transitive texhyphj;
 	requires opencsv;
 }
