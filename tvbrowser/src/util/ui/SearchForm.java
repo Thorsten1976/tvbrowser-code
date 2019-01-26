@@ -581,7 +581,6 @@ public class SearchForm extends JPanel {
       while (iter.hasNext()) {
         ProgramFieldType type = iter.next();
         if (type.getFormat() != ProgramFieldType.FORMAT_BINARY
-            && type != ProgramFieldType.PICTURE_COPYRIGHT_TYPE
             && type != ProgramFieldType.INFO_TYPE
             && type != ProgramFieldType.CUSTOM_TYPE) {
           // We can search all fields but binaries
