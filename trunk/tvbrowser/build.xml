@@ -440,9 +440,12 @@
 	</copy>
   </target>
 
-  <target name="do-runtime-win" depends="clean-win, make-win, runtime">
+  <target name="create-win-dir">
+  	<mkdir dir="${tvbrowser-win.runtime.dir}"/>
+  </target>
+	
+  <target name="do-runtime-win" depends="clean-win, make-win, runtime, create-win-dir">
     <echo message="deployment dir is ${deployment.dir}, win is ${win.dir}" />
-    <mkdir dir="${tvbrowser-win.runtime.dir}"/>
     <copy todir="${tvbrowser-win.runtime.dir}">
       <fileset dir="${tvbrowser-default.runtime.dir}"/>
       <fileset dir="${deployment.dir}" includes="windows.properties"/>
@@ -450,8 +453,8 @@
     </copy>
   </target>
   
-  <target name="do-jlink" depends="do-runtime-win">
-  	<delete dir="${tvbrowser-win.runtime.dir}/java"/>
+  <target name="win-jlink" depends="create-win-dir">
+  	<delete dir="${tvbrowser-win.runtime.dir}/java" failonerror="false"/>
   	<echo message="Creating jlink image in ${jlink.image.dir}"/>
   	<echo message="Executing: ${jlink.command}"/>
   	<exec executable="${jlink.command}" failonerror="true">
@@ -462,8 +465,8 @@
   	</exec>
   </target>
 	
-  <target name="do-jlink32" depends="do-runtime-win">
-  	<delete dir="${tvbrowser-win.runtime.dir}/java"/>
+  <target name="win-jlink32" depends="create-win-dir">
+  	<delete dir="${tvbrowser-win.runtime.dir}/java" failonerror="false"/>
   	<echo message="Creating jlink image in ${jlink.image.dir}"/>
   	<echo message="Executing: ${jlink.command32}"/>
   	<exec executable="${jlink.command32}" failonerror="true">
@@ -475,7 +478,7 @@
   </target>
 	
   <!-- Creates the runtime folder for the windows platform -->
-  <target name="runtime-win" depends="do-jlink"/>
+  <target name="runtime-win" depends="do-runtime-win, win-jlink"/>
 
   <!-- Creates the runtime folder for the Mac platform -->
   <target name="runtime-mac" depends="clean-mac, make-mac, runtime">
@@ -858,7 +861,7 @@
   	<move file="${public.dir}/jre/${programname.file}-jre_${jre.version}_win64.exe" todir="${public.dir}"/>
   </target>
 		
-  <target name="create-installer-win32" depends="exe, prepare-nsis, do-jlink32" if="java32.found">
+  <target name="create-installer-win32" depends="exe, prepare-nsis, win-jlink32" if="java32.found">
   	<mkdir dir="${public.dir}"/>
   	<delete dir="${public.dir}/jre"/>
   	<mkdir dir="${public.dir}/jre"/>
