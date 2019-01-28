@@ -811,6 +811,7 @@ public class TVBrowser {
 			if (System.getProperty("java.class.path")==null) return null;
 			cmd.add("-cp");
 			cmd.add(System.getProperty("java.class.path"));
+			cmd.add("-m");
 			cmd.add(mainCommand[0]);
 	    mainCommandSize = 1;
 		}
