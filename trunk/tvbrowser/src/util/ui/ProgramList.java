@@ -935,7 +935,14 @@ public class ProgramList extends JList<Object> implements ChangeListener,
   @Override
 	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
 	  if(Settings.propSmootherScrolling.getBoolean()) {
-		return Math.min(super.getScrollableUnitIncrement(visibleRect, orientation, direction), 10);
+		int increment = super.getScrollableUnitIncrement(visibleRect, orientation, direction);
+		int valueDefault = 10;
+		  
+		if(increment >= visibleRect.height) {
+		  valueDefault = Math.max(valueDefault, 10 + increment - visibleRect.height);
+		}
+		    
+		return Math.min(increment,valueDefault);
 	  }
 	  else {
 		return super.getScrollableUnitIncrement(visibleRect, orientation, direction);
