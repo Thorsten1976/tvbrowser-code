@@ -352,25 +352,25 @@ public class ProgramTextCreator {
     Date programDate = prog.getDate();
     if(programDate.equals(currentDate.addDays(-1))) {
       buffer.append(Localizer.getLocalization(Localizer.I18N_YESTERDAY));
-      buffer.append(" Â· ");
+      buffer.append(" · ");
     }
     else if(programDate.equals(currentDate)){
       buffer.append(Localizer.getLocalization(Localizer.I18N_TODAY));
-      buffer.append(" Â· ");
+      buffer.append(" · ");
     }
     else if(programDate.equals(currentDate.addDays(1))){
       buffer.append(Localizer.getLocalization(Localizer.I18N_TOMORROW));
-      buffer.append(" Â· ");
+      buffer.append(" · ");
     }
     buffer.append(prog.getDateString());
 
-    buffer.append(" Â· ");
+    buffer.append(" · ");
     buffer.append(prog.getTimeString());
     if (prog.getLength() > 0) {
       buffer.append('-');
       buffer.append(prog.getEndTimeString());
     }
-    buffer.append(" Â· ");
+    buffer.append(" · ");
     buffer.append(prog.getChannel());
 
     buffer.append("</b></div>");
