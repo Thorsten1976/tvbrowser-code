@@ -820,7 +820,6 @@ public class TVBrowser {
 		// finally add program arguments		
 		String[] cmdarr = new String[cmd.size()];
 		for(int i=0;i<cmd.size();++i){
-			System.out.println(cmd.get(i));
 			cmdarr[i] = cmd.get(i);
 		}
 		return cmdarr;
@@ -864,7 +863,7 @@ public class TVBrowser {
       return false;
     }
     String implementation = System.getProperty("java.vm.name");
-    if (StringUtils.containsIgnoreCase(implementation, "openjdk")) {
+    if (!StringUtils.containsIgnoreCase(implementation, "openjdk")) {
       return false;
     }
     return true;
