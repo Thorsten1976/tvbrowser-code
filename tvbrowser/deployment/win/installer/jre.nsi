@@ -127,14 +127,14 @@ Function .onInit
   
   goon:
   IfErrors errors
-  StrCpy $INSTDIR "$0\java"
+  StrCpy $INSTDIR "$0\java\"
   goto end
   errors:
   # The default installation directory
   ${If} ${RunningX64}
-      StrCpy $INSTDIR "$PROGRAMFILES64\TV-Browser\java"
+      StrCpy $INSTDIR "$PROGRAMFILES64\TV-Browser\java\"
   ${Else}
-      StrCpy $INSTDIR "$PROGRAMFILES\TV-Browser\java"
+      StrCpy $INSTDIR "$PROGRAMFILES\TV-Browser\java\"
   ${EndIf}
   
   end:
@@ -172,6 +172,11 @@ Section "$(STD_SECTION_NAME)" SEC_STANDARD
   SectionIn 1 RO
 
   # Set output path to the installation directory.
+  StrCpy $0 $INSTDIR "" -5
+  
+  StrCmp $0 "\java" +2 +1
+  StrCpy $INSTDIR "$INSTDIR\java\"
+  
   SetOutPath "$INSTDIR"
   File /r "${RUNTIME_DIR}\java\*.*"
   
