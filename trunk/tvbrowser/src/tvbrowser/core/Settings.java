@@ -2203,6 +2203,9 @@ public class Settings {
   public static final BooleanProperty propSmootherScrolling = new BooleanProperty(
 	      mProp, "smootherScrolling", true);
   
+  public static final IntProperty propScreenNumber = new IntProperty(
+	      mProp, "screenNumber", 0);
+  
   /**
    * Hidden property for blocked filter components for Favorite usage.
    * Add the property favoriteBlockedFilterComponents to the settings.prop

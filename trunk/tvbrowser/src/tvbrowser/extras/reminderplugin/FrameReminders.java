@@ -36,6 +36,7 @@ import tvbrowser.core.Settings;
 import tvbrowser.core.icontheme.IconLoader;
 import tvbrowser.core.plugin.PluginManagerImpl;
 import tvbrowser.extras.reminderplugin.PanelReminder.InterfaceClose;
+import tvbrowser.ui.mainframe.MainFrame;
 import util.ui.Localizer;
 import util.ui.ScrollableJPanel;
 import util.ui.TVBrowserIcons;
@@ -59,6 +60,8 @@ public class FrameReminders extends JFrame implements InterfaceClose<PanelRemind
   private AtomicBoolean mAutoResize = null;
   
   private FrameReminders() {
+	super(MainFrame.getInstance().getGraphicsConfiguration());
+	
     mListReminders = new ScrollableJPanel();
     mListReminders.setLayout(new BoxLayout(mListReminders, BoxLayout.Y_AXIS));
     mScrollPane = new JScrollPane(mListReminders);

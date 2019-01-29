@@ -39,7 +39,6 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.Point;
@@ -127,6 +126,19 @@ public class UiUtilities {
    *          The window to center and show.
    */
   public static void centerAndShow(Window win) {
+	centerAndShow(win, true);
+  }
+  
+  /**
+   * Centers a window to its parent frame and shows it.
+   * <p>
+   * If the window has no parent frame it will be centered to the screen.
+   *
+   * @param win
+   *          The window to center and show.
+   * @since 4.1
+   */
+  public static void centerAndShow(final Window win, final boolean show) {
     Dimension wD = win.getSize();
     Dimension frameD;
     Point framePos;
@@ -146,8 +158,7 @@ public class UiUtilities {
       // dual head, use first screen
       if (ge.getScreenDevices().length > 1) {
         try {
-          GraphicsDevice gd = ge.getDefaultScreenDevice();
-          GraphicsConfiguration config = gd.getConfigurations()[0];
+          GraphicsConfiguration config = win.getGraphicsConfiguration();
           frameD = config.getBounds().getSize();
           framePos = config.getBounds().getLocation();
         } catch (RuntimeException e) {
@@ -167,7 +178,10 @@ public class UiUtilities {
     wPos.x = Math.max(0, wPos.x); // Make x > 0
     wPos.y = Math.max(0, wPos.y); // Make y > 0
     win.setLocation(wPos);
-    win.setVisible(true);
+    
+    if(show) {
+      win.setVisible(true);
+    }
   }
 
   /**

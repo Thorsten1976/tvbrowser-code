@@ -26,12 +26,11 @@ package util.settings;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
-import java.awt.Toolkit;
+import java.awt.Rectangle;
 import java.awt.Window;
+import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -40,6 +39,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import util.ui.UiUtilities;
 
 /**
  * A class with the position and size settings for a window.
@@ -140,17 +141,17 @@ public final class WindowSetting {
    * @since 3.3
    */
   public void layout(final Window window, final Window parent) {
-    final Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-
+    final Rectangle d = window.getGraphicsConfiguration().getBounds();
+    
     int width = mWidth;
     int height = mHeight;
 
-    if(width < 20 || width > d.width) {
+    if(width < 20 || width > (d.x + d.width)) {
       window.pack();
       width = window.getWidth();
     }
 
-    if(height < 20 || height > d.height) {
+    if(height < 20 || height > (d.y + d.height)) {
       window.pack();
       height = window.getHeight();
     }
@@ -168,12 +169,15 @@ public final class WindowSetting {
     height = Math.min(height, d.height);
 
     window.setSize(width, height);
+    
+    boolean locationSet = false;
 
-    if(mXPos < 0 || mYPos < 0 || mXPos > d.width || mYPos > d.height) {
-      window.setLocationRelativeTo(null);
+    if(mXPos < 0 || mYPos < 0 || mXPos > (d.x + d.width) || mYPos > (d.y + d.height)) {
+      UiUtilities.centerAndShow(window, false);
     }
     else {
       window.setLocation(mXPos, mYPos);
+      locationSet = true;
     }
     
     if(mExtendedState == JFrame.MAXIMIZED_BOTH) {
@@ -183,9 +187,108 @@ public final class WindowSetting {
     }
     
     if(mWindowCache == null || !window.equals(mWindowCache)) {
-      window.addWindowListener(new WindowAdapter() {
+      window.addComponentListener(new ComponentAdapter() {
+    	private Thread mSavePosWait;
+        private AtomicBoolean mWaitSavePos = new AtomicBoolean(false);
+          
+        private Thread mSaveSizeWait;
+        private AtomicBoolean mWaitSaveSize = new AtomicBoolean(false);
+        
+        private int getExtendedState(ComponentEvent e) {
+          mExtendedState = JFrame.NORMAL;
+        
+          if(window instanceof JFrame) {
+            mExtendedState = ((JFrame) window).getExtendedState();
+          }
+          else if(window instanceof JDialog && e.getComponent().getSize().equals(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize())) {
+            mExtendedState = JFrame.MAXIMIZED_BOTH;
+          }
+        
+          return mExtendedState;
+        }
+        
+        private void savePos(ComponentEvent e) {
+            mWaitSavePos.set(true);
+            
+            if(mSavePosWait == null || !mSavePosWait.isAlive()) {
+              mSavePosWait = new Thread("SAVE WINDOW POSITION WAITING THREAD") {
+                @Override
+                public void run() {
+                  while(mWaitSavePos.getAndSet(false)) {
+                    try {
+                      sleep(100);
+                    } catch (InterruptedException e) {
+                      // ignore
+                    }
+                  }
+                  
+                  if((getExtendedState(e) & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
+                    mXPos = e.getComponent().getX();
+                    mYPos = e.getComponent().getY();
+                  }
+                }
+              };
+              mSavePosWait.start();
+            }                  
+        }
+        
+        private void saveSize(ComponentEvent e) {
+            mWaitSaveSize.set(true);
+            
+            if(mSaveSizeWait == null || !mSaveSizeWait.isAlive()) {
+              mSaveSizeWait = new Thread("SAVE WINDOW SIZE WAITING THREAD") {
+                @Override
+                public void run() {
+                  while(mWaitSaveSize.getAndSet(false)) {
+                    try {
+                      sleep(100);
+                    } catch (InterruptedException e) {
+                      // ignore
+                    }
+                  }
+                                          
+                  if((getExtendedState(e) & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
+                    mWidth = e.getComponent().getWidth();
+                    mHeight = e.getComponent().getHeight();
+                  }
+                }
+              };
+              mSaveSizeWait.start();
+            }
+        }
+
         @Override
-        public void windowOpened(final WindowEvent e) {
+        public void componentHidden(ComponentEvent e) {
+          savePos(e);
+        }
+        
+        @Override
+        public void componentMoved(ComponentEvent e) {
+          savePos(e);
+        }
+        
+        public void componentResized(ComponentEvent e) {
+            if (mMinSize != null && !mIgnoreAndMinSizeLocation) {
+              int winWidth = window.getWidth();
+              int winHeight = window.getHeight();
+              boolean resize = false;
+              if (winWidth < mMinSize.getWidth()) {
+                winWidth = mMinSize.width;
+                resize = true;
+              }
+              if (winHeight < mMinSize.getHeight()) {
+                winHeight = mMinSize.height;
+                resize = true;
+              }
+              if (resize) {
+                window.setSize(winWidth, winHeight);
+              }
+            }
+            saveSize(e);
+          }
+        
+	    @Override
+	    public void componentShown(ComponentEvent e) {
           SwingUtilities.invokeLater(new Thread() {
             public void run() {
               try {
@@ -195,123 +298,27 @@ public final class WindowSetting {
               if(parent == null && !mIgnoreAndMinSizeLocation) {
                 Point p = e.getComponent().getLocation();
                 
-                if(mXPos < 0 || mYPos < 0 || mXPos > d.width || mYPos > d.height) {
-                  window.setLocationRelativeTo(null);
+                if(mXPos < 0 || mYPos < 0 || mXPos > (d.x + d.width) || mYPos > (d.y + d.height)) {
+                  UiUtilities.centerAndShow(window, false);
                 }
                 else if((p.x != mXPos || mYPos != p.y) && System.getenv("DESKTOP_SESSION") != null &&  System.getenv("DESKTOP_SESSION").toLowerCase().equals("ubuntu")) {
-                  window.setLocation(mXPos - Math.abs(p.x-mXPos), mYPos - Math.abs(p.y-mYPos));
+                  window.setLocation(mXPos, mYPos);
                 }
               }
-
-              window.addComponentListener(new ComponentListener() {
-                private Thread mSavePosWait;
-                private AtomicBoolean mWaitSavePos = new AtomicBoolean(false);
-                
-                private Thread mSaveSizeWait;
-                private AtomicBoolean mWaitSaveSize = new AtomicBoolean(false);
-                
-                public void componentHidden(ComponentEvent e) {
-                  savePos(e);
+              else {
+            	Point p = e.getComponent().getLocation();
+            	
+            	if((mXPos >= 0 || mYPos >= 0) && (p.x != mXPos || mYPos != p.y) && System.getenv("DESKTOP_SESSION") != null &&  System.getenv("DESKTOP_SESSION").toLowerCase().equals("ubuntu")) {
+                  window.setLocation(mXPos, mYPos);
                 }
-
-                public void componentMoved(ComponentEvent e) {
-                  savePos(e);
-                }
-
-                public void componentResized(ComponentEvent e) {
-                  if (mMinSize != null && !mIgnoreAndMinSizeLocation) {
-                    int winWidth = window.getWidth();
-                    int winHeight = window.getHeight();
-                    boolean resize = false;
-                    if (winWidth < mMinSize.getWidth()) {
-                      winWidth = mMinSize.width;
-                      resize = true;
-                    }
-                    if (winHeight < mMinSize.getHeight()) {
-                      winHeight = mMinSize.height;
-                      resize = true;
-                    }
-                    if (resize) {
-                      window.setSize(winWidth, winHeight);
-                    }
-                  }
-                  saveSize(e);
-                }
-
-                public void componentShown(ComponentEvent e) {
-                  savePos(e);
-                }
-                
-                private void savePos(ComponentEvent e) {
-                  mWaitSavePos.set(true);
-                  
-                  if(mSavePosWait == null || !mSavePosWait.isAlive()) {
-                    mSavePosWait = new Thread("SAVE WINDOW POSITION WAITING THREAD") {
-                      @Override
-                      public void run() {
-                        while(mWaitSavePos.getAndSet(false)) {
-                          try {
-                            sleep(100);
-                          } catch (InterruptedException e) {
-                            // ignore
-                          }
-                        }
-                        
-                        if((getExtendedState() & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
-                          mXPos = e.getComponent().getX();
-                          mYPos = e.getComponent().getY();
-                        }
-                      }
-                    };
-                    mSavePosWait.start();
-                  }                  
-                }
-                
-                private void saveSize(ComponentEvent e) {
-                  mWaitSaveSize.set(true);
-                  
-                  if(mSaveSizeWait == null || !mSaveSizeWait.isAlive()) {
-                    mSaveSizeWait = new Thread("SAVE WINDOW SIZE WAITING THREAD") {
-                      @Override
-                      public void run() {
-                        while(mWaitSaveSize.getAndSet(false)) {
-                          try {
-                            sleep(100);
-                          } catch (InterruptedException e) {
-                            // ignore
-                          }
-                        }
-                                                
-                        if((getExtendedState() & JFrame.MAXIMIZED_BOTH) != JFrame.MAXIMIZED_BOTH) {
-                          mWidth = e.getComponent().getWidth();
-                          mHeight = e.getComponent().getHeight();
-                        }
-                      }
-                    };
-                    mSaveSizeWait.start();
-                  }
-                }
-                
-                private int getExtendedState() {
-                  mExtendedState = JFrame.NORMAL;
-                  
-                  if(window instanceof JFrame) {
-                    mExtendedState = ((JFrame) window).getExtendedState();
-                  }
-                  else if(window instanceof JDialog && e.getComponent().getSize().equals(GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getSize())) {
-                    mExtendedState = JFrame.MAXIMIZED_BOTH;
-                  }
-                  
-                  return mExtendedState;
-                }
-              });
+              }
             }
           });
         }
       });
     }
     
-    if(parent != null && !mIgnoreAndMinSizeLocation) {
+    if(parent != null && !mIgnoreAndMinSizeLocation && !locationSet) {
       window.setLocationRelativeTo(parent);
     }
     

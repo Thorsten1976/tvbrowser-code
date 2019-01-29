@@ -37,6 +37,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
+import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -1094,9 +1095,9 @@ public class TVBrowser {
     final int windowX = Settings.propWindowX.getInt();
     final int windowY = Settings.propWindowY.getInt();
 
-    final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-
-    if ((windowX == -1 && windowY == -1) || windowX + windowWidth < 0 || windowX > screen.width + 10 || windowY + windowHeight < 0 || windowY > screen.height + 10 || windowWidth < 200 || windowHeight < 200) {
+    final Rectangle2D screen = mainFrame.getGraphicsConfiguration().getBounds();
+    
+    if ((windowX == -1 && windowY == -1) || windowX + windowWidth < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < 0 || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
       UiUtilities.centerAndShow(mainFrame);
     } else {
       mainFrame.setLocation(windowX, windowY);
@@ -1105,8 +1106,8 @@ public class TVBrowser {
     SwingUtilities.invokeLater(() -> {
       Point p = mainFrame.getLocation();
       
-      if(windowX < 0 || windowY < 0 || windowX > screen.width || windowY > screen.height) {
-        mainFrame.setLocationRelativeTo(null);
+      if(windowX < 0 || windowY < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
+    	UiUtilities.centerAndShow(mainFrame, false);
       }
       else if(p.x != windowX || windowY != p.y) {
         mainFrame.setLocation(windowX - Math.abs(p.x-windowX), windowY - Math.abs(p.y-windowY));

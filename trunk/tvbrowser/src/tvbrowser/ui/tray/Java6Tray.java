@@ -46,6 +46,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import tvbrowser.ui.mainframe.MainFrame;
 import util.misc.JavaVersion;
 import util.misc.OperatingSystem;
 import util.ui.UiUtilities;
@@ -161,14 +162,12 @@ public class Java6Tray {
             mTrayIcon = new TrayIcon(ImageIO.read(new File("imgs/tvbrowser16.png")), tooltip);
           }
           
-          mTrayParent = new JDialog();
-          mTrayParent.setTitle("Tray-Menu");
-
+          mTrayParent = new JDialog(null, "Tray-Menu", null, MainFrame.getInstance().getGraphicsConfiguration());
           mTrayParent.setSize(0, 0);
           mTrayParent.setUndecorated(true);
           mTrayParent.setAlwaysOnTop(true);
           mTrayParent.setVisible(false);
-
+          
           mLog.info("Java 6 Tray inited.");
         }
         else {
