@@ -460,6 +460,7 @@
   	<exec executable="${jlink.command}" failonerror="true">
   		<arg value="--add-modules"/>
   		<arg value="${jlink.modules}"/>
+  		<arg value="--include-locales=en,de"/>
   		<arg value="--output"/>
   		<arg value="${tvbrowser-win.runtime.dir}/java"/>
   	</exec>
@@ -472,6 +473,7 @@
   	<exec executable="${jlink.command32}" failonerror="true">
   		<arg value="--add-modules"/>
   		<arg value="${jlink.modules}"/>
+  		<arg value="--include-locales=en,de"/>
   		<arg value="--output"/>
   		<arg value="${tvbrowser-win.runtime.dir}/java"/>
   	</exec>
