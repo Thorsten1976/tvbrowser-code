@@ -578,13 +578,13 @@ public class SoftwareUpdateDlg extends JDialog implements ActionListener, ListSe
     		String[] options = {"",""};
     		options[0] = mLocalizer.msg("restartnow", "restart");
     		options[1] = mLocalizer.msg("restartlater", "later");
-    		if (JOptionPane.showOptionDialog(null,  mLocalizer.msg("restartplugin", "plugins has been installed.\nrestart TV-Browser?"),
+    		if (JOptionPane.showOptionDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()),  mLocalizer.msg("restartplugin", "plugins has been installed.\nrestart TV-Browser?"),
     				mLocalizer.msg("restartdialog","restart"), JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,options ,options[0])==0){
     	        TVBrowser.addRestart();
     	        MainFrame.getInstance().quit();
     		}
     	} else {
-    		JOptionPane.showMessageDialog(null, mLocalizer.msg("restartprogram", "please restart tvbrowser before..."));
+    		JOptionPane.showMessageDialog(UiUtilities.getLastModalChildOf(MainFrame.getInstance()), mLocalizer.msg("restartprogram", "please restart tvbrowser before..."));
     	}
         setVisible(false);
       }

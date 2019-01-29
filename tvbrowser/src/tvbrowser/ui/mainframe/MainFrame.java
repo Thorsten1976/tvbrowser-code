@@ -36,6 +36,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
@@ -324,8 +325,22 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
   
   private Component mSelectedTab;
   
+  private static GraphicsConfiguration getGraphicsConfigurationForFrame() {
+	GraphicsConfiguration result = null; 
+	GraphicsEnvironment graphicsEnvironment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	
+	if (Settings.propScreenNumber.getInt() < graphicsEnvironment.getScreenDevices().length) {
+	  result = graphicsEnvironment.getScreenDevices()[Settings.propScreenNumber.getInt()].getDefaultConfiguration();
+	}
+	else {
+      result = graphicsEnvironment.getScreenDevices()[0].getDefaultConfiguration();
+	}
+	
+	return result;
+  }
+  
   private MainFrame() {
-    super(TVBrowser.MAINWINDOW_TITLE);
+    super(TVBrowser.MAINWINDOW_TITLE, getGraphicsConfigurationForFrame());
     println("POS 1");
     setContentPane(new BackgroundPanel());
     
@@ -1516,9 +1531,11 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
       @Override
       public void run() {
         synchronized (mCenterPanelWrapperList) {
-          for(PluginCenterPanelWrapper wrapper : mCenterPanelWrapperList) {
-            wrapper.filterSelected(filter);
-          }          
+          try {
+            for(PluginCenterPanelWrapper wrapper : mCenterPanelWrapperList) {
+              wrapper.filterSelected(filter);
+            }      
+          }catch(Throwable t) {}
         }
       }
     }.start();
@@ -1592,7 +1609,7 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
 
   private void quit(boolean log, boolean export) {
     mTimer.stop(); // disable the update timer to avoid new update events
-    if (log && downloadingThread != null && downloadingThread.isAlive()) {
+    if (log && downloadingThread != null && downloadingThread.isAlive()) {    	
       final JDialog info = new JDialog(UiUtilities.getLastModalChildOf(this));
       info.setModalityType(ModalityType.DOCUMENT_MODAL);
       info.setUndecorated(true);
@@ -1636,6 +1653,16 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
     }
     TvDataServiceProxyManager.getInstance().shutDown();
 
+    GraphicsDevice[] graphicDevices = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+    
+    GraphicsDevice device = getGraphicsConfiguration().getDevice();
+    for(int i = 0; i < graphicDevices.length; i++) {
+      if(graphicDevices[i].equals(device)) {
+        Settings.propScreenNumber.setInt(i);
+        break;
+      }
+    }
+    
     TVBrowser.shutdown(log);
 
     TvDataBase.getInstance().close(log);
