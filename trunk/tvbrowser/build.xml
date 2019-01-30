@@ -553,13 +553,13 @@
 		<!--option value="-Dcom.apple.macos.useScreenMenuBar=true"/-->
 		<option value="-Dcom.apple.mrj.application.apple.menu.about.name=${bundle.name}"/>
 		<option value="-Dcom.apple.smallTabs=true"/>
+		<option value="--module-path=lib:tvbrowser.jar"/>
 		<option value="-Xmx1024M"/>
-		<option value="-XX:+IgnoreUnrecognizedVMOptions"/>
-	    <option value="--add-modules=ALL-SYSTEM"/> 
+		<option value="-m tvbrowser/tvbrowser.TVBrowser"/>
 		</appbundler>
 
 	    <copy todir="${tvbrowser-macjava.runtime.dir}/TV-Browser.app/Contents/Resources">
-	        <fileset dir="${tvbrowser-default.runtime.dir}" excludes="tvbrowser.jar"/>
+	        <fileset dir="${tvbrowser-default.runtime.dir}"/>
 	    </copy>
 	    <copy todir="${tvbrowser-macjava.runtime.dir}/TV-Browser.app/Contents/Resources">
 	      <fileset dir="${deployment.dir}" includes="osx.properties"/>
@@ -675,6 +675,7 @@
   	    	<include name="plugins/**"/>
   	    	<include name="themepacks/**"/>
   	    	<include name="infothemes/**"/>
+  	    	<include name="lib/**"/>
   	    	<exclude name="tvbrowser.sh"/>
   	    	<exclude name="tvbrowser.desktop"/>
   	    	<include name="*"/>
@@ -707,6 +708,7 @@
   	    	<include name="plugins/**"/>
   	    	<include name="themepacks/**"/>
   	    	<include name="infothemes/**"/>
+  	    	<include name="lib/**"/>
   	    	<exclude name="tvbrowser.sh"/>
   	    	<exclude name="tvbrowser.desktop"/>
   	    	<include name="*"/>
