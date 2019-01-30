@@ -634,7 +634,7 @@
   </target>
 
   <target name="clean-public">
-  	<delete>
+  	<delete failonerror="false">
   		<fileset dir="${public.dir}" includes="**/*"/>
   	</delete>
   </target>
