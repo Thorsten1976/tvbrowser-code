@@ -1098,8 +1098,8 @@ public class TVBrowser {
 
     final Rectangle2D screen = mainFrame.getGraphicsConfiguration().getBounds();
     
-    if ((windowX == -1 && windowY == -1) || windowX + windowWidth < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < 0 || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
-      UiUtilities.centerAndShow(mainFrame);
+    if (Settings.propIsWindowMaximized.getBoolean() || (windowX == -1 && windowY == -1) || windowX + windowWidth < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY + windowHeight < 0 || windowY > (screen.getY() + screen.getHeight() - 30) || windowWidth < 200 || windowHeight < 200) {
+      UiUtilities.centerAndShow(mainFrame, false);
     } else {
       mainFrame.setLocation(windowX, windowY);
     }
@@ -1110,7 +1110,7 @@ public class TVBrowser {
       if(windowX < 0 || windowY < 0 || windowX > (screen.getX() + screen.getWidth() - 30) || windowY > (screen.getY() + screen.getHeight() - 30)) {
     	UiUtilities.centerAndShow(mainFrame, false);
       }
-      else if(p.x != windowX || windowY != p.y) {
+      else if(!Settings.propIsWindowMaximized.getBoolean() && (p.x != windowX || windowY != p.y)) {
         mainFrame.setLocation(windowX - Math.abs(p.x-windowX), windowY - Math.abs(p.y-windowY));
       }
     });
