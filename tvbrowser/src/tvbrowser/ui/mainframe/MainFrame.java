@@ -735,10 +735,10 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
    */
   public void switchFullscreenMode() {
     dispose();
-
+    
     SwingUtilities.invokeLater(() -> {
-      GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
+      GraphicsDevice device = getGraphicsConfiguration().getDevice();
+      
       if(isFullScreenMode()) {
         // switch back from fullscreen
         device.setFullScreenWindow(null);
@@ -807,14 +807,14 @@ public class MainFrame extends JFrame implements DateListener,DropTargetListener
         }
 
         setUndecorated(true);
-        final Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-
+        final Rectangle screen = getGraphicsConfiguration().getBounds();
+        
         if(device.isFullScreenSupported() && OperatingSystem.isMacOs()) {
           device.setFullScreenWindow(MainFrame.getInstance());
         }
         else {
-          setLocation(0,0);
-          setSize(screen);
+          setLocation(screen.x,screen.y);
+          setSize(new Dimension(screen.width, screen.height));
         }
 
         setVisible(true);
